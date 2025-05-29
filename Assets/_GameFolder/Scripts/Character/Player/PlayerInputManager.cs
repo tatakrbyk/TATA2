@@ -10,10 +10,17 @@ namespace XD
         private static PlayerInputManager instance; public static PlayerInputManager Instance { get { return instance; } }
         PlayerControls playerControls;
 
+        [Header("Player Movement Input")]
         [SerializeField] Vector2 movementInput;
         public float horizontalInput;
         public float verticalInput;
         public float moveAmount;
+
+        [Header("Camera Movement Input")]
+        [SerializeField] Vector2 cameraInput;
+        public float cameraHorizontalInput;
+        public float cameraVerticalInput;
+
 
 
         private void Awake()
@@ -37,7 +44,8 @@ namespace XD
         }
         private void Update()
         {
-            HandleMovementInput();
+            HandlePlayerMovementInput();
+            HandleCameraMovementInput();
         }
         private void OnSceneChange(Scene oldScene, Scene newScene)
         {
@@ -57,6 +65,7 @@ namespace XD
                 playerControls = new PlayerControls();
 
                 playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
+                playerControls.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
             }
 
             playerControls.Enable();
@@ -84,7 +93,7 @@ namespace XD
             }
         }
 
-        private void HandleMovementInput()
+        private void HandlePlayerMovementInput()
         {
             verticalInput = movementInput.y;
             horizontalInput = movementInput.x;
@@ -101,6 +110,12 @@ namespace XD
             {
                 moveAmount = 1; // Run
             }
+        }
+
+        private void HandleCameraMovementInput()
+        {
+            cameraVerticalInput = cameraInput.y;
+            cameraHorizontalInput = cameraInput.x;
         }
     }
 

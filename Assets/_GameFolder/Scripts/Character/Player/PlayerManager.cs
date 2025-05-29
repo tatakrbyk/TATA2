@@ -14,6 +14,16 @@ namespace XD
             playerLocomotionManager = GetComponent<PlayerLocomotionManager>();
         }
 
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+
+            // If this is the player object owned by this client
+            if(IsOwner)
+            {
+                PlayerCamera.Instance.player = this;
+            }
+        }
         protected override void Update()
         {
             base.Update();
@@ -22,6 +32,15 @@ namespace XD
             if(!IsOwner) return;
 
             playerLocomotionManager.HandleAllMovement();
+        }
+
+        protected override void LateUpdate()
+        {
+            if(!IsOwner) return;
+            base.LateUpdate();
+
+            PlayerCamera.Instance.HandleAllCameraActions();
+
         }
     }
 }

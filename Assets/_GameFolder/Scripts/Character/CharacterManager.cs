@@ -43,6 +43,10 @@ namespace XD
                     characterNetworkManager.networkRotationSmoothTime);
             }
         }
-    }
 
+        protected virtual void LateUpdate()
+        {
+            
+        }
+    }
 }
