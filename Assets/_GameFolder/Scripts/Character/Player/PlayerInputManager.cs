@@ -8,6 +8,9 @@ namespace XD
     public class PlayerInputManager : MonoBehaviour
     {
         private static PlayerInputManager instance; public static PlayerInputManager Instance { get { return instance; } }
+
+        public PlayerManager player;
+
         PlayerControls playerControls;
 
         [Header("Player Movement Input")]
@@ -110,6 +113,13 @@ namespace XD
             {
                 moveAmount = 1; // Run
             }
+
+            if (player == null) return;
+            // Why do i pass 0 on the horizontal? Because we only want non-strafing movement 
+            // We Use the horizontal when we are strafing or locked on
+
+            // Npt locked on
+            player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
         }
 
         private void HandleCameraMovementInput()

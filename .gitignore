@@ -67,6 +67,7 @@ sysinfo.txt
 *.unitypackage
 *.unitypackage.meta
 *.app
+*.fbx
 
 # Crashlytics generated file
 crashlytics-build.properties
@@ -83,3 +84,7 @@ crashlytics-build.properties
 /[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Flow/UnitOptions.db.meta
 /[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Core/Property Providers
 /[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Core/Property Providers.meta
+
+# Ignore Addtion folder and its contents (e.g. animations, .fbx)
+Assets/_GameFolder/Art/Addtion/
+Assets/_GameFolder/Art/Animations/

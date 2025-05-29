@@ -10,6 +10,11 @@ namespace XD
         {
 
         }
+
+        protected virtual void Update()
+        {
+
+        }
     }
 
 }

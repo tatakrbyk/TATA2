@@ -24,6 +24,29 @@ namespace XD
             player = GetComponent<PlayerManager>();
         }
 
+        protected override void Update()
+        {
+            base.Update();
+
+            if(player.IsOwner)
+            {
+                // Replicated
+                player.characterNetworkManager.verticalMovement.Value = verticalMovement;
+                player.characterNetworkManager.horizontalMovement.Value = horizontalMovement;
+                player.characterNetworkManager.moveAmount.Value = moveAmount;
+            }
+            else
+            {
+                verticalMovement = player.characterNetworkManager.verticalMovement.Value;
+                horizontalMovement = player.characterNetworkManager.horizontalMovement.Value;
+                moveAmount = player.characterNetworkManager.moveAmount.Value;
+
+
+                // If not locked on,    
+                player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
+            }
+        }
+
         // Call PlayerManager
         public void HandleAllMovement()
         {
@@ -31,14 +54,16 @@ namespace XD
             HandleRotation();
         }
 
-        private void GetVerticalAndHorizontalInputs()
+        private void GetMovementValues()
         {
             verticalMovement = PlayerInputManager.Instance.verticalInput;
-            horizontalMovement = PlayerInputManager.Instance.horizontalInput;   
+            horizontalMovement = PlayerInputManager.Instance.horizontalInput;  
+            moveAmount = PlayerInputManager.Instance.moveAmount;
+            
         }
         private void HandleGroundedMovement()
         {
-            GetVerticalAndHorizontalInputs();
+            GetMovementValues();
 
             moveDirection = PlayerCamera.Instance.transform.forward * verticalMovement; 
             moveDirection = moveDirection + PlayerCamera.Instance.transform.right * horizontalMovement;
