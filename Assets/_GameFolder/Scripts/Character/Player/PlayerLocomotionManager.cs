@@ -8,15 +8,21 @@ namespace XD
     {
         PlayerManager player;
 
-        public float verticalMovement;
-        public float horizontalMovement;
-        public float moveAmount;
+        [HideInInspector] public float verticalMovement;
+        [HideInInspector] public float horizontalMovement;
+        [HideInInspector] public float moveAmount;
 
+        [Header("Movement Settings")]
         private Vector3 moveDirection;
         private Vector3 targetRotationDirection;
-        [SerializeField] private float walkingSpeed = 2;
-        [SerializeField] private float runningSpeed = 5;
-        [SerializeField] private float rotationSpeed = 15;
+        private float walkingSpeed = 1.5f;
+        private float runningSpeed = 3.5f;
+        private float sprintingSpeed = 7f;
+        private float rotationSpeed = 15;
+
+        [Header("Dodge")]     
+        private Vector3 rollDirection;
+
         protected override void Awake()
         {
             base.Awake();
@@ -43,7 +49,7 @@ namespace XD
 
 
                 // If not locked on,    
-                player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
+                player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);
             }
         }
 
@@ -63,6 +69,8 @@ namespace XD
         }
         private void HandleGroundedMovement()
         {
+            if(!player.canMove) { return; }
+            
             GetMovementValues();
 
             moveDirection = PlayerCamera.Instance.transform.forward * verticalMovement; 
@@ -70,21 +78,32 @@ namespace XD
             moveDirection.Normalize();
             moveDirection.y = 0;
 
-            if(PlayerInputManager.Instance.moveAmount > 0.5f )
+            if(player.playerNetworkManager.isSprinting.Value)
             {
-                // Move at a running speed
-                player.characterController.Move(moveDirection * runningSpeed *  Time.deltaTime);
-            }
-            else if(PlayerInputManager.Instance.moveAmount <= 0.5f)
-            {
-                // Move at a walking speed
-                player.characterController.Move(moveDirection * walkingSpeed * Time.deltaTime);
+                player.characterController.Move(moveDirection * sprintingSpeed * Time.deltaTime);
 
             }
+            else
+            {
+                if (PlayerInputManager.Instance.moveAmount > 0.5f)
+                {
+                    // Move at a running speed
+                    player.characterController.Move(moveDirection * runningSpeed * Time.deltaTime);
+                }
+                else if (PlayerInputManager.Instance.moveAmount <= 0.5f)
+                {
+                    // Move at a walking speed
+                    player.characterController.Move(moveDirection * walkingSpeed * Time.deltaTime);
+
+                }
+            }
+
         }
 
         private void HandleRotation()
         {
+            if(!player.canRotate) { return; }
+
             targetRotationDirection = Vector3.zero;
             targetRotationDirection = PlayerCamera.Instance.cameraObject.transform.forward * verticalMovement;
             targetRotationDirection = targetRotationDirection + PlayerCamera.Instance.cameraObject.transform.right * horizontalMovement;
@@ -99,6 +118,51 @@ namespace XD
             Quaternion newRotation = Quaternion.LookRotation(targetRotationDirection);
             Quaternion targetRotation = Quaternion.Slerp( transform.rotation, newRotation, rotationSpeed * Time.deltaTime);
             transform.rotation = targetRotation;
+        }
+
+        public void HandleSprinting()
+        {
+            if(player.isPerformingAction)
+            {
+                player.playerNetworkManager.isSprinting.Value = false;          
+            }
+
+            if(moveAmount >= 0.5)
+            {
+                player.playerNetworkManager.isSprinting.Value = true;
+            }
+            // If we are stationary/Moving Slowly sprinting is false
+            else
+            {
+                player.playerNetworkManager.isSprinting.Value = false;
+            }
+        }
+        public void HandleDodge()
+        {
+            if(player.isPerformingAction) {  return; }  
+
+            // if we are moving when we attempt to dodge, we perform a roll
+            if (PlayerInputManager.Instance.moveAmount > 0 )
+            {
+                rollDirection = PlayerCamera.Instance.cameraObject.transform.forward * PlayerInputManager.Instance.verticalInput;
+                rollDirection += PlayerCamera.Instance.cameraObject.transform.right * PlayerInputManager.Instance.horizontalInput;
+                rollDirection.y = 0;
+                rollDirection.Normalize();
+
+                Quaternion playerRotation = Quaternion.LookRotation(rollDirection);
+                player.transform.rotation = playerRotation;
+
+                // Roll Animation
+                player.playerAnimatorManager.PlayActionAnimation("Roll_Forward_01", true, true);
+            }
+            // If we are stationary, we perform a backstep
+            else
+            {
+                // Backstep Animation
+                player.playerAnimatorManager.PlayActionAnimation("Back_Step_01", true, true);
+
+            }
+
         }
     }
 
