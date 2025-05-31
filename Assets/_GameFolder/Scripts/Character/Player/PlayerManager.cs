@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace XD
         [HideInInspector] public PlayerAnimatorManager playerAnimatorManager;
         [HideInInspector] public PlayerLocomotionManager playerLocomotionManager;
         [HideInInspector] public PlayerNetworkManager playerNetworkManager;
+        [HideInInspector] public PlayerStatsManager playerStatsManager;
         protected override void Awake()
         {
             base.Awake();
@@ -16,6 +18,7 @@ namespace XD
             playerLocomotionManager = GetComponent<PlayerLocomotionManager>();
             playerAnimatorManager = GetComponent<PlayerAnimatorManager>();
             playerNetworkManager = GetComponent<PlayerNetworkManager>();
+            playerStatsManager  = GetComponent<PlayerStatsManager>();
         }
 
         public override void OnNetworkSpawn()
@@ -27,6 +30,15 @@ namespace XD
             {
                 PlayerCamera.Instance.player = this;
                 PlayerInputManager.Instance.player = this;
+
+                
+                playerNetworkManager.currentStamina.OnValueChanged += PlayerUIManager.Instance.playerUIHUDManager.SetNewStaminaValue; 
+                playerNetworkManager.currentStamina.OnValueChanged += playerStatsManager.ResetStaminaRegeneraationTimer;
+
+                playerNetworkManager.maxStamina.Value = playerStatsManager.CalculateStaminaBasedOnEnduranceLevel(playerNetworkManager.endurance.Value);
+                playerNetworkManager.currentStamina.Value = playerStatsManager.CalculateStaminaBasedOnEnduranceLevel(playerNetworkManager.endurance.Value);
+                PlayerUIManager.Instance.playerUIHUDManager.SetMaxStaminaValue(playerNetworkManager.maxStamina.Value);
+
             }
         }
         protected override void Update()
@@ -37,6 +49,7 @@ namespace XD
             if(!IsOwner) return;
 
             playerLocomotionManager.HandleAllMovement();
+            playerStatsManager.RegenerateStamina();
         }
 
         protected override void LateUpdate()

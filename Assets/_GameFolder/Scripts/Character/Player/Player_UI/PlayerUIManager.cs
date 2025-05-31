@@ -5,11 +5,12 @@ namespace XD
 {
     public class PlayerUIManager : MonoBehaviour
     {
-        private static PlayerUIManager instance; public static PlayerUIManager Instance;
+        private static PlayerUIManager instance; public static PlayerUIManager Instance { get { return instance; } }
 
         [Header("Network Join")]
         [SerializeField] bool startGameAsClient;
 
+        [HideInInspector] public PlayerUIHUDManager playerUIHUDManager;
         private void Awake()
         {
             if (instance == null)
@@ -20,6 +21,8 @@ namespace XD
             {
                 Destroy(gameObject);
             }
+
+            playerUIHUDManager = GetComponentInChildren<PlayerUIHUDManager>();  
         }
 
         private void Start()

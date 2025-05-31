@@ -19,9 +19,11 @@ namespace XD
         private float runningSpeed = 3.5f;
         private float sprintingSpeed = 7f;
         private float rotationSpeed = 15;
+        private int sprintingStaminaCost = 1;
 
         [Header("Dodge")]     
         private Vector3 rollDirection;
+        private float dodgeStaminaCost = 20;
 
         protected override void Awake()
         {
@@ -127,7 +129,13 @@ namespace XD
                 player.playerNetworkManager.isSprinting.Value = false;          
             }
 
-            if(moveAmount >= 0.5)
+            if (player.playerNetworkManager.currentStamina.Value <= 0)
+            {
+                player.playerNetworkManager.isSprinting.Value = false;
+                return;
+            }
+
+            if (moveAmount >= 0.5)
             {
                 player.playerNetworkManager.isSprinting.Value = true;
             }
@@ -136,10 +144,16 @@ namespace XD
             {
                 player.playerNetworkManager.isSprinting.Value = false;
             }
+            
+            if (player.playerNetworkManager.isSprinting.Value)
+            {
+                player.playerNetworkManager.currentStamina.Value -= sprintingStaminaCost * Time.deltaTime;
+            }
         }
         public void HandleDodge()
         {
             if(player.isPerformingAction) {  return; }  
+            if(player.playerNetworkManager.currentStamina.Value <= 0) { return; }
 
             // if we are moving when we attempt to dodge, we perform a roll
             if (PlayerInputManager.Instance.moveAmount > 0 )
@@ -162,6 +176,8 @@ namespace XD
                 player.playerAnimatorManager.PlayActionAnimation("Back_Step_01", true, true);
 
             }
+
+            player.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
 
         }
     }
