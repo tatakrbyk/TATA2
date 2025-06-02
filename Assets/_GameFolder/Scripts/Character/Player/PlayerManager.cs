@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace XD
 {
@@ -30,7 +31,7 @@ namespace XD
             {
                 PlayerCamera.Instance.player = this;
                 PlayerInputManager.Instance.player = this;
-
+                WorldSaveGameManager.Instance.player = this;
                 
                 playerNetworkManager.currentStamina.OnValueChanged += PlayerUIManager.Instance.playerUIHUDManager.SetNewStaminaValue; 
                 playerNetworkManager.currentStamina.OnValueChanged += playerStatsManager.ResetStaminaRegeneraationTimer;
@@ -59,6 +60,21 @@ namespace XD
 
             PlayerCamera.Instance.HandleAllCameraActions();
 
+        }
+        
+        public void SaveGameDataToCurrentCharacterData(ref CharacterSaveData currentCharacterData)
+        {
+            currentCharacterData.sceneIndex = SceneManager.GetActiveScene().buildIndex;
+            currentCharacterData.characterName = playerNetworkManager.characterName.Value.ToString();
+            currentCharacterData.xCoord = transform.position.x;
+            currentCharacterData.yCoord = transform.position.y;
+            currentCharacterData.zCoord = transform.position.z;
+        }
+        public void LoadGameDataFromCurrentCharacterData(ref CharacterSaveData currentCharacterData)
+        {
+            playerNetworkManager.characterName.Value = currentCharacterData.characterName;
+            Vector3 playerPosition = new Vector3(currentCharacterData.xCoord, currentCharacterData.yCoord, currentCharacterData.zCoord);
+            transform.position= playerPosition;
         }
     }
 }

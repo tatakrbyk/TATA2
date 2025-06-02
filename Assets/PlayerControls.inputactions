@@ -176,6 +176,17 @@
                 },
                 {
                     "name": "",
+                    "id": "e4f34e01-6c75-4cf3-b1cf-b585992e13c9",
+                    "path": "<HID::Microntek              USB Joystick          >/button2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dodge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "3344edba-3155-4675-add7-f5ad5836dc03",
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "Hold",
@@ -362,6 +373,56 @@
                     "processors": "",
                     "groups": "",
                     "action": "Mouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "id": "0d183bab-7560-4a74-bcc8-0f62ab3050ed",
+            "actions": [
+                {
+                    "name": "X",
+                    "type": "Button",
+                    "id": "8bcf18ed-a686-4846-aa3c-db1d757f5e6f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f54f661c-68ac-4c04-84e7-7c73c1d0e19b",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "X",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "46ecf65d-81c7-47e4-9ce0-03a87f949991",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "X",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f7adc310-897c-44c1-bac1-2c9853d50f96",
+                    "path": "<HID::Microntek              USB Joystick          >/button4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "X",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
