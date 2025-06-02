@@ -25,6 +25,13 @@ namespace XD
         private Vector3 rollDirection;
         private float dodgeStaminaCost = 20;
 
+        [Header("Jump")]
+        private float jumpStaminaCost = 10;
+        private float jumpHeight = 4;
+        private float jumpForwardSpeed = 5;
+        private float freeFallSpeed = 2;
+        private Vector3 jumpDirection;
+
         protected override void Awake()
         {
             base.Awake();
@@ -60,6 +67,8 @@ namespace XD
         {
             HandleGroundedMovement();
             HandleRotation();
+            HandleJumpingMovement();
+            HandleFreeFallMovement();
         }
 
         private void GetMovementValues()
@@ -100,6 +109,27 @@ namespace XD
                 }
             }
 
+        }
+
+        private void HandleJumpingMovement()
+        {
+            if(player.isJumping)
+            {
+                player.characterController.Move(jumpDirection * jumpForwardSpeed * Time.deltaTime);
+            }
+        }
+        private void HandleFreeFallMovement()
+        {
+            if(!player.isGrounded)
+            {
+                Vector3 freefallDirection;
+
+                freefallDirection = PlayerCamera.Instance.transform.forward * PlayerInputManager.Instance.verticalInput;
+                freefallDirection += PlayerCamera.Instance.transform.right * PlayerInputManager.Instance.horizontalInput;
+                freefallDirection.y  = 0;
+
+                player.characterController.Move(freefallDirection * freeFallSpeed * Time.deltaTime);    
+            }
         }
 
         private void HandleRotation()
@@ -150,7 +180,7 @@ namespace XD
                 player.playerNetworkManager.currentStamina.Value -= sprintingStaminaCost * Time.deltaTime;
             }
         }
-        public void HandleDodge()
+        public void AttemptToPerformDodge()
         {
             if(player.isPerformingAction) {  return; }  
             if(player.playerNetworkManager.currentStamina.Value <= 0) { return; }
@@ -179,6 +209,47 @@ namespace XD
 
             player.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
 
+        }
+
+        public void AttemptToPerformJump()
+        {
+            if (player.isPerformingAction) { return; }
+            if (player.playerNetworkManager.currentStamina.Value <= 0) { return; }
+            if (player.isJumping) { return; }
+            if (!player.isGrounded) { return; }
+
+            // TODO: Two Hand or One Hand Animation
+            player.playerAnimatorManager.PlayActionAnimation("Main_Jump_Start_01", false);
+            player.isJumping = true;
+            
+            player.playerNetworkManager.currentStamina.Value -= jumpStaminaCost;
+
+            jumpDirection = PlayerCamera.Instance.cameraObject.transform.forward * PlayerInputManager.Instance.verticalInput;
+            jumpDirection += PlayerCamera.Instance.cameraObject.transform.right * PlayerInputManager.Instance.horizontalInput;
+            jumpDirection.y = 0;
+
+            if(jumpDirection != Vector3.zero)
+            {
+                // Sprinting = Full, running = half, walking = quarter
+                if(player.playerNetworkManager.isSprinting.Value)
+                {
+                    jumpDirection *= 1;
+                }
+                else if(PlayerInputManager.Instance.moveAmount >= 0.5) // Walk
+                {
+                    jumpDirection *= 0.5f; 
+                }
+                else if (PlayerInputManager.Instance.moveAmount < 0.5) // Walk
+                {
+                    jumpDirection *= 0.25f;
+                }
+            }
+        }
+
+        // Call Main_Jump_Lift Events
+        public void ApplyJumpVelocity()
+        {
+            yVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravityForce);
         }
     }
 

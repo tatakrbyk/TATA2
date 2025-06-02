@@ -27,6 +27,7 @@ namespace XD
         [Header("Player ACTIONS INPUT")]
         [SerializeField] bool dodgeInput = false;
         [SerializeField] bool sprintInput = false;
+        [SerializeField] bool jumpInput = false;
 
         private void Awake()
         {
@@ -73,7 +74,8 @@ namespace XD
                 
                 // Rool & Backstep
                 playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
-                
+                playerControls.PlayerActions.Jump.performed += i => jumpInput = true;
+
                 // Sprint 
                 playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
                 playerControls.PlayerActions.Sprint.canceled += i => sprintInput = false;
@@ -109,7 +111,8 @@ namespace XD
             HandlePlayerMovementInput();
             HandleCameraMovementInput();
             HandleDodgeInput();
-            HandleSprinting();
+            HandleSprintInput();
+            HandleJumpInput();
         }
         #region Movements
         private void HandlePlayerMovementInput()
@@ -153,11 +156,11 @@ namespace XD
                 dodgeInput = false;
 
                 //  TODO: If any UI or menu is open, return and don't dodge
-                player.playerLocomotionManager.HandleDodge();
+                player.playerLocomotionManager.AttemptToPerformDodge();
             }
         }
 
-        private void HandleSprinting()
+        private void HandleSprintInput()
         {
             if(sprintInput)
             {
@@ -166,6 +169,22 @@ namespace XD
             else
             {
                 player.playerNetworkManager.isSprinting.Value = false;
+            }
+        }
+
+        private void HandleJumpInput()
+        {
+            if (jumpInput)
+            {
+                jumpInput = false;
+
+                // TODO: If we have a uý window open, simply return without doing anything
+
+                player.playerLocomotionManager.AttemptToPerformJump();   
+            }
+            else
+            {
+                
             }
         }
         #endregion
