@@ -21,7 +21,7 @@ public class TitleScreenLoadMenuInputManager : MonoBehaviour
 
     private void OnEnable()
     {
-        if (playerControls != null)
+        if (playerControls == null)
         {
             playerControls = new PlayerControls();
             playerControls.UI.X.performed += i => deleteCharacterSlot = true;

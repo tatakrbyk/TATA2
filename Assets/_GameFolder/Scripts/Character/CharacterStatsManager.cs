@@ -18,11 +18,23 @@ namespace XD
             character = GetComponent<CharacterManager>();
         }
 
-        public int CalculateStaminaBasedOnEnduranceLevel(int enduranceLevel)
+        protected virtual void Start()
+        {
+
+        }
+        public int CalculateHealthBasedOnVitalityLevel(int vitality)
+        {
+            int health = 0;
+
+            health = vitality * 15;
+            return Mathf.RoundToInt(health);
+        }
+
+        public int CalculateStaminaBasedOnEnduranceLevel(int endurance)
         {
             int stamina = 0;
 
-            stamina = enduranceLevel * 10;
+            stamina = endurance * 10;
             return Mathf.RoundToInt(stamina);
         }
 

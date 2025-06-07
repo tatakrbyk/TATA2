@@ -19,7 +19,13 @@ namespace XD
         public float yCoord;
         public float zCoord;
 
-
+        [Header("Resources")]
+        public int currentHealth;
+        public float currentStamina;
+        
+        [Header("Stats")]
+        public int vitality;
+        public int endurance;
 
     }
 }

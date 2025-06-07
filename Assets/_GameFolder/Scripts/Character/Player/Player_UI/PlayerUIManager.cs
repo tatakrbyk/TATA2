@@ -11,6 +11,8 @@ namespace XD
         [SerializeField] bool startGameAsClient;
 
         [HideInInspector] public PlayerUIHUDManager playerUIHUDManager;
+        [HideInInspector] public PlayerUIPopUpManager playerUIPopUpManager;
+
         private void Awake()
         {
             if (instance == null)
@@ -22,7 +24,8 @@ namespace XD
                 Destroy(gameObject);
             }
 
-            playerUIHUDManager = GetComponentInChildren<PlayerUIHUDManager>();  
+            playerUIHUDManager = GetComponentInChildren<PlayerUIHUDManager>();
+            playerUIPopUpManager = GetComponentInChildren<PlayerUIPopUpManager>();
         }
 
         private void Start()

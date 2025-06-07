@@ -125,7 +125,7 @@ namespace XD
                 // IF THIS PROFILE SLOT IS OPEN THEN WE WILL USE IT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_01;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
 
@@ -136,7 +136,7 @@ namespace XD
                 // IF THIS PROFILE SLOT IS OPEN THEN WE WILL USE IT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_02;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
 
@@ -147,7 +147,7 @@ namespace XD
                 // IF THIS PROFILE SLOT IS OPEN THEN WE WILL USE IT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_03;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
 
@@ -158,7 +158,7 @@ namespace XD
                 // IF THIS PROFILE SLOT IS OPEN THEN WE WILL USE IT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_04;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
 
@@ -169,7 +169,7 @@ namespace XD
                 // IF THIS PROFILE SLOT IS OPEN THEN WE WILL USE IT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_05;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
 
@@ -180,7 +180,7 @@ namespace XD
                 // IF THIS PROFILE SLOT IS OPEN THEN WE WILL USE IT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_06;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
 
@@ -191,7 +191,7 @@ namespace XD
                 // IF THIS PROFILE SLOT IS OPEN THEN WE WILL USE IT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_07;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
 
@@ -202,7 +202,7 @@ namespace XD
                 // IF THIS PROFILE SLOT IS OPEN THEN WE WILL USE IT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_08;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
 
@@ -213,7 +213,7 @@ namespace XD
                 // IF THIS PROFILE SLOT IS OPEN THEN WE WILL USE IT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_09;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
 
@@ -224,7 +224,7 @@ namespace XD
                 // IF THIS PROFILE SLOT IS OPEN THEN WE WILL USE IT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_10;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame(); ;
                 return;
             }
 
@@ -233,6 +233,14 @@ namespace XD
             TitleScreenManager.Instance.DisplayNoFreeCharacterSlotsPopUp();
         }
 
+        private void NewGame()
+        {
+            // Call(t): Charactet Select&Create New Character Stats nd items
+            player.playerNetworkManager.vitality.Value = 15;
+            player.playerNetworkManager.endurance.Value = 12;
+            SaveGame();
+            StartCoroutine(LoadWorldScene());
+        }
         public void LoadGame()
         {
             saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(currentCharacterSlotBeingUsed);
