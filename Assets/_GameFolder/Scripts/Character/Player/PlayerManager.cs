@@ -10,11 +10,14 @@ namespace XD
     {
         [Header("Debug Menu")]
         [SerializeField] private bool respawnCharacter = false;
+        [SerializeField] private bool switchRightWeapon = false;
 
         [HideInInspector] public PlayerAnimatorManager playerAnimatorManager;
         [HideInInspector] public PlayerLocomotionManager playerLocomotionManager;
         [HideInInspector] public PlayerNetworkManager playerNetworkManager;
         [HideInInspector] public PlayerStatsManager playerStatsManager;
+        [HideInInspector] public PlayerInventoryManager playerInventoryManager;
+        [HideInInspector] public PlayerEquipmentManager playerEquipmentManager;
         protected override void Awake()
         {
             base.Awake();
@@ -23,6 +26,8 @@ namespace XD
             playerAnimatorManager = GetComponent<PlayerAnimatorManager>();
             playerNetworkManager = GetComponent<PlayerNetworkManager>();
             playerStatsManager  = GetComponent<PlayerStatsManager>();
+            playerInventoryManager = GetComponent<PlayerInventoryManager>();
+            playerEquipmentManager = GetComponent<PlayerEquipmentManager>();
         }
         protected override void Update()
         {
@@ -67,8 +72,12 @@ namespace XD
                 playerNetworkManager.currentStamina.OnValueChanged += playerStatsManager.ResetStaminaRegeneraationTimer;
 
             }
+            // Stats
+            playerNetworkManager.currentHealth.OnValueChanged += playerNetworkManager.CheckHP;
 
-            playerNetworkManager.currentHealth.OnValueChanged += playerNetworkManager.CheckHP; 
+            // Equipment
+            playerNetworkManager.currentRightHandWeaponID.OnValueChanged += playerNetworkManager.OnCurrentRightHandWeaponIDChange;
+            playerNetworkManager.currentLeftHandWeaponID.OnValueChanged += playerNetworkManager.OnCurrentLeftHandWeaponIDChange;
         }
 
         public override IEnumerator ProcessDeathEvent(bool manuallySelectDeathAnimation = false)
@@ -130,11 +139,17 @@ namespace XD
         // TODO: DEBUG
         private void DebugMenu()
         {
-            if(respawnCharacter)
+            if (respawnCharacter)
             {
                 respawnCharacter = false;
                 ReviveCharacter();
 
+            }
+
+            if (switchRightWeapon)
+            {
+                switchRightWeapon = false;
+                playerEquipmentManager.SwitchRightWeapon();
             }
         }
     }

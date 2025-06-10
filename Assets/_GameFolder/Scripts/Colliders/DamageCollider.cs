@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace XD
@@ -7,6 +8,8 @@ namespace XD
 
     public class DamageCollider : MonoBehaviour
     {
+        protected Collider damageCollider;
+
         [Header("Damage")]
         public float physicalDamage = 0;
         public float magicDamage = 0;
@@ -48,6 +51,17 @@ namespace XD
 
             damageTarget.characterEffectsManager.ProcessInstantEffect(damageEffect);
 
+        }
+
+        public virtual void EnableDamageCollider()
+        {
+            damageCollider.enabled = true;
+        }
+
+        public virtual void DisableDamageCollider()
+        {
+            damageCollider.enabled = false;
+            charactersDamaged.Clear();
         }
 
     }

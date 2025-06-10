@@ -41,7 +41,7 @@ namespace XD
             bool applyRootMotion = true,
             bool canRotate = false,
             bool canMove = false )
-        { 
+        {
             character.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(animationName, 0.2f);
             // Can be used to stop character from attempting new actions 

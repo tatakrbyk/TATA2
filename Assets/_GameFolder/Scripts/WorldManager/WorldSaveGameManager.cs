@@ -43,7 +43,7 @@ namespace XD
 
         private void Awake()
         {
-                if(instance == null)
+            if(instance == null)
             {
                 instance = this;
             }else
