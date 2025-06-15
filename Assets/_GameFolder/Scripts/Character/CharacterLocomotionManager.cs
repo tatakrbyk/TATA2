@@ -40,7 +40,7 @@ namespace XD
             }
             else
             {   // If we are not jumping, and our falling velocity has not been set 
-                if(!character.isJumping && !failingVelocityHasBeenSet)
+                if(!character.characterNetworkManager.isJumping.Value && !failingVelocityHasBeenSet)
                 {
                     failingVelocityHasBeenSet = true;
                     yVelocity.y = fallStartVelocity;
@@ -60,7 +60,7 @@ namespace XD
 
         protected void OnDrawGizmosSelected()
         {
-            Gizmos.DrawSphere(character.transform.position, groundCheckSphereRadius);
+            //Gizmos.DrawSphere(character.transform.position, groundCheckSphereRadius);
         }
     }
 

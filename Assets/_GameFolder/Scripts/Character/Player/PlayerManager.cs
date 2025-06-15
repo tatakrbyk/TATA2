@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Unity.Netcode;
 
 namespace XD
 {
@@ -18,6 +19,7 @@ namespace XD
         [HideInInspector] public PlayerStatsManager playerStatsManager;
         [HideInInspector] public PlayerInventoryManager playerInventoryManager;
         [HideInInspector] public PlayerEquipmentManager playerEquipmentManager;
+        [HideInInspector] public PlayerCombatManager playerCombatManager;
         protected override void Awake()
         {
             base.Awake();
@@ -28,6 +30,7 @@ namespace XD
             playerStatsManager  = GetComponent<PlayerStatsManager>();
             playerInventoryManager = GetComponent<PlayerInventoryManager>();
             playerEquipmentManager = GetComponent<PlayerEquipmentManager>();
+            playerCombatManager = GetComponent<PlayerCombatManager>();
         }
         protected override void Update()
         {
@@ -53,9 +56,9 @@ namespace XD
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
-
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedCallback;
             // If this is the player object owned by this client
-            if(IsOwner)
+            if (IsOwner)
             {
                 PlayerCamera.Instance.player = this;
                 PlayerInputManager.Instance.player = this;
@@ -78,6 +81,30 @@ namespace XD
             // Equipment
             playerNetworkManager.currentRightHandWeaponID.OnValueChanged += playerNetworkManager.OnCurrentRightHandWeaponIDChange;
             playerNetworkManager.currentLeftHandWeaponID.OnValueChanged += playerNetworkManager.OnCurrentLeftHandWeaponIDChange;
+            playerNetworkManager.currentWeaponBeingUsed.OnValueChanged += playerNetworkManager.OnCurrentWeaponBeingUsedIDChange; 
+
+            if (IsOwner && !IsServer)
+            {
+                LoadGameDataFromCurrentCharacterData(ref WorldSaveGameManager.Instance.currentCharacterData);
+            }
+        }
+
+        private void OnClientConnectedCallback(ulong clientId)
+        {
+
+            WorldGameSessionManager.Instance.AddPlayerToActivePlayersList(this);
+
+            // If we are the server, we are the host, so we don't need to Load Players to sync data
+            if (!IsServer && IsOwner)
+            {
+                foreach (var player in WorldGameSessionManager.Instance.activePlayers)
+                {
+                    if (player != this)
+                    {
+                        player.LoadOtherPlayerCharacterWhenJoiningServer();
+                    }
+                }
+            }
         }
 
         public override IEnumerator ProcessDeathEvent(bool manuallySelectDeathAnimation = false)
@@ -134,6 +161,14 @@ namespace XD
             playerNetworkManager.maxStamina.Value = playerStatsManager.CalculateStaminaBasedOnEnduranceLevel(playerNetworkManager.endurance.Value);
             playerNetworkManager.currentStamina.Value = currentCharacterData.currentStamina;
             PlayerUIManager.Instance.playerUIHUDManager.SetMaxStaminaValue(playerNetworkManager.maxStamina.Value);
+        }
+
+        // When a player late joins the server
+        public void LoadOtherPlayerCharacterWhenJoiningServer( )
+        {
+            // Sync Weapons
+            playerNetworkManager.OnCurrentRightHandWeaponIDChange(0, playerNetworkManager.currentRightHandWeaponID.Value);
+            playerNetworkManager.OnCurrentLeftHandWeaponIDChange(0, playerNetworkManager.currentLeftHandWeaponID.Value);
         }
 
         // TODO: DEBUG

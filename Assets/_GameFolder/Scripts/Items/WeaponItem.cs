@@ -31,6 +31,8 @@ namespace XD
         public float poiseDamage = 10;
         // Offensive poise bonus when attacking
 
+        [Header("Attack Modifiers")]
+        public float light_Attack_01_Modifier = 1.1f;
         // Weapon modifiers
         // Light Attack modifier
         // Heavy Attack modifier
@@ -38,11 +40,14 @@ namespace XD
 
         [Header("Stamina Cost")]
         public int baseStaminaCost = 20;
+        public float lightAttackStaminaCostMultiplier = 0.9f;
+
         // Runnincg attack stamina cost modifier
-        // Light attack stamina cost modifier
         // Heavy attack stamina cost modifier
 
         // Item based Actions ( RB, RT, LB, LT )
+        [Header("Weapon Actions")]
+        public WeaponItemAction oh_RB_Action; // One Hand Right Bummper Action
 
         // Ash of war 
 

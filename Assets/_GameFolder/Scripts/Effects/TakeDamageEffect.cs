@@ -43,17 +43,16 @@ namespace XD
         {
             base.ProcessEffect(character);
 
-            if(character.isDead.Value) { return; }
+            if (character.isDead.Value) { return; }
 
             // Check gor invulnerability
 
             CalculateDamage(character);
 
-            // Check which directional damage came from
-            // Play a damage animation 
+            PlayDirectionalBasedDamageAnimation(character);
             // Check for build ups (poison, etc)
-            // Play damage sound fx
-            // Play damage vfx 
+            PlayDamageSFX(character);
+            PlayDamageVFX(character);
 
         }
 
@@ -62,7 +61,7 @@ namespace XD
             if (!character.IsOwner) { return; }
 
 
-            if(characterCausingDamage != null)
+            if (characterCausingDamage != null)
             {
 
             }
@@ -71,7 +70,7 @@ namespace XD
 
             finalDamageDealt = Mathf.RoundToInt(physicalDamage + magicDamage + fireDamage + lightningDamage + holyDamage);
 
-            if(finalDamageDealt <= 0)
+            if (finalDamageDealt <= 0)
             {
                 finalDamageDealt = 1;
             }
@@ -82,5 +81,57 @@ namespace XD
             // calculate poise damage for stunned 
         }
 
+        private void PlayDamageVFX(CharacterManager character)
+        {
+            character.characterEffectsManager.PlayBloodSplatterVFX(contactPoint);
+        }
+
+        private void PlayDamageSFX(CharacterManager character)
+        {
+            AudioClip physicalDamageSFX = WorldSoundFXManager.Instance.ChooseRandomSFXFromArray(WorldSoundFXManager.Instance.physicalDamageSFX);
+            character.characterSoundFXManager.PlaySoundFX(physicalDamageSFX);
+        }
+
+        private void PlayDirectionalBasedDamageAnimation(CharacterManager character)
+        {
+            if(!character.IsOwner) { return; }
+            if(character.isDead.Value) { return; }
+            
+            poiseIsBroken = true;
+            if (angleHitFrom >= 145 && angleHitFrom <= 180)
+            {
+                // Play Front Animation
+                damageAnimation = character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager.forward_Medium_Damage);
+            }
+            else if (angleHitFrom <= -145 && angleHitFrom >= -180)
+            {
+                // Play Front Animation
+                damageAnimation = character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager.forward_Medium_Damage);
+
+            }
+            else if (angleHitFrom >= -45 && angleHitFrom <= 45)
+            {
+                // Play Back Animation
+                damageAnimation = character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager.backward_Medium_Damage);
+
+            }
+            else if (angleHitFrom >= -144 && angleHitFrom <= -45)
+            {
+                // Play Left Animation
+                damageAnimation = character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager.left_Medium_Damage);
+            }
+            else if (angleHitFrom >= 45 && angleHitFrom <= 144)
+            {
+                // Play Right Animation
+                damageAnimation = character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager.right_Medium_Damage);
+            }
+
+            if(poiseIsBroken)
+            {
+                character.characterAnimatorManager.lastDamageAnimationPlayed = damageAnimation;
+                character.characterAnimatorManager.PlayActionAnimation(damageAnimation, true);
+            }
+
+        }
     }
 }

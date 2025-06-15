@@ -41,9 +41,9 @@ namespace XD
             }
         }
 
-        public WeaponItem GetWeaponByID(int id)
+        public WeaponItem GetWeaponByID(int ID)
         {
-            return weapons.FirstOrDefault(weapon => weapon.itemID == id);
+            return weapons.FirstOrDefault(weapon => weapon.itemID == ID);
         }
 
 

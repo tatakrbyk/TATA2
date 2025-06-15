@@ -8,6 +8,9 @@ namespace XD
     {   
         private static WorldCharacterEffectsManager instance; public static WorldCharacterEffectsManager Instance { get { return instance; } }
 
+        [Header("VFX")]
+        public GameObject bloodSplatterVFX;
+
         [Header("Damage")]
         public TakeDamageEffect takeDamageEffect;
 

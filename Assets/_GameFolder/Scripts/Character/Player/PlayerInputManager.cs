@@ -28,6 +28,7 @@ namespace XD
         [SerializeField] bool dodgeInput = false;
         [SerializeField] bool sprintInput = false;
         [SerializeField] bool jumpInput = false;
+        [SerializeField] bool RB_Input = false;
 
         private void Awake()
         {
@@ -47,6 +48,10 @@ namespace XD
             SceneManager.activeSceneChanged += OnSceneChange;
 
             instance.enabled = false ;
+            if (playerControls != null)
+            {
+                playerControls.Disable();
+            }
         }
         private void Update()
         {
@@ -57,10 +62,19 @@ namespace XD
             if (newScene.buildIndex == WorldSaveGameManager.Instance.GetWorldSceneIndex())
             {
                 instance.enabled = true;
+
+                if (playerControls != null)
+                {
+                    playerControls.Enable();
+                }
             }
             else
             {
                 instance.enabled = false;
+                if (playerControls != null)
+                {
+                    playerControls.Disable();
+                }
             }
         }
         private void OnEnable()
@@ -79,6 +93,9 @@ namespace XD
                 // Sprint 
                 playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
                 playerControls.PlayerActions.Sprint.canceled += i => sprintInput = false;
+
+                playerControls.PlayerActions.RB.performed += i => RB_Input = true;
+
             }
 
             playerControls.Enable();
@@ -113,6 +130,7 @@ namespace XD
             HandleDodgeInput();
             HandleSprintInput();
             HandleJumpInput();
+            HandleRBInput();
         }
         #region Movements
         private void HandlePlayerMovementInput()
@@ -187,7 +205,22 @@ namespace XD
                 
             }
         }
+
+        private void HandleRBInput()
+        {
+            if(RB_Input)
+            {
+                RB_Input = false;
+
+                // TODO: If we have a uý window open, simply return without doing anything
+                player.playerNetworkManager.SetCharacterActionHand(true);
+
+                // TODO: If we are two handing the weapon, use the two handed action
+                player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentRightHandWeapon.oh_RB_Action, player.playerInventoryManager.currentRightHandWeapon); 
+            }
+        }
         #endregion
     }
 
 }
+ 

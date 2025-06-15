@@ -113,7 +113,7 @@ namespace XD
 
         private void HandleJumpingMovement()
         {
-            if(player.isJumping)
+            if(player.playerNetworkManager.isJumping.Value)
             {
                 player.characterController.Move(jumpDirection * jumpForwardSpeed * Time.deltaTime);
             }
@@ -215,12 +215,12 @@ namespace XD
         {
             if (player.isPerformingAction) { return; }
             if (player.playerNetworkManager.currentStamina.Value <= 0) { return; }
-            if (player.isJumping) { return; }
+            if (player.playerNetworkManager.isJumping.Value) { return; }
             if (!player.isGrounded) { return; }
 
             // TODO: Two Hand or One Hand Animation
             player.playerAnimatorManager.PlayActionAnimation("Main_Jump_Start_01", false);
-            player.isJumping = true;
+            player.playerNetworkManager.isJumping.Value = true;
             
             player.playerNetworkManager.currentStamina.Value -= jumpStaminaCost;
 

@@ -8,7 +8,7 @@ namespace XD
 
     public class DamageCollider : MonoBehaviour
     {
-        protected Collider damageCollider;
+        [SerializeField] protected Collider damageCollider;
 
         [Header("Damage")]
         public float physicalDamage = 0;
@@ -17,22 +17,25 @@ namespace XD
         public float lightningDamage = 0;
         public float holyDamage = 0;
 
-        private Vector3 contactPoint;
+        protected Vector3 contactPoint;
 
         [Header("Characters Damaged")]
         protected List<CharacterManager> charactersDamaged = new List<CharacterManager>();
 
+        protected virtual void Awake()
+        {
+           
+        }
         // NOTE(T): 
         // Damage Collider layer only trigger Character layer
-        private void OnTriggerEnter(Collider other)
+        protected virtual void OnTriggerEnter(Collider other)
         {
-            CharacterManager damageTarget = other.GetComponent<CharacterManager>();
+            CharacterManager damageTarget = other.GetComponentInParent<CharacterManager>();
+
             if (damageTarget != null)
             {
                 contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
-
                 DamageTarget(damageTarget);
-                
             }
         }
 

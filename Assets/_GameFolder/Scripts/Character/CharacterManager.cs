@@ -17,10 +17,11 @@ namespace XD
         [HideInInspector] public CharacterNetworkManager characterNetworkManager;
         [HideInInspector] public CharacterEffectsManager characterEffectsManager;
         [HideInInspector] public CharacterAnimatorManager characterAnimatorManager;
+        [HideInInspector] public CharacterCombatManager characterCombatManager;
+        [HideInInspector] public CharacterSoundFXManager characterSoundFXManager;
 
         [Header("Flags")]
         public bool isPerformingAction = false;
-        public bool isJumping = false;
         public bool isGrounded = true;
         public bool applyRootMotion = false;
         public bool canRotate = true;
@@ -36,8 +37,14 @@ namespace XD
             characterNetworkManager = GetComponent<CharacterNetworkManager>();
             characterEffectsManager = GetComponent<CharacterEffectsManager>();
             characterAnimatorManager = GetComponent<CharacterAnimatorManager>();
+            characterCombatManager = GetComponent<CharacterCombatManager>();
+            characterSoundFXManager = GetComponent<CharacterSoundFXManager>();
         }
         
+        protected virtual void Start()
+        {
+            IgnoreMyOwnColliders();
+        }
         protected virtual void Update()
         {
             animator.SetBool("IsGrounded", isGrounded);
@@ -99,6 +106,26 @@ namespace XD
         {
 
         }
-       
+        
+        protected virtual void IgnoreMyOwnColliders()
+        {
+            Collider characterControllerCollider = GetComponent<Collider>();
+            Collider[] damageableCharacterColliders = GetComponentsInChildren<Collider>();
+            List<Collider> collidersToIgnore = new List<Collider>();
+
+            foreach (var collider in damageableCharacterColliders)
+            {
+                collidersToIgnore.Add(collider);
+            }
+            collidersToIgnore.Add(characterControllerCollider);
+
+            foreach (var collider in collidersToIgnore)
+            {
+                foreach(var otherCollider in collidersToIgnore)
+                {
+                        Physics.IgnoreCollision(collider, otherCollider, true);
+                }
+            }
+        }
     }
 }

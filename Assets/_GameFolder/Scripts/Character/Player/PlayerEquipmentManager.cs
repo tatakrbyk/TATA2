@@ -86,20 +86,20 @@ namespace XD
                             firstWeaponPosition = i;
                         }
                     }
-                    if (weaponCount <= 1)
-                    {
-                        player.playerInventoryManager.rightHandWeaponIndex = -1;
-                        selectedWeapon = WorldItemDatabase.Instance.unarmedWeapon;
-                        player.playerNetworkManager.currentRightHandWeaponID.Value = selectedWeapon.itemID;
-                    }
-                    else
-                    {
-                        player.playerInventoryManager.rightHandWeaponIndex = firstWeaponPosition;
-                        player.playerNetworkManager.currentRightHandWeaponID.Value = firstWeapon.itemID;
-                    }
-                    return;
-
                 }
+
+                if (weaponCount <= 1)
+                {
+                    player.playerInventoryManager.rightHandWeaponIndex = -1;
+                    selectedWeapon = WorldItemDatabase.Instance.unarmedWeapon;
+                    player.playerNetworkManager.currentRightHandWeaponID.Value = selectedWeapon.itemID;
+                }
+                else
+                {
+                    player.playerInventoryManager.rightHandWeaponIndex = firstWeaponPosition;
+                    player.playerNetworkManager.currentRightHandWeaponID.Value = firstWeapon.itemID;
+                }
+                return;
             }
 
             foreach(WeaponItem weapon in player.playerInventoryManager.weaponsInRightHandSlots)
@@ -152,6 +152,34 @@ namespace XD
                 leftHandSlot.LoadWeapon(leftHandWeaponModel);
                 leftWeaponManager = leftHandWeaponModel.GetComponent<WeaponManager>();
                 leftWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentLeftHandWeapon);
+            }
+        }
+        #endregion
+
+        #region Damage Colliders
+        // Call: Main_Light_Attack_01 Events
+        public void OpenDamageCollider()
+        {
+            if (player.playerNetworkManager.isUsingRightHand.Value)
+            {
+                rightWeaponManager.meleeDamageCollider.EnableDamageCollider();
+            }
+            else if (player.playerNetworkManager.isUsingLeftHand.Value)
+            {
+                leftWeaponManager.meleeDamageCollider.EnableDamageCollider();
+            }
+        }
+        
+        // Call: Main_Light_Attack_01 Events
+        public void CloseDamageCollider()
+        {
+            if (player.playerNetworkManager.isUsingRightHand.Value)
+            {
+                rightWeaponManager.meleeDamageCollider.DisableDamageCollider();
+            }
+            else if (player.playerNetworkManager.isUsingLeftHand.Value)
+            {
+                leftWeaponManager.meleeDamageCollider.DisableDamageCollider();
             }
         }
         #endregion

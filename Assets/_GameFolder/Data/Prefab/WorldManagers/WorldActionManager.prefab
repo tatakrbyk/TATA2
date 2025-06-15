@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8634623660509860212
+--- !u!1 &716633003055661424
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5228723997484883104}
-  - component: {fileID: 533405064222108861}
+  - component: {fileID: 5943904302109973154}
+  - component: {fileID: 8950603721272090526}
   m_Layer: 0
-  m_Name: WorldCharacterEffectsManager
+  m_Name: WorldActionManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5228723997484883104
+--- !u!4 &5943904302109973154
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8634623660509860212}
+  m_GameObject: {fileID: 716633003055661424}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,21 +32,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &533405064222108861
+--- !u!114 &8950603721272090526
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8634623660509860212}
+  m_GameObject: {fileID: 716633003055661424}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1eeaf6148b0dff4eaa9bf1e0b964ff2, type: 3}
+  m_Script: {fileID: 11500000, guid: 3631a09990377d54b9824067bb23bf1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bloodSplatterVFX: {fileID: 3548588485384254792, guid: 2f9e7dc163581394da1e00b561eed65d,
-    type: 3}
-  takeDamageEffect: {fileID: 11400000, guid: 62a813555807a274d9d86a496f6e2f24, type: 2}
-  instantEffects:
-  - {fileID: 11400000, guid: 194b99f51b9e74a488f6a77c63c1e3de, type: 2}
-  - {fileID: 11400000, guid: 62a813555807a274d9d86a496f6e2f24, type: 2}
+  weaponItemActions:
+  - {fileID: 11400000, guid: 350305cd0cfe963428f9973164bdfed6, type: 2}
+  - {fileID: 11400000, guid: 24e4623539aba5d409b4bfab9bc22e37, type: 2}
