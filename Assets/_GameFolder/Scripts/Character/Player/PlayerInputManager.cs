@@ -18,6 +18,13 @@ namespace XD
         public float horizontalInput;
         public float verticalInput;
         public float moveAmount;
+        
+        [Header("Lock On Input")]
+        [SerializeField] bool lockOn_Input = false;
+        [SerializeField] bool lockOn_Left_Input = false;
+        [SerializeField] bool lockOn_Right_Input = false;
+        [SerializeField] float lockOn_Change_Input;
+        private Coroutine lockOnCoroutine;
 
         [Header("Camera Movement Input")]
         [SerializeField] Vector2 cameraInput;
@@ -94,7 +101,14 @@ namespace XD
                 playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
                 playerControls.PlayerActions.Sprint.canceled += i => sprintInput = false;
 
+                // Mouse Left Click (Attack)
                 playerControls.PlayerActions.RB.performed += i => RB_Input = true;
+
+                // Lock On
+                playerControls.PlayerActions.LockOn.performed += i => lockOn_Input = true;
+                playerControls.PlayerActions.SeekLeftLockOnTarget.performed += i => lockOn_Left_Input = true;
+                playerControls.PlayerActions.SeekRightLockOnTarget.performed += i => lockOn_Right_Input = true;
+
 
             }
 
@@ -125,6 +139,8 @@ namespace XD
 
         private void HandleAllInputs()
         {
+            HandleLockOnInput();
+            HandleLockOnSwitchTargetInput(); 
             HandlePlayerMovementInput();
             HandleCameraMovementInput();
             HandleDodgeInput();
@@ -155,8 +171,15 @@ namespace XD
             // Why do i pass 0 on the horizontal? Because we only want non-strafing movement 
             // We Use the horizontal when we are strafing or locked on
 
-            // Npt locked on
-            player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);
+            // Not locked on
+            if(!player.playerNetworkManager.isLockedOn.Value || player.playerNetworkManager.isSprinting.Value)
+            {
+                player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);       
+            }
+            else
+            { 
+                player.playerAnimatorManager.UpdateAnimatorMovementParameters(horizontalInput, verticalInput, player.playerNetworkManager.isSprinting.Value);
+            }
         }
 
         private void HandleCameraMovementInput()
@@ -200,10 +223,6 @@ namespace XD
 
                 player.playerLocomotionManager.AttemptToPerformJump();   
             }
-            else
-            {
-                
-            }
         }
 
         private void HandleRBInput()
@@ -218,6 +237,79 @@ namespace XD
                 // TODO: If we are two handing the weapon, use the two handed action
                 player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentRightHandWeapon.oh_RB_Action, player.playerInventoryManager.currentRightHandWeapon); 
             }
+        }
+
+        private void HandleLockOnInput()
+        {
+            if(player.playerNetworkManager.isLockedOn.Value)
+            {
+                Debug.Log("lockOn_Input: " + lockOn_Input);
+                if (player.playerCombatManager.currentTarget == null) {  return; }
+                
+                if(player.playerCombatManager.currentTarget.isDead.Value)
+                {
+                    player.playerNetworkManager.isLockedOn.Value = false;
+                }
+
+                // Attempt to find new target
+                if (lockOnCoroutine != null)
+                {
+                    StopCoroutine(lockOnCoroutine);
+                }
+                lockOnCoroutine = StartCoroutine(PlayerCamera.Instance.WaitThenFindNewTarget());
+            }
+
+            if(lockOn_Input && player.playerNetworkManager.isLockedOn.Value)
+            {
+                lockOn_Input = false;
+                PlayerCamera.Instance.ClearLockOnTargets();
+                player.playerNetworkManager.isLockedOn.Value = false;
+                return;
+            }
+
+            if(lockOn_Input && !player.playerNetworkManager.isLockedOn.Value)
+            {
+                lockOn_Input = false;
+
+                // TODO(): IF we are aiming used ranged  weapons return ( don't lock on)
+
+                PlayerCamera.Instance.HandleLocatingLockOnTargets();
+                if(PlayerCamera.Instance.nearestLockOnTarget != null)
+                {
+                    player.playerCombatManager.SetTarget(PlayerCamera.Instance.nearestLockOnTarget);
+                    player.playerNetworkManager.isLockedOn.Value = true;
+                }
+            }
+        }
+
+        private void HandleLockOnSwitchTargetInput()
+        {
+            if (lockOn_Left_Input)
+            {
+                lockOn_Left_Input = false;
+
+                if (player.playerNetworkManager.isLockedOn.Value)
+                {
+                    PlayerCamera.Instance.HandleLocatingLockOnTargets();
+                    if(PlayerCamera.Instance.leftLockOnTarget != null)
+                    {
+                        player.playerCombatManager.SetTarget(PlayerCamera.Instance.leftLockOnTarget);
+                    }
+                }
+            }
+            if (lockOn_Right_Input)
+            {
+                lockOn_Right_Input = false;
+                if (player.playerNetworkManager.isLockedOn.Value)
+                {
+                    PlayerCamera.Instance.HandleLocatingLockOnTargets();
+                    if (PlayerCamera.Instance.rightLockOnTarget != null)
+                    {
+                        player.playerCombatManager.SetTarget(PlayerCamera.Instance.rightLockOnTarget);
+                    }
+                }
+            }
+     
         }
         #endregion
     }

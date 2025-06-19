@@ -48,6 +48,16 @@ namespace XD
             Debug.Log($"Stamina Deduted: {staminaDeduted}");
             player.playerNetworkManager.currentStamina.Value -= Mathf.RoundToInt(staminaDeduted); 
         }
+
+        public override void SetTarget(CharacterManager newTarget)
+        {
+            base.SetTarget(newTarget);
+
+            if(player.IsOwner)
+            {
+                PlayerCamera.Instance.SetLockCameraHeight();
+            }
+        }
     }
 
 }

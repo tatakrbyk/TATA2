@@ -253,6 +253,33 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LockOn"",
+                    ""type"": ""Button"",
+                    ""id"": ""229b1183-8503-4f1d-9e2b-9c1001a71a54"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SeekLeftLockOnTarget"",
+                    ""type"": ""Button"",
+                    ""id"": ""8927ae77-b280-46a1-94ed-1f8d8f2f8c69"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SeekRightLockOnTarget"",
+                    ""type"": ""Button"",
+                    ""id"": ""d6f4357b-a071-4d0a-9698-57202bf8685f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -385,6 +412,72 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""15815680-7150-4eed-a45b-50bda09553d0"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LockOn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""66c51a64-ca7b-4234-a3a6-06524b8b00de"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LockOn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""263925d0-fd54-4cef-805c-6a8044489a52"",
+                    ""path"": ""<Gamepad>/rightStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SeekLeftLockOnTarget"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3969d8d0-5a6e-46d8-8949-d35674e82cff"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SeekLeftLockOnTarget"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ecf91765-c4e9-4c57-94a2-5784e940eb95"",
+                    ""path"": ""<Gamepad>/rightStick/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SeekRightLockOnTarget"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b0269a52-137b-4176-8879-e34efe370bd3"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SeekRightLockOnTarget"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -610,6 +703,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_PlayerActions_Jump = m_PlayerActions.FindAction("Jump", throwIfNotFound: true);
         m_PlayerActions_RB = m_PlayerActions.FindAction("RB", throwIfNotFound: true);
         m_PlayerActions_Sprint = m_PlayerActions.FindAction("Sprint", throwIfNotFound: true);
+        m_PlayerActions_LockOn = m_PlayerActions.FindAction("LockOn", throwIfNotFound: true);
+        m_PlayerActions_SeekLeftLockOnTarget = m_PlayerActions.FindAction("SeekLeftLockOnTarget", throwIfNotFound: true);
+        m_PlayerActions_SeekRightLockOnTarget = m_PlayerActions.FindAction("SeekRightLockOnTarget", throwIfNotFound: true);
         // PlayerCamera
         m_PlayerCamera = asset.FindActionMap("PlayerCamera", throwIfNotFound: true);
         m_PlayerCamera_Movement = m_PlayerCamera.FindAction("Movement", throwIfNotFound: true);
@@ -800,6 +896,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerActions_Jump;
     private readonly InputAction m_PlayerActions_RB;
     private readonly InputAction m_PlayerActions_Sprint;
+    private readonly InputAction m_PlayerActions_LockOn;
+    private readonly InputAction m_PlayerActions_SeekLeftLockOnTarget;
+    private readonly InputAction m_PlayerActions_SeekRightLockOnTarget;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player Actions".
     /// </summary>
@@ -827,6 +926,18 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "PlayerActions/Sprint".
         /// </summary>
         public InputAction @Sprint => m_Wrapper.m_PlayerActions_Sprint;
+        /// <summary>
+        /// Provides access to the underlying input action "PlayerActions/LockOn".
+        /// </summary>
+        public InputAction @LockOn => m_Wrapper.m_PlayerActions_LockOn;
+        /// <summary>
+        /// Provides access to the underlying input action "PlayerActions/SeekLeftLockOnTarget".
+        /// </summary>
+        public InputAction @SeekLeftLockOnTarget => m_Wrapper.m_PlayerActions_SeekLeftLockOnTarget;
+        /// <summary>
+        /// Provides access to the underlying input action "PlayerActions/SeekRightLockOnTarget".
+        /// </summary>
+        public InputAction @SeekRightLockOnTarget => m_Wrapper.m_PlayerActions_SeekRightLockOnTarget;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -865,6 +976,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Sprint.started += instance.OnSprint;
             @Sprint.performed += instance.OnSprint;
             @Sprint.canceled += instance.OnSprint;
+            @LockOn.started += instance.OnLockOn;
+            @LockOn.performed += instance.OnLockOn;
+            @LockOn.canceled += instance.OnLockOn;
+            @SeekLeftLockOnTarget.started += instance.OnSeekLeftLockOnTarget;
+            @SeekLeftLockOnTarget.performed += instance.OnSeekLeftLockOnTarget;
+            @SeekLeftLockOnTarget.canceled += instance.OnSeekLeftLockOnTarget;
+            @SeekRightLockOnTarget.started += instance.OnSeekRightLockOnTarget;
+            @SeekRightLockOnTarget.performed += instance.OnSeekRightLockOnTarget;
+            @SeekRightLockOnTarget.canceled += instance.OnSeekRightLockOnTarget;
         }
 
         /// <summary>
@@ -888,6 +1008,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Sprint.started -= instance.OnSprint;
             @Sprint.performed -= instance.OnSprint;
             @Sprint.canceled -= instance.OnSprint;
+            @LockOn.started -= instance.OnLockOn;
+            @LockOn.performed -= instance.OnLockOn;
+            @LockOn.canceled -= instance.OnLockOn;
+            @SeekLeftLockOnTarget.started -= instance.OnSeekLeftLockOnTarget;
+            @SeekLeftLockOnTarget.performed -= instance.OnSeekLeftLockOnTarget;
+            @SeekLeftLockOnTarget.canceled -= instance.OnSeekLeftLockOnTarget;
+            @SeekRightLockOnTarget.started -= instance.OnSeekRightLockOnTarget;
+            @SeekRightLockOnTarget.performed -= instance.OnSeekRightLockOnTarget;
+            @SeekRightLockOnTarget.canceled -= instance.OnSeekRightLockOnTarget;
         }
 
         /// <summary>
@@ -1174,6 +1303,27 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSprint(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "LockOn" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLockOn(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "SeekLeftLockOnTarget" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSeekLeftLockOnTarget(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "SeekRightLockOnTarget" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSeekRightLockOnTarget(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "PlayerCamera" which allows adding and removing callbacks.

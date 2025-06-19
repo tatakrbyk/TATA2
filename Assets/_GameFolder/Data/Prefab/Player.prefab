@@ -66,6 +66,37 @@ Transform:
   - {fileID: 3786635222834689457}
   m_Father: {fileID: 5478392281250948057}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &443985877238849096
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2710558384564602951}
+  m_Layer: 7
+  m_Name: LockOnTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2710558384564602951
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443985877238849096}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.147, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8029499749229311143}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &470137897980649502
 GameObject:
   m_ObjectHideFlags: 0
@@ -350,6 +381,7 @@ Transform:
   - {fileID: 5886404986277582440}
   - {fileID: 8428901973168656183}
   - {fileID: 4075479644572414907}
+  - {fileID: 5489899954655628028}
   m_Father: {fileID: 8029499749229311143}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &6033771619420729501
@@ -406,6 +438,37 @@ Transform:
   m_Children:
   - {fileID: 2119722318378166523}
   m_Father: {fileID: 6395845154780884590}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2375644483405557388
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7026758660776072363}
+  m_Layer: 7
+  m_Name: LineCastOption1(TheEyes)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7026758660776072363
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2375644483405557388}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.079, z: 0.153}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2212020418514131871}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2508366307164202087
 GameObject:
@@ -801,6 +864,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7935751516915478810}
+  - {fileID: 2710558384564602951}
   - {fileID: 521114496127358225}
   m_Father: {fileID: 7056288038459986345}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1996,6 +2060,7 @@ Transform:
   - {fileID: 9142215559955410490}
   - {fileID: 1266873408640891793}
   - {fileID: 7471647343482573304}
+  - {fileID: 7026758660776072363}
   m_Father: {fileID: 4075479644572414907}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &5669127187944917394
@@ -2085,6 +2150,37 @@ Transform:
   - {fileID: 2171621775510509131}
   m_Father: {fileID: 5012355054379938644}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7887456300095934922
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5489899954655628028}
+  m_Layer: 7
+  m_Name: LineCastOption2(LockOnTransform)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5489899954655628028
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7887456300095934922}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: -0.07206322, w: 0.9974001}
+  m_LocalPosition: {x: -0.178, y: 0.166, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7935751516915478810}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -8.265}
 --- !u!1 &7916814843093093346
 GameObject:
   m_ObjectHideFlags: 0
@@ -2486,6 +2582,7 @@ MonoBehaviour:
   characterEffectsManager: {fileID: 0}
   characterAnimatorManager: {fileID: 0}
   characterCombatManager: {fileID: 0}
+  characterSoundFXManager: {fileID: 0}
   isPerformingAction: 0
   isGrounded: 1
   applyRootMotion: 0
@@ -2524,6 +2621,8 @@ MonoBehaviour:
   verticalMovement:
     m_InternalValue: 0
   moveAmount:
+    m_InternalValue: 0
+  isLockedOn:
     m_InternalValue: 0
   isSprinting:
     m_InternalValue: 0
@@ -2610,11 +2709,11 @@ MonoBehaviour:
         byte0059: 0
         byte0060: 0
         byte0061: 0
+  currentWeaponBeingUsed:
+    m_InternalValue: 0
   currentRightHandWeaponID:
     m_InternalValue: 0
   currentLeftHandWeaponID:
-    m_InternalValue: 0
-  currentWeaponBeingUsed:
     m_InternalValue: 0
   isUsingRightHand:
     m_InternalValue: 0
@@ -2708,6 +2807,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5de4cce73c117e64c9d22a9b0cfc6f19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  applyRootMotion: 0
+  lastDamageAnimationPlayed: 
+  hit_React_Forward_Medium_01: hit_React_Forward_Medium_01
+  hit_React_Forward_Medium_02: hit_React_Forward_Medium_02
+  hit_React_Backward_Medium_01: hit_React_Backward_Medium_01
+  hit_React_Backward_Medium_02: hit_React_Backward_Medium_02
+  hit_React_Left_Medium_01: hit_React_Left_Medium_01
+  hit_React_Left_Medium_02: hit_React_Left_Medium_02
+  hit_React_Right_Medium_01: hit_React_Right_Medium_01
+  hit_React_Right_Medium_02: hit_React_Right_Medium_02
+  forward_Medium_Damage: []
+  backward_Medium_Damage: []
+  left_Medium_Damage: []
+  right_Medium_Damage: []
 --- !u!114 &7178962090376573941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2720,6 +2833,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26ec70e16ff02dd46bae345d1aa666ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentTarget: {fileID: 0}
+  lockOnTransform: {fileID: 2710558384564602951}
   currentAttackType: 0
   currentWeaponBeingUsed: {fileID: 0}
 --- !u!114 &8835070833307113263
@@ -2746,6 +2861,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0840fef1ad1b5e94bad0bb4a4c8b5983, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bloodSplatterVFX: {fileID: 0}
   effectToTest: {fileID: 11400000, guid: 194b99f51b9e74a488f6a77c63c1e3de, type: 2}
   processEffect: 0
 --- !u!1 &8527531132337187561

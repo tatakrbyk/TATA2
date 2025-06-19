@@ -78,6 +78,9 @@ namespace XD
             // Stats
             playerNetworkManager.currentHealth.OnValueChanged += playerNetworkManager.CheckHP;
 
+            // Lock On
+            playerNetworkManager.isLockedOn.OnValueChanged += playerNetworkManager.OnIsLockedOnChanged;
+            playerNetworkManager.currentTargetNetworkObjectID.OnValueChanged += playerNetworkManager.OnLockOnTargetIDChange;
             // Equipment
             playerNetworkManager.currentRightHandWeaponID.OnValueChanged += playerNetworkManager.OnCurrentRightHandWeaponIDChange;
             playerNetworkManager.currentLeftHandWeaponID.OnValueChanged += playerNetworkManager.OnCurrentLeftHandWeaponIDChange;
@@ -122,6 +125,7 @@ namespace XD
 
             if(IsOwner)
             {
+                isDead.Value = false;
                 playerNetworkManager.currentHealth.Value = playerNetworkManager.maxHealth.Value;
                 playerNetworkManager.currentStamina.Value = playerNetworkManager.maxStamina.Value;
 
@@ -169,9 +173,15 @@ namespace XD
             // Sync Weapons
             playerNetworkManager.OnCurrentRightHandWeaponIDChange(0, playerNetworkManager.currentRightHandWeaponID.Value);
             playerNetworkManager.OnCurrentLeftHandWeaponIDChange(0, playerNetworkManager.currentLeftHandWeaponID.Value);
+
+            // Lock On
+            if(playerNetworkManager.isLockedOn.Value)
+            {
+                playerNetworkManager.OnLockOnTargetIDChange(0, playerNetworkManager.currentTargetNetworkObjectID.Value);
+            }
         }
 
-        // TODO: DEBUG
+        // TODO: DEBUG 
         private void DebugMenu()
         {
             if (respawnCharacter)
