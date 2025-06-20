@@ -18,7 +18,7 @@ namespace XD
         private float lockOnRadius = 20;
         private float minimumViewableAngle = -50;
         private float maximumViewableAngle = 50;
-        private float lockOnTargetFollowSpeed = 0.2f;
+        private float lockOnTargetFollowSpeed = 1;
         private float setCameraHeightSpeed = 0.05f;
         private float unlockedCameraHeight = 1.65f;
         private float lockedCameraHeight = 2.0f;

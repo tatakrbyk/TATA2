@@ -33,6 +33,8 @@ namespace XD
 
         [Header("Attack Modifiers")]
         public float light_Attack_01_Modifier = 1.1f;
+        public float heavy_Attack_01_Modifier = 1.4f;
+        public float charge_Attack_01_Modifier = 2.0f;
         // Weapon modifiers
         // Light Attack modifier
         // Heavy Attack modifier
@@ -48,6 +50,7 @@ namespace XD
         // Item based Actions ( RB, RT, LB, LT )
         [Header("Weapon Actions")]
         public WeaponItemAction oh_RB_Action; // One Hand Right Bummper Action
+        public WeaponItemAction oh_RT_Action; // One Hand Right Trigger Action
 
         // Ash of war 
 

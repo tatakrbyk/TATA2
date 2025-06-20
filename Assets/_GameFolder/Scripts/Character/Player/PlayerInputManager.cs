@@ -35,8 +35,13 @@ namespace XD
         [SerializeField] bool dodgeInput = false;
         [SerializeField] bool sprintInput = false;
         [SerializeField] bool jumpInput = false;
+
+        [Header("Bumper INPUTS")]
         [SerializeField] bool RB_Input = false;
 
+        [Header("Trigger INPUTS")]
+        [SerializeField] bool RT_Input = false; 
+        [SerializeField] bool Hold_RT_Input = false;
         private void Awake()
         {
             if (instance == null)
@@ -103,6 +108,11 @@ namespace XD
 
                 // Mouse Left Click (Attack)
                 playerControls.PlayerActions.RB.performed += i => RB_Input = true;
+               
+                playerControls.PlayerActions.RT.performed += i => RT_Input = true;
+                playerControls.PlayerActions.HoldRT.performed += i => Hold_RT_Input = true;
+                playerControls.PlayerActions.HoldRT.canceled += i => Hold_RT_Input = false;
+
 
                 // Lock On
                 playerControls.PlayerActions.LockOn.performed += i => lockOn_Input = true;
@@ -147,6 +157,8 @@ namespace XD
             HandleSprintInput();
             HandleJumpInput();
             HandleRBInput();
+            HandleRTInput();
+            HandleChargeRTInput();
         }
         #region Movements
         private void HandlePlayerMovementInput()
@@ -239,6 +251,31 @@ namespace XD
             }
         }
 
+        private void HandleRTInput()
+        {
+            if(RT_Input)
+            {
+                RT_Input = false;
+
+                // TODO: If we have a uý window open, simply return without doing anything
+                player.playerNetworkManager.SetCharacterActionHand(true);
+
+                // TODO: If we are two handing the weapon, use the two handed action
+                player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentRightHandWeapon.oh_RT_Action, player.playerInventoryManager.currentRightHandWeapon);
+            }
+        }
+
+        private void HandleChargeRTInput()
+        {
+            // Check for a charge
+            if(player.isPerformingAction)
+            {
+                if(player.playerNetworkManager.isUsingRightHand.Value)
+                {
+                    player.playerNetworkManager.isChargingAttack.Value = Hold_RT_Input;
+                }
+            }
+        }
         private void HandleLockOnInput()
         {
             if(player.playerNetworkManager.isLockedOn.Value)

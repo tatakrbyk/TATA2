@@ -29,6 +29,9 @@ MonoBehaviour:
   lightningDamage: 0
   poiseDamage: 12
   light_Attack_01_Modifier: 1.1
+  heavy_Attack_01_Modifier: 1.4
+  charge_Attack_01_Modifier: 2
   baseStaminaCost: 20
   lightAttackStaminaCostMultiplier: 0.9
   oh_RB_Action: {fileID: 11400000, guid: 24e4623539aba5d409b4bfab9bc22e37, type: 2}
+  oh_RT_Action: {fileID: 11400000, guid: e3c8087f2211d264195e565abd112532, type: 2}
