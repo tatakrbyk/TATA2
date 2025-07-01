@@ -21,12 +21,10 @@ namespace XD
         [HideInInspector] public CharacterSoundFXManager characterSoundFXManager;
         [HideInInspector] public CharacterLocomotionManager characterLocomotionManager;
 
+        [Header("Character Group")]
+        public CharacterGroup characterGroup;
         [Header("Flags")]
         public bool isPerformingAction = false;
-        public bool isGrounded = true;
-        public bool applyRootMotion = false;
-        public bool canRotate = true;
-        public bool canMove = true;
 
 
         protected virtual void Awake()
@@ -49,7 +47,7 @@ namespace XD
         }
         protected virtual void Update()
         {
-            animator.SetBool("IsGrounded", isGrounded);
+            animator.SetBool("IsGrounded", characterLocomotionManager.isGrounded);
             // If this character is being controlled from our side, then assign its network position to the position of our transform
             if(IsOwner)
             {
@@ -73,11 +71,29 @@ namespace XD
             }
         }
 
+        protected virtual void FixedUpdate()
+        {
+
+        }
         protected virtual void LateUpdate()
         {
             
         }
 
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+
+            characterNetworkManager.isMoving.OnValueChanged += characterNetworkManager.OnIsMovingChanged;   
+        }
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+
+            animator.SetBool("isMoving", characterNetworkManager.isMoving.Value);
+            characterNetworkManager.isMoving.OnValueChanged -= characterNetworkManager.OnIsMovingChanged;
+
+        }
         public virtual IEnumerator ProcessDeathEvent(bool manuallySelectDeathAnimation = false)
         {
             if(IsOwner)

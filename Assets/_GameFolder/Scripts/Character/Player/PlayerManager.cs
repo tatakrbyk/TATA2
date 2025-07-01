@@ -9,9 +9,6 @@ namespace XD
 {
     public class PlayerManager : CharacterManager
     {
-        [Header("Debug Menu")]
-        [SerializeField] private bool respawnCharacter = false;
-        [SerializeField] private bool switchRightWeapon = false;
 
         [HideInInspector] public PlayerAnimatorManager playerAnimatorManager;
         [HideInInspector] public PlayerLocomotionManager playerLocomotionManager;
@@ -42,7 +39,7 @@ namespace XD
             playerLocomotionManager.HandleAllMovement();
             playerStatsManager.RegenerateStamina();
 
-            DebugMenu();
+            
         }
 
         protected override void LateUpdate()
@@ -219,22 +216,7 @@ namespace XD
             }
         }
 
-        // TODO: DEBUG 
-        private void DebugMenu()
-        {
-            if (respawnCharacter)
-            {
-                respawnCharacter = false;
-                ReviveCharacter();
-
-            }
-
-            if (switchRightWeapon)
-            {
-                switchRightWeapon = false;
-                playerEquipmentManager.SwitchRightWeapon();
-            }
-        }
+  
     }
 }
   

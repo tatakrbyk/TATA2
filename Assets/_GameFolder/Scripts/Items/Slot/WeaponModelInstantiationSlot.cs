@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+
+// NOTE(Taha): Using HandR and HandL
 namespace XD
 {
     public class WeaponModelInstantiationSlot : MonoBehaviour

@@ -196,6 +196,24 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "SwitchRightWeapon",
+                    "type": "Button",
+                    "id": "fb5cf521-461d-450f-99e6-dbdd87a85780",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SwitchLeftWeapon",
+                    "type": "Button",
+                    "id": "0bc5e6d6-7cb4-420d-8f9a-e324f4e1b191",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "SeekLeftLockOnTarget",
                     "type": "Button",
                     "id": "8927ae77-b280-46a1-94ed-1f8d8f2f8c69",
@@ -311,6 +329,72 @@
                     "processors": "",
                     "groups": "",
                     "action": "RB",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c5edcad2-d0d2-47d2-908e-57f57664e20b",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchRightWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0938b229-ffd9-4e87-82d4-68959dabc1e1",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchRightWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "78e2e7b5-bdc2-409e-83b4-2adb8c7552e3",
+                    "path": "<Joystick>/stick/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchRightWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aa379971-ce30-4070-a628-40df885ab98a",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchLeftWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d3654ed5-633a-47cc-8a7e-badebf48aa3d",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchLeftWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0660ffbc-a352-418d-99a3-63c94d629cd0",
+                    "path": "<Joystick>/stick/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchLeftWeapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

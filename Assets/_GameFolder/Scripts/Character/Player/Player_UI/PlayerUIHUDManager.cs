@@ -1,15 +1,17 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace XD
 {
     public class PlayerUIHUDManager : MonoBehaviour
     {
+        [Header("Stats Bars")]
         [SerializeField] UI_StatBar healthBar;
         [SerializeField] UI_StatBar staminaBar;
 
+        [Header("Quick Slots")]
+        [SerializeField] Image leftWeaponQuickSlotIcon;
+        [SerializeField] Image rightWeaponQuickSlotIcon;
         public void RefreshHUD()
         {
             healthBar.gameObject.SetActive(false);
@@ -36,6 +38,56 @@ namespace XD
         {
             staminaBar.SetMaxStat(maxValue);
         }
+
+        public void SetLeftWeaponQuickSlotIcon(int WeaponID)
+        {
+            WeaponItem weapon = WorldItemDatabase.Instance.GetWeaponByID(WeaponID);
+
+            if (weapon == null)
+            {
+                Debug.LogError("Weapon with ID " + WeaponID + " not found in the database.");
+                leftWeaponQuickSlotIcon.enabled = false;
+                leftWeaponQuickSlotIcon.sprite = null;
+                return;
+            }
+            if (weapon.itemIcon == null)
+            {
+                Debug.LogError("Weapon with ID " + WeaponID + " does not have an icon.");
+                leftWeaponQuickSlotIcon.enabled = false;
+                leftWeaponQuickSlotIcon.sprite = null;
+                return;
+            }
+            leftWeaponQuickSlotIcon.sprite = weapon.itemIcon;
+            leftWeaponQuickSlotIcon.enabled = true;
+        }
+        
+            
+        
+
+        public void SetRightWeaponQuickSlotIcon(int WeaponID)
+        {
+            WeaponItem weapon = WorldItemDatabase.Instance.GetWeaponByID(WeaponID);
+
+            if(weapon == null)
+            {
+                Debug.LogError("Weapon with ID " + WeaponID + " not found in the database.");
+                rightWeaponQuickSlotIcon.enabled = false;
+                rightWeaponQuickSlotIcon.sprite = null;
+                return;
+            }
+            if (weapon.itemIcon == null)
+            {
+                Debug.LogError("Weapon with ID " + WeaponID + " does not have an icon.");
+                rightWeaponQuickSlotIcon.enabled = false;
+                rightWeaponQuickSlotIcon.sprite = null;
+                return;
+            }
+
+            rightWeaponQuickSlotIcon.sprite = weapon.itemIcon;
+            rightWeaponQuickSlotIcon.enabled = true;
+
+        }
+
 
     }
 

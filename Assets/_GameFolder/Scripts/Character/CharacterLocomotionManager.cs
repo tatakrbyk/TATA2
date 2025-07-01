@@ -20,7 +20,11 @@ namespace XD
         protected float inAirTimer = 0;
 
         [Header("Flags")]
-        public bool isRolling = false; 
+        public bool isRolling = false;
+        public bool canRotate = true;
+        public bool canMove = true;
+        public bool isGrounded = true;
+
 
         protected virtual void Awake()
         {
@@ -31,7 +35,7 @@ namespace XD
         {
             HandleGroundCheck();
 
-            if(character.isGrounded)
+            if(character.characterLocomotionManager.isGrounded)
             {
                  // If we are not attempting to jump or move upward
                 if(yVelocity.y < 0)
@@ -58,12 +62,23 @@ namespace XD
 
         protected void HandleGroundCheck()
         {
-            character.isGrounded = Physics.CheckSphere(character.transform.position, groundCheckSphereRadius, groundLayer);
+            character.characterLocomotionManager.isGrounded = Physics.CheckSphere(character.transform.position, groundCheckSphereRadius, groundLayer);
         }
 
         protected void OnDrawGizmosSelected()
         {
             //Gizmos.DrawSphere(character.transform.position, groundCheckSphereRadius);
+        }
+        // Call: ZombieAttack 01/02
+        public void EnableCanRotate()
+        {
+            canRotate = true;
+        }
+
+        // Call: ZombieAttack 01/02
+        public void DisableCanRotate()
+        {
+            canRotate = false;
         }
     }
 

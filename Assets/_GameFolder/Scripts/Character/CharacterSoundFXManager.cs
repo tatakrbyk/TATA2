@@ -8,6 +8,12 @@ namespace XD
     {
         
         private AudioSource audioSource;
+
+        [Header("Damage Grunts")]
+        [SerializeField] protected AudioClip[] damageGrunts;
+
+        [Header("Attack Grunts")]
+        [SerializeField] protected AudioClip[] attackGrunts;
         protected virtual void Awake()
         {
             audioSource = GetComponent<AudioSource>();
@@ -28,6 +34,17 @@ namespace XD
         public void PlayRollSoundFX()
         {
             audioSource.PlayOneShot(WorldSoundFXManager.Instance.rollSFX);
+        }
+
+        public virtual void PlayDamageGrunt()
+        {
+            PlaySoundFX(WorldSoundFXManager.Instance.ChooseRandomSFXFromArray(damageGrunts));
+        }
+
+        public virtual void PlayAttackGrunt()
+        {
+            PlaySoundFX(WorldSoundFXManager.Instance.ChooseRandomSFXFromArray(attackGrunts));
+
         }
     }
 

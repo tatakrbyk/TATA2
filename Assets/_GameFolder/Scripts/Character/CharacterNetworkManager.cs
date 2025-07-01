@@ -20,6 +20,7 @@ namespace SG
 
 
         [Header("Animator")]
+        public NetworkVariable<bool> isMoving = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<float> horizontalMovement = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<float> verticalMovement = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<float> moveAmount = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -82,6 +83,12 @@ namespace SG
             character.animator.SetBool("IsChargingAttack", isChargingAttack.Value);
 
         }
+
+        public void OnIsMovingChanged(bool oldStatus, bool newStatus)
+        {
+            character.animator.SetBool("IsMoving", isMoving.Value);
+        }
+
         #region Animation Action
         [ServerRpc]
         public void NotifyTheServerOfActionAnimationServerRpc(ulong clientID, string animationID, bool applyRootMotion)
@@ -105,7 +112,7 @@ namespace SG
 
         private void PerformActionAnimationFromServer(string animationID, bool applyRootMotion)
         {
-            character.applyRootMotion = applyRootMotion;
+            character.characterAnimatorManager.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(animationID, 0.2f);
         }
 #endregion
@@ -132,7 +139,7 @@ namespace SG
 
         private void PerformAttackActionAnimationFromServer(string animationID, bool applyRootMotion)
         {
-            character.applyRootMotion = applyRootMotion;
+            character.characterAnimatorManager.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(animationID, 0.2f);
         }
         #endregion

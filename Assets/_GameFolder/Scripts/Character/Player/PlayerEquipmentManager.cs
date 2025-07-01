@@ -61,7 +61,7 @@ namespace XD
         {
             if(!player.IsOwner) { return; }
 
-            player.playerAnimatorManager.PlayActionAnimation("Swap_Right_Weapon_01", false, true, true, true);
+            player.playerAnimatorManager.PlayActionAnimation("Swap_Right_Weapon_01", false, false, true, true);
 
             WeaponItem selectedWeapon = null;
 
@@ -140,8 +140,68 @@ namespace XD
         {
             if (!player.IsOwner) { return; }
             
-            player.playerAnimatorManager.PlayActionAnimation("Swap_Left_Weapon_01", false);
 
+
+            player.playerAnimatorManager.PlayActionAnimation("Swap_Left_Weapon_01", false, false, true, true);
+
+            WeaponItem selectedWeapon = null;
+
+            player.playerInventoryManager.leftHandWeaponIndex += 1;
+
+            if (player.playerInventoryManager.leftHandWeaponIndex < 0 || player.playerInventoryManager.leftHandWeaponIndex > 2)
+            {
+                player.playerInventoryManager.leftHandWeaponIndex = 0;
+
+                // Check if holding more than one weapon
+                float weaponCount = 0;
+                WeaponItem firstWeapon = null;
+                int firstWeaponPosition = 0;
+                for (int i = 0; i < player.playerInventoryManager.weaponsInLeftHandSlots.Length; i++)
+                {
+                    if (player.playerInventoryManager.weaponsInLeftHandSlots[i].itemID != WorldItemDatabase.Instance.unarmedWeapon.itemID)
+                    {
+                        weaponCount += 1;
+                        if (firstWeapon == null)
+                        {
+                            firstWeapon = player.playerInventoryManager.weaponsInLeftHandSlots[i];
+                            firstWeaponPosition = i;
+                        }
+                    }
+                }
+                Debug.Log("XD 7");
+
+                if (weaponCount <= 1)
+                {
+                    player.playerInventoryManager.leftHandWeaponIndex = -1;
+                    selectedWeapon = WorldItemDatabase.Instance.unarmedWeapon;
+                    player.playerNetworkManager.currentLeftHandWeaponID.Value = selectedWeapon.itemID;
+                }
+                else
+                {
+                    player.playerInventoryManager.leftHandWeaponIndex = firstWeaponPosition;
+                    player.playerNetworkManager.currentLeftHandWeaponID.Value = firstWeapon.itemID;
+                }
+                return;
+            }
+            Debug.Log("XD 5");
+
+            foreach (WeaponItem weapon in player.playerInventoryManager.weaponsInLeftHandSlots)
+            {
+                if (player.playerInventoryManager.weaponsInLeftHandSlots[player.playerInventoryManager.leftHandWeaponIndex].itemID != WorldItemDatabase.Instance.unarmedWeapon.itemID)
+                {
+                    selectedWeapon = player.playerInventoryManager.weaponsInLeftHandSlots[player.playerInventoryManager.leftHandWeaponIndex];
+
+                    // Assign the network weapon ID so it swithes for all connected clients
+                    player.playerNetworkManager.currentLeftHandWeaponID.Value = player.playerInventoryManager.weaponsInLeftHandSlots[player.playerInventoryManager.leftHandWeaponIndex].itemID;
+                    return;
+                }
+            }
+            Debug.Log("XD");
+
+            if (selectedWeapon == null && player.playerInventoryManager.leftHandWeaponIndex <= 2)
+            {
+                SwitchLeftWeapon();
+            }
         }
         public void LoadLeftWeapon()
         {
@@ -163,10 +223,13 @@ namespace XD
             if (player.playerNetworkManager.isUsingRightHand.Value)
             {
                 rightWeaponManager.meleeDamageCollider.EnableDamageCollider();
+                player.characterSoundFXManager.PlaySoundFX(WorldSoundFXManager.Instance.ChooseRandomSFXFromArray(player.playerInventoryManager.currentRightHandWeapon.whooshes));
             }
             else if (player.playerNetworkManager.isUsingLeftHand.Value)
             {
                 leftWeaponManager.meleeDamageCollider.EnableDamageCollider();
+                player.characterSoundFXManager.PlaySoundFX(WorldSoundFXManager.Instance.ChooseRandomSFXFromArray(player.playerInventoryManager.currentLeftHandWeapon.whooshes));
+
             }
         }
         

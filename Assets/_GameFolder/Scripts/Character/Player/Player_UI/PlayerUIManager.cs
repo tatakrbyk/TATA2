@@ -25,7 +25,7 @@ namespace XD
             }
 
             playerUIHUDManager = GetComponentInChildren<PlayerUIHUDManager>();
-            playerUIPopUpManager = GetComponentInChildren<PlayerUIPopUpManager>();
+            playerUIPopUpManager = GetComponentInChildren<PlayerUIPopUpManager>(); 
         }
 
         private void Start()

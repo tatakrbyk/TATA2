@@ -32,9 +32,12 @@ namespace XD
         // Offensive poise bonus when attacking
 
         [Header("Attack Modifiers")]
-        public float light_Attack_01_Modifier = 1.1f;
+        public float light_Attack_01_Modifier = 1.0f;
+        public float light_Attack_02_Modifier = 1.2f;
         public float heavy_Attack_01_Modifier = 1.4f;
+        public float heavy_Attack_02_Modifier = 1.6f;
         public float charge_Attack_01_Modifier = 2.0f;
+        public float charge_Attack_02_Modifier = 2.2f;
         // Weapon modifiers
         // Light Attack modifier
         // Heavy Attack modifier
@@ -55,6 +58,8 @@ namespace XD
         // Ash of war 
 
         // Blocking Sounds
+        [Header("Whooshes")]
+        public AudioClip[] whooshes;
 
     }
 

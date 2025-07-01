@@ -11,6 +11,10 @@ namespace XD
 
         public WeaponItem currentWeaponBeingUsed;
 
+        [Header("Flags")]
+        public bool canCommboWithMainHandWeapon = false;
+        public bool canCommboWithOffHandWeapon = false;
+
         protected override void Awake()
         {
             base.Awake();

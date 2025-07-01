@@ -90,8 +90,10 @@ namespace XD
         {
             AudioClip physicalDamageSFX = WorldSoundFXManager.Instance.ChooseRandomSFXFromArray(WorldSoundFXManager.Instance.physicalDamageSFX);
             character.characterSoundFXManager.PlaySoundFX(physicalDamageSFX);
+            character.characterSoundFXManager.PlayDamageGrunt();
         }
 
+        // Hit React Animations
         private void PlayDirectionalBasedDamageAnimation(CharacterManager character)
         {
             if(!character.IsOwner) { return; }

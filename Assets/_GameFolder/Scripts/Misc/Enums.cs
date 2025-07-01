@@ -24,6 +24,12 @@ namespace XD
         NO_SLOT
     }
 
+    public enum CharacterGroup
+    {
+        Team01,
+        Team02 // AI 
+    }
+
     public enum WeaponModelSlot
     {
         RightHand,
@@ -36,10 +42,11 @@ namespace XD
     public enum AttackType
     {
         LightAttack01,
-        HeavyAttack02,
-        
+        LightAttack02,
+              
         HeavyAttack01,
-        
+        HeavyAttack02,
+
         ChargedAttack01,
         ChargedAttack02
     }

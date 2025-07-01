@@ -17,6 +17,7 @@ namespace XD
         [Header("Flags")]
         public bool applyRootMotion = false;
 
+
         [Header("Damage Animation")]
         public string lastDamageAnimationPlayed;
 
@@ -144,15 +145,14 @@ namespace XD
             bool canRotate = false,
             bool canMove = false )
         {
-            Debug.Log("Playing Animation: " + animationName);
 
-            character.applyRootMotion = applyRootMotion;
+            this.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(animationName, 0.2f);
             // Can be used to stop character from attempting new actions 
             // This flag will turn true if you are stunned
             character.isPerformingAction = isPerformingAction; 
-            character.canRotate = canRotate;
-            character.canMove = canMove;
+            character.characterLocomotionManager.canRotate = canRotate;
+            character.characterLocomotionManager.canMove = canMove;
 
             // Animation Replicated
             character.characterNetworkManager.NotifyTheServerOfActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, animationName, applyRootMotion);
@@ -168,14 +168,26 @@ namespace XD
             // Keep Track of last Attack performed ( for combos)
             // Keep Track of attack Type ( Light, Heavy, etc. )
             character.characterCombatManager.currentAttackType = attackType;
-            character.applyRootMotion = applyRootMotion;
+            character.characterCombatManager.lastAttackAnimationPerformed = animationName;
+            character.characterAnimatorManager.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(animationName, 0.2f);
             character.isPerformingAction = isPerformingAction;
-            character.canRotate = canRotate;
-            character.canMove = canMove;
+            character.characterLocomotionManager.canRotate = canRotate;
+            character.characterLocomotionManager.canMove = canMove;
 
             // Animation Replicated
             character.characterNetworkManager.NotifyTheServerOfAttackActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, animationName, applyRootMotion);
+        }
+
+        // Call Animation = "straight_sword_light/Heavy_attack_01/02" + release(+)_full
+        public virtual void EnableCanDoCombo()
+        {
+           
+        }
+
+        public virtual void DisableCanDoCombo()
+        {
+           
         }
     }
 

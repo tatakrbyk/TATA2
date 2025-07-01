@@ -13,14 +13,10 @@ namespace XD
         public virtual void AttemptToPerformAction(PlayerManager playerPerformAction, WeaponItem weaponPerformAction)
         {
             if(playerPerformAction.IsOwner)
-            {
-                Debug.Log("Performing Action: " + actionID + " on Weapon: " + weaponPerformAction.itemName + "  itemýd " + weaponPerformAction.itemID);
-                Debug.Log(playerPerformAction.playerNetworkManager.currentWeaponBeingUsed.Value);
-                playerPerformAction.playerNetworkManager.currentWeaponBeingUsed.Value = weaponPerformAction.itemID;
-                Debug.Log(playerPerformAction.playerNetworkManager.currentWeaponBeingUsed.Value);
-
+            { 
+                playerPerformAction.playerNetworkManager.currentWeaponBeingUsed.Value = weaponPerformAction.itemID;  
             }
-            Debug.Log("Action");
+            
         }
     }
 }

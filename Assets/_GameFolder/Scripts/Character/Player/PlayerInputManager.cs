@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -35,6 +36,8 @@ namespace XD
         [SerializeField] bool dodgeInput = false;
         [SerializeField] bool sprintInput = false;
         [SerializeField] bool jumpInput = false;
+        [SerializeField] bool switchRightWeaponInput = false;
+        [SerializeField] bool switchLeftWeaponInput = false;
 
         [Header("Bumper INPUTS")]
         [SerializeField] bool RB_Input = false;
@@ -112,7 +115,10 @@ namespace XD
                 playerControls.PlayerActions.RT.performed += i => RT_Input = true;
                 playerControls.PlayerActions.HoldRT.performed += i => Hold_RT_Input = true;
                 playerControls.PlayerActions.HoldRT.canceled += i => Hold_RT_Input = false;
-
+                 
+                // Switch Weapons
+                playerControls.PlayerActions.SwitchLeftWeapon.performed += i => switchLeftWeaponInput = true;
+                playerControls.PlayerActions.SwitchRightWeapon.performed += i => switchRightWeaponInput = true;
 
                 // Lock On
                 playerControls.PlayerActions.LockOn.performed += i => lockOn_Input = true;
@@ -159,6 +165,8 @@ namespace XD
             HandleRBInput();
             HandleRTInput();
             HandleChargeRTInput();
+            HandleSwitchRightWeaponInput();
+            HandleSwitchLeftWeaponInput();
         }
         #region Movements
         private void HandlePlayerMovementInput()
@@ -183,8 +191,17 @@ namespace XD
             // Why do i pass 0 on the horizontal? Because we only want non-strafing movement 
             // We Use the horizontal when we are strafing or locked on
 
-            // Not locked on
-            if(!player.playerNetworkManager.isLockedOn.Value || player.playerNetworkManager.isSprinting.Value)
+            if (moveAmount != 0)
+            {
+                player.playerNetworkManager.isMoving.Value = true;
+            }
+            else
+            {
+                player.playerNetworkManager.isMoving.Value = false;
+            }
+
+                // Not locked on
+            if (!player.playerNetworkManager.isLockedOn.Value || player.playerNetworkManager.isSprinting.Value)
             {
                 player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);       
             }
@@ -347,6 +364,23 @@ namespace XD
                 }
             }
      
+        }
+        private void HandleSwitchRightWeaponInput()
+        {
+            if(switchRightWeaponInput)
+            {
+                switchRightWeaponInput = false;
+                player.playerEquipmentManager.SwitchRightWeapon();
+            }
+        }
+
+        private void HandleSwitchLeftWeaponInput()
+        {
+            if (switchLeftWeaponInput)
+            {
+                switchLeftWeaponInput = false;
+                player.playerEquipmentManager.SwitchLeftWeapon();
+            }
         }
         #endregion
     }

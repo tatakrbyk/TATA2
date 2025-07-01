@@ -86,7 +86,7 @@ namespace XD
         }
         private void HandleGroundedMovement()
         {
-            if(!player.canMove) { return; }
+            if(!player.playerLocomotionManager.canMove) { return; }
             
             GetMovementValues();
 
@@ -126,7 +126,7 @@ namespace XD
         }
         private void HandleFreeFallMovement()
         {
-            if(!player.isGrounded)
+            if(!player.playerLocomotionManager.isGrounded)
             {
                 Vector3 freefallDirection;
 
@@ -141,7 +141,7 @@ namespace XD
         private void HandleRotation()
         {
             if(player.isDead.Value) { return; }
-            if(!player.canRotate) { return; }
+            if(!player.playerLocomotionManager.canRotate) { return; }
 
             if(player.playerNetworkManager.isLockedOn.Value)
             {
@@ -261,7 +261,7 @@ namespace XD
             if (player.isPerformingAction) { return; }
             if (player.playerNetworkManager.currentStamina.Value <= 0) { return; }
             if (player.playerNetworkManager.isJumping.Value) { return; }
-            if (!player.isGrounded) { return; }
+            if (!player.playerLocomotionManager.isGrounded) { return; }
 
             // TODO: Two Hand or One Hand Animation
             player.playerAnimatorManager.PlayActionAnimation("Main_Jump_Start_01", false);
