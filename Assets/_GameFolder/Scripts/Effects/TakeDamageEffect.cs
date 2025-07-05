@@ -41,11 +41,12 @@ namespace XD
 
         public override void ProcessEffect(CharacterManager character)
         {
+            if (character.characterNetworkManager.isInvulnerable.Value) { return; }
+
             base.ProcessEffect(character);
 
             if (character.isDead.Value) { return; }
 
-            // Check gor invulnerability
 
             CalculateDamage(character);
 
@@ -90,7 +91,7 @@ namespace XD
         {
             AudioClip physicalDamageSFX = WorldSoundFXManager.Instance.ChooseRandomSFXFromArray(WorldSoundFXManager.Instance.physicalDamageSFX);
             character.characterSoundFXManager.PlaySoundFX(physicalDamageSFX);
-            character.characterSoundFXManager.PlayDamageGrunt();
+            character.characterSoundFXManager.PlayDamageGruntSoundFX();
         }
 
         // Hit React Animations

@@ -8,6 +8,7 @@ namespace XD
     [CreateAssetMenu(menuName = "AI/States/PursueTargetState", fileName = "PursueTargetState")]
     public class PursueTargetState : AIState
     {
+        
         public override AIState Tick(AICharacterManager aiCharacter)
         {
             // Check if we are performing an action ( If so do nothing until action is complete )
@@ -25,17 +26,21 @@ namespace XD
                 aiCharacter.navMeshAgent.enabled = true;
             }
 
-            // If taret goes outside of the characters Field Of View, pivot to face them
-            if(aiCharacter.aiCharacterCombatManager.viewableAngle < aiCharacter.aiCharacterCombatManager.minimumFOV || aiCharacter.aiCharacterCombatManager.viewableAngle > aiCharacter.aiCharacterCombatManager.maximumFOV)
+            // If target goes outside of the characters Field Of View, pivot to face them
+            if(aiCharacter.aiCharacterCombatManager.enablePivot)
             {
+                if(aiCharacter.aiCharacterCombatManager.viewableAngle < aiCharacter.aiCharacterCombatManager.minimumFOV || aiCharacter.aiCharacterCombatManager.viewableAngle > aiCharacter.aiCharacterCombatManager.maximumFOV)
+                {
+                    aiCharacter.aiCharacterCombatManager.PivotTowardsTarget(aiCharacter);
+                }
                 
-                aiCharacter.aiCharacterCombatManager.PivotTowardsTarget(aiCharacter);
             }
             aiCharacter.aICharacterLocomotionManager.RotateTowardsAgent(aiCharacter);
 
+
             if(aiCharacter.aiCharacterCombatManager.distanceFromTarget <= aiCharacter.navMeshAgent.stoppingDistance )
             {
-                return SwitchState(aiCharacter, aiCharacter.combbatStance);
+                return SwitchState(aiCharacter, aiCharacter.combatStance);
             }
 
 

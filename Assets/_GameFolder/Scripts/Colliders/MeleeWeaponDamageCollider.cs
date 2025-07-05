@@ -37,6 +37,8 @@ namespace XD
             {
                 if(damageTarget == characterCausingDamage) { return; } // Prevent self damage
                 contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
+
+
                 DamageTarget(damageTarget);
             }
         }

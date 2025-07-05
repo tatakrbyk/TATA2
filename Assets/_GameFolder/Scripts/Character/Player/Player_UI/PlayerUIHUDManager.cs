@@ -12,6 +12,11 @@ namespace XD
         [Header("Quick Slots")]
         [SerializeField] Image leftWeaponQuickSlotIcon;
         [SerializeField] Image rightWeaponQuickSlotIcon;
+
+        [Header("Boss Health BAR")]
+        public Transform bossHealthBarParent;
+        public GameObject bossHealthBarObject;
+
         public void RefreshHUD()
         {
             healthBar.gameObject.SetActive(false);
@@ -62,8 +67,6 @@ namespace XD
         }
         
             
-        
-
         public void SetRightWeaponQuickSlotIcon(int WeaponID)
         {
             WeaponItem weapon = WorldItemDatabase.Instance.GetWeaponByID(WeaponID);

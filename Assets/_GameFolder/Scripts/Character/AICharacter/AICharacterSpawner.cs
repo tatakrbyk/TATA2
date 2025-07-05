@@ -29,6 +29,8 @@ namespace XD
                 instantiatedGameObject.transform.position  = transform.position;
                 instantiatedGameObject.transform.rotation = transform.rotation;
                 instantiatedGameObject.GetComponent<NetworkObject>().Spawn();
+
+                WorldAIManager.Instance.AddCharacterToSpawnedCharactersList(instantiatedGameObject.GetComponent<AICharacterManager>());
             }
         }
     }

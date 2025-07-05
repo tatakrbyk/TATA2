@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,7 +13,11 @@ namespace XD
 
         [Header("Characters")]
         [SerializeField] private List<AICharacterSpawner> aiCharacterSpawners;
-        [SerializeField] private List<GameObject> spawnedInCharacters;
+        [SerializeField] private List<AICharacterManager> spawnedInCharacters;
+
+        [Header("Bosses")]
+        [SerializeField] private List<AIBossCharacterManager> spawnedInBosses;
+
         private void Awake()
         {
             if (instance == null)
@@ -34,6 +39,25 @@ namespace XD
                 aiCharacterSpawner.AttemptToSpawnCharacter();
 
             }
+        }
+
+        public void AddCharacterToSpawnedCharactersList(AICharacterManager character)
+        {
+            if(spawnedInCharacters.Contains(character)) {  return; }
+            spawnedInCharacters.Add(character);
+
+            AIBossCharacterManager bossCharacter = character as AIBossCharacterManager;
+
+            if(bossCharacter != null)
+            {
+                if(spawnedInBosses.Contains(bossCharacter)) { return; }
+                spawnedInBosses.Add(bossCharacter);
+            }
+        }
+
+        public AIBossCharacterManager GetBossCharacterByID(int ID)
+        {
+            return spawnedInBosses.FirstOrDefault(boss => boss.bossID == ID);
         }
         public void DeSpawnCharacter()
         {

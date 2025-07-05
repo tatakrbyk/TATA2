@@ -31,13 +31,16 @@ namespace XD
             {
                 aiCharacter.navMeshAgent.enabled = true;
             }
-
-            // Rotate to face our target
-            if(!aiCharacter.aICharacterNetworkManager.isMoving.Value)
+            
+            if(aiCharacter.aiCharacterCombatManager.enablePivot)
             {
-                if(aiCharacter.aiCharacterCombatManager.viewableAngle < -30 || aiCharacter.aiCharacterCombatManager.viewableAngle > 30)
+                // Rotate to face our target
+                if(!aiCharacter.aiCharacterNetworkManager.isMoving.Value)
                 {
-                    aiCharacter.aiCharacterCombatManager.PivotTowardsTarget(aiCharacter);                        
+                    if(aiCharacter.aiCharacterCombatManager.viewableAngle < -30 || aiCharacter.aiCharacterCombatManager.viewableAngle > 30)
+                    {
+                        aiCharacter.aiCharacterCombatManager.PivotTowardsTarget(aiCharacter);                        
+                    }
                 }
             }
 

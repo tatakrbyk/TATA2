@@ -14,6 +14,10 @@ namespace XD
 
         [Header("Attack Grunts")]
         [SerializeField] protected AudioClip[] attackGrunts;
+
+        [Header("FootSteps")]
+        [SerializeField] protected AudioClip[] footSteps;
+
         protected virtual void Awake()
         {
             audioSource = GetComponent<AudioSource>();
@@ -36,14 +40,31 @@ namespace XD
             audioSource.PlayOneShot(WorldSoundFXManager.Instance.rollSFX);
         }
 
-        public virtual void PlayDamageGrunt()
+        public virtual void PlayDamageGruntSoundFX()
         {
-            PlaySoundFX(WorldSoundFXManager.Instance.ChooseRandomSFXFromArray(damageGrunts));
+            if (damageGrunts.Length > 0)
+            {
+                PlaySoundFX(WorldSoundFXManager.Instance.ChooseRandomSFXFromArray(damageGrunts));
+            }
         }
 
-        public virtual void PlayAttackGrunt()
+        public virtual void PlayAttackGruntSoundFX()
         {
-            PlaySoundFX(WorldSoundFXManager.Instance.ChooseRandomSFXFromArray(attackGrunts));
+            if (attackGrunts.Length > 0)
+            {
+                PlaySoundFX(WorldSoundFXManager.Instance.ChooseRandomSFXFromArray(attackGrunts));
+            }
+
+        }
+
+        public virtual void PlayFootStepSoundFX()
+        {
+            if(footSteps.Length > 0)
+            {
+                PlaySoundFX(WorldSoundFXManager.Instance.ChooseRandomSFXFromArray(footSteps));
+                Debug.Log("XD");
+
+            }
 
         }
     }

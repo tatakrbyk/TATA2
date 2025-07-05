@@ -39,5 +39,23 @@ namespace XD
                 }
             }
         }
+        // Call: Player Roll Animation Events
+        public void EnableIsInvulnerable()
+        {
+            if (character.IsOwner)
+            {
+                character.characterNetworkManager.isInvulnerable.Value = true;
+            }
+        }
+
+        // Call: Player Roll Animation Events
+        public void DisableIsInvulnerable()
+        {
+            if (character.IsOwner)
+            { 
+                character.characterNetworkManager.isInvulnerable.Value = false;
+            }
+        }
+
     }
 }

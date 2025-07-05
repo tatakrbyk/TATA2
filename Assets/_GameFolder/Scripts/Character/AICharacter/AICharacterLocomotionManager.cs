@@ -8,7 +8,7 @@ namespace XD
     {
         public void RotateTowardsAgent(AICharacterManager aICharacter)
         {
-            if(aICharacter.aICharacterNetworkManager.isMoving.Value)
+            if(aICharacter.aiCharacterNetworkManager.isMoving.Value)
             {
                 aICharacter.transform.rotation = aICharacter.navMeshAgent.transform.rotation;
             }

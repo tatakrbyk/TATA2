@@ -9,8 +9,10 @@ namespace XD
         protected AICharacterManager aiCharacter;
 
         [Header("Recovery Timer")]
-        public float actionRecoveryTimer = 0;   
+        public float actionRecoveryTimer = 0;
 
+        [Header("Pivot")]
+        public bool enablePivot = true;
         [Header("Target Info")]
         public float distanceFromTarget;
         public float viewableAngle;
@@ -63,7 +65,9 @@ namespace XD
                             targetsDirection = targetCharacter.transform.position - transform.position;
                             viewableAngle = WorldUtilityManager.Instance.GetAngleOfTarget(transform, targetsDirection);
                             aiCharacter.characterCombatManager.SetTarget(targetCharacter);
-                            PivotTowardsTarget(aiCharacter);
+                            
+                            if (enablePivot) {
+                                PivotTowardsTarget(aiCharacter);}
                         }
                     }
                 }  
@@ -72,7 +76,7 @@ namespace XD
             }
         }
 
-        public void PivotTowardsTarget(AICharacterManager aiCharacterManager)
+        public virtual void PivotTowardsTarget(AICharacterManager aiCharacterManager)
         { 
             if(aiCharacterManager.isPerformingAction) return;
 
@@ -112,7 +116,7 @@ namespace XD
 
         public void RotateTowardsAgent(AICharacterManager aICharacter)
         {
-            if(aICharacter.aICharacterNetworkManager.isMoving.Value)
+            if(aICharacter.aiCharacterNetworkManager.isMoving.Value)
             {
                 aICharacter.transform.rotation = aICharacter.navMeshAgent.transform.rotation;
             }

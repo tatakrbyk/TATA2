@@ -6,7 +6,7 @@ namespace XD
 {
     public class Utility_DestroyAfterTime : MonoBehaviour
     {
-        private float timeUntilDestroy = 5f;
+        [SerializeField] private float timeUntilDestroy = 5f;
 
         private void Awake()
         {

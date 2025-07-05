@@ -27,5 +27,14 @@ namespace XD
         public int vitality;
         public int endurance;
 
+        [Header("Bossess")]
+        public SerializableDictionary<int, bool> bossesAwakened; // Int = Boss ID, bool = Awakened Status
+        public SerializableDictionary<int, bool> bossesDefeated; // Int = Boss ID, bool = Defeated Status
+
+        public CharacterSaveData()
+        {
+            bossesAwakened = new SerializableDictionary<int, bool>();
+            bossesDefeated = new SerializableDictionary<int, bool>();
+        }
     }
 }

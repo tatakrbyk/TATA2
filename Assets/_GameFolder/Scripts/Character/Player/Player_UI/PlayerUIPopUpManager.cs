@@ -11,7 +11,13 @@ namespace XD
         [SerializeField] GameObject diedPopUpGameObject;
         [SerializeField] TextMeshProUGUI diedPopUpBackgroundText;
         [SerializeField] TextMeshProUGUI diedPopUpText;
-        [SerializeField] CanvasGroup diedPopUpCanvasGroup; 
+        [SerializeField] CanvasGroup diedPopUpCanvasGroup;
+
+        [Header("Boss Defeated POP UP")]
+        [SerializeField] GameObject bossDefeatedPopUpGameObject;
+        [SerializeField] TextMeshProUGUI bossDefeatedPopUpBackgroundText;
+        [SerializeField] TextMeshProUGUI bossDefeatedPopUpText;
+        [SerializeField] CanvasGroup bossDefeatedPopUpCanvasGroup; 
 
         public void SendYouDiedPopUp()
         {
@@ -24,6 +30,21 @@ namespace XD
             StartCoroutine(StretchPopUpTextOverTime(diedPopUpBackgroundText, 8, 19f));
             StartCoroutine(FadeInPopUpOverTime(diedPopUpCanvasGroup, 5));
             StartCoroutine(WaitThenFadeOutPopUpOverTime(diedPopUpCanvasGroup, 2, 5));
+
+        }
+
+        public void SendBossDefeatedPopUp(string bossDefeatedMessage)
+        {
+            bossDefeatedPopUpText.text = bossDefeatedMessage;
+            bossDefeatedPopUpBackgroundText.text = bossDefeatedMessage;
+
+            bossDefeatedPopUpGameObject.SetActive(true);
+            bossDefeatedPopUpBackgroundText.characterSpacing = 0;
+
+            // Pop Up Aniamtion
+            StartCoroutine(StretchPopUpTextOverTime(bossDefeatedPopUpBackgroundText, 8, 19f));
+            StartCoroutine(FadeInPopUpOverTime(bossDefeatedPopUpCanvasGroup, 5));
+            StartCoroutine(WaitThenFadeOutPopUpOverTime(bossDefeatedPopUpCanvasGroup, 2, 5));
 
         }
 

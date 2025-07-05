@@ -7,7 +7,9 @@ namespace XD
 {
     public class AICharacterManager : CharacterManager
     {
-        [HideInInspector] public AICharacterNetworkManager aICharacterNetworkManager;
+        [Header("Character Name")]
+        public string characterName = "";   
+        [HideInInspector] public AICharacterNetworkManager aiCharacterNetworkManager;
         [HideInInspector] public AICharacterCombatManager aiCharacterCombatManager;
         [HideInInspector] public AICharacterLocomotionManager aICharacterLocomotionManager;
 
@@ -15,12 +17,12 @@ namespace XD
         public NavMeshAgent navMeshAgent;
 
         [Header("Current State")]
-        [SerializeField] private AIState currentState;
+        [SerializeField] protected AIState currentState;
 
         [Header("States")]
         public IdleState idle;
         public PursueTargetState pursueTarget;
-        public CombatStanceState combbatStance;
+        public CombatStanceState combatStance;
         public AttackState attack;
 
 
@@ -29,16 +31,33 @@ namespace XD
         {
             base.Awake();
             aiCharacterCombatManager = GetComponent<AICharacterCombatManager>();
-            aICharacterNetworkManager = GetComponent<AICharacterNetworkManager>();
+            aiCharacterNetworkManager = GetComponent<AICharacterNetworkManager>();
             aICharacterLocomotionManager = GetComponent<AICharacterLocomotionManager>();
             navMeshAgent = GetComponentInChildren<NavMeshAgent>();
+            
+        }
 
-            // NOTE(Taha): Using of SO multiple AI, So we need to copy SO per AI
-            // Use a copy of the scriptable objects, so the originals are not modified
-            idle = Instantiate(idle);
-            pursueTarget = Instantiate(pursueTarget);
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+            if (IsOwner)
+            {
+                // NOTE(Taha): Using of SO multiple AI, So we need to copy SO per AI
+                // Use a copy of the scriptable objects, so the originals are not modified
+                idle = Instantiate(idle);
+                pursueTarget = Instantiate(pursueTarget);
+                combatStance = Instantiate(combatStance);
+                attack = Instantiate(attack);
+                currentState = idle;
+            }
 
-            currentState = idle;
+            aiCharacterNetworkManager.currentHealth.OnValueChanged += aiCharacterNetworkManager.CheckHP;
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+            aiCharacterNetworkManager.currentHealth.OnValueChanged -= aiCharacterNetworkManager.CheckHP;    
         }
         protected override void FixedUpdate()
         {
@@ -46,7 +65,6 @@ namespace XD
             if(IsOwner)
             {
                 ProcessStateMachine();
-
             }
         }
 
@@ -81,16 +99,16 @@ namespace XD
 
                 if(remainingDistance > navMeshAgent.stoppingDistance)
                 {
-                    aICharacterNetworkManager.isMoving.Value = true;
+                    aiCharacterNetworkManager.isMoving.Value = true;
                 }
                 else
                 {
-                    aICharacterNetworkManager.isMoving.Value = false;
+                    aiCharacterNetworkManager.isMoving.Value = false;
                 }
             }
             else
             {
-                aICharacterNetworkManager.isMoving.Value = false;
+                aiCharacterNetworkManager.isMoving.Value = false;
             }
         }
     }

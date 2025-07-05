@@ -31,7 +31,7 @@ namespace XD
 
         public void OpenRightHandDamageCollider()
         {
-            aiCharacter.characterSoundFXManager.PlayAttackGrunt();
+            aiCharacter.characterSoundFXManager.PlayAttackGruntSoundFX();
             rightHandDamageCollider.EnableDamageCollider();
         }
 
@@ -42,7 +42,7 @@ namespace XD
 
         public void OpenLeftHandDamageCollider()
         {
-            aiCharacter.characterSoundFXManager.PlayAttackGrunt();
+            aiCharacter.characterSoundFXManager.PlayAttackGruntSoundFX();
             leftHandDamageCollider.EnableDamageCollider();
         }
 

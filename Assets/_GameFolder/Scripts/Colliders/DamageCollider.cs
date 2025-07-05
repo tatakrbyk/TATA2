@@ -35,6 +35,8 @@ namespace XD
             if (damageTarget != null)
             {
                 contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
+
+
                 DamageTarget(damageTarget);
             }
         }

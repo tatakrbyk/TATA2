@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using SG;
 
 // Player And AI base sc
 namespace XD
@@ -84,14 +83,18 @@ namespace XD
         {
             base.OnNetworkSpawn();
 
-            characterNetworkManager.isMoving.OnValueChanged += characterNetworkManager.OnIsMovingChanged;   
+            animator.SetBool("IsMoving", characterNetworkManager.isMoving.Value);
+            characterNetworkManager.OnIsActiveChanged(false, characterNetworkManager.isActive.Value);
+
+            characterNetworkManager.isMoving.OnValueChanged += characterNetworkManager.OnIsMovingChanged;
+            characterNetworkManager.isActive.OnValueChanged += characterNetworkManager.OnIsActiveChanged;
         }
         public override void OnNetworkDespawn()
         {
-            base.OnNetworkDespawn();
-
-            animator.SetBool("isMoving", characterNetworkManager.isMoving.Value);
+            base.OnNetworkDespawn();    
+            
             characterNetworkManager.isMoving.OnValueChanged -= characterNetworkManager.OnIsMovingChanged;
+            characterNetworkManager.isActive.OnValueChanged -= characterNetworkManager.OnIsActiveChanged;
 
         }
         public virtual IEnumerator ProcessDeathEvent(bool manuallySelectDeathAnimation = false)

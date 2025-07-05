@@ -65,7 +65,7 @@ namespace XD
                 aiCharacter.aiCharacterCombatManager.PivotTowardsTarget(aiCharacter);
             }
 
-            return SwitchState(aiCharacter, aiCharacter.combbatStance);
+            return SwitchState(aiCharacter, aiCharacter.combatStance);
         }
 
         protected void PerformAttack(AICharacterManager aiCharacter)
