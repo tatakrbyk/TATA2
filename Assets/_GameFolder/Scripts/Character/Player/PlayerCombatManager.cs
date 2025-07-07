@@ -44,10 +44,34 @@ namespace XD
                 case AttackType.LightAttack01:
                     staminaDeduted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.lightAttackStaminaCostMultiplier;
                     break;
-                default:
+                case AttackType.LightAttack02:
+                    staminaDeduted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.lightAttackStaminaCostMultiplier;
+                    break;
+                case AttackType.HeavyAttack01:
+                    staminaDeduted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.heavyAttackStaminaCostMultiplier;
+                    break;
+                case AttackType.HeavyAttack02:
+                    staminaDeduted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.heavyAttackStaminaCostMultiplier;
+                    break;
+                case AttackType.ChargedAttack01:
+                    staminaDeduted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.chargedAttackStaminaCostMultiplier;
+                    break;
+                case AttackType.ChargedAttack02:
+                    staminaDeduted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.chargedAttackStaminaCostMultiplier;
+                    break;
+                case AttackType.RunningAttack01:
+                    staminaDeduted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.runningAttackStaminaCostMultiplier;
+                    break;
+                case AttackType.RollingAttack01:
+                    staminaDeduted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.rollingAttackStaminaCostMultiplier;
+                    break;
+                case AttackType.BackstepAttack01:
+                    staminaDeduted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.backstepAttackStaminaCostMultiplier;
                     break;
 
-
+                default:
+                    staminaDeduted = 0;
+                    break;
             }
             Debug.Log($"Stamina Deduted: {staminaDeduted}");
             player.playerNetworkManager.currentStamina.Value -= Mathf.RoundToInt(staminaDeduted); 
@@ -61,6 +85,26 @@ namespace XD
             {
                 PlayerCamera.Instance.SetLockCameraHeight();
             }
+        }
+
+        // Call Animation = "straight_sword_light_attack_01/02"
+        public override void EnableCanDoCombo()
+        {
+            if (player.playerNetworkManager.isUsingRightHand.Value)
+            {
+                player.playerCombatManager.canCommboWithMainHandWeapon = true;
+
+            }
+            else
+            {
+
+            }
+        }
+
+        public override void DisableCanDoCombo()
+        {
+            player.playerCombatManager.canCommboWithMainHandWeapon = false;
+            player.playerCombatManager.canCommboWithOffHandWeapon = false;
         }
     }
 

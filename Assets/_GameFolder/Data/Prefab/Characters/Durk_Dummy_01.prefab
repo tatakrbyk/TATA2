@@ -2729,8 +2729,8 @@ GameObject:
   - component: {fileID: 310502871003025332}
   - component: {fileID: 967880062476883751}
   - component: {fileID: 1200729007335282533}
-  - component: {fileID: 6322904211495576853}
   - component: {fileID: 8828438088604401836}
+  - component: {fileID: 6322904211495576853}
   - component: {fileID: 1787377180851898740}
   - component: {fileID: 3002201940297822504}
   - component: {fileID: 6986795502077060458}
@@ -2739,6 +2739,7 @@ GameObject:
   - component: {fileID: 7672094677841754617}
   - component: {fileID: 5988936955677450757}
   - component: {fileID: 4959211743235235119}
+  - component: {fileID: 5757037074573504584}
   m_Layer: 6
   m_Name: Durk_Dummy_01
   m_TagString: Untagged
@@ -2762,6 +2763,7 @@ Transform:
   - {fileID: 8955710252853210962}
   - {fileID: 4455518165351635437}
   - {fileID: 2815319374421282298}
+  - {fileID: 3332970851054156775}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &8333937331727422510
@@ -2955,59 +2957,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &6322904211495576853
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8158459887512676723}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a26d523d419bc1b439416430d9510e6c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isDead:
-    m_InternalValue: 0
-  characterController: {fileID: 0}
-  animator: {fileID: 0}
-  characterNetworkManager: {fileID: 0}
-  characterEffectsManager: {fileID: 0}
-  characterAnimatorManager: {fileID: 0}
-  characterCombatManager: {fileID: 0}
-  characterSoundFXManager: {fileID: 0}
-  characterLocomotionManager: {fileID: 0}
-  characterGroup: 1
-  isPerformingAction: 0
-  characterName: Durk, Guardion Of The World
-  aiCharacterNetworkManager: {fileID: 0}
-  aiCharacterCombatManager: {fileID: 0}
-  aICharacterLocomotionManager: {fileID: 0}
-  navMeshAgent: {fileID: 0}
-  currentState: {fileID: 0}
-  idle: {fileID: 11400000, guid: 9a243c1643dda3a4bae030c49afbd200, type: 2}
-  pursueTarget: {fileID: 11400000, guid: 55ba9760cfa26c240b50cd6a787e2ecd, type: 2}
-  combatStance: {fileID: 11400000, guid: f1b9af7e2be5c2a479926ebf45885124, type: 2}
-  attack: {fileID: 11400000, guid: 65fd94a3ee9aa8540990a09c5be5bfa6, type: 2}
-  bossID: 0
-  bossIntroClip: {fileID: 8300000, guid: e65820c814d7fba4099c1d462b6f82f4, type: 3}
-  bossBattleLoopClip: {fileID: 8300000, guid: f71958c16dc5aa84589d4878759fabe8, type: 3}
-  bossFightIsActive:
-    m_InternalValue: 0
-  hasBeenAwakened:
-    m_InternalValue: 0
-  hasBeenDefeated:
-    m_InternalValue: 0
-  fogWalls: []
-  sleepAnimation: Sleep_01
-  awakenAnimation: Awaken_01
-  minHealthPercentageToShift: 50
-  phaseShiftAnimation: 
-  phase02CombatStanceState: {fileID: 11400000, guid: e9479357f6c77214d8bc1d9e1b1a2619,
-    type: 2}
-  sleepState: {fileID: 11400000, guid: 821754e80f34f1d4e8f79b2ee0c95942, type: 2}
-  durkSoundFXManager: {fileID: 0}
-  durkCombatManager: {fileID: 0}
 --- !u!114 &8828438088604401836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3061,6 +3010,60 @@ MonoBehaviour:
     m_InternalValue: 10
   endurance:
     m_InternalValue: 10
+--- !u!114 &6322904211495576853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8158459887512676723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a26d523d419bc1b439416430d9510e6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDead:
+    m_InternalValue: 0
+  characterController: {fileID: 0}
+  animator: {fileID: 0}
+  characterNetworkManager: {fileID: 0}
+  characterEffectsManager: {fileID: 0}
+  characterAnimatorManager: {fileID: 0}
+  characterCombatManager: {fileID: 0}
+  characterSoundFXManager: {fileID: 0}
+  characterLocomotionManager: {fileID: 0}
+  characterUIManager: {fileID: 0}
+  characterGroup: 1
+  isPerformingAction: 0
+  characterName: Durk, Guardion Of The World
+  aiCharacterNetworkManager: {fileID: 0}
+  aiCharacterCombatManager: {fileID: 0}
+  aICharacterLocomotionManager: {fileID: 0}
+  navMeshAgent: {fileID: 0}
+  currentState: {fileID: 0}
+  idle: {fileID: 11400000, guid: 9a243c1643dda3a4bae030c49afbd200, type: 2}
+  pursueTarget: {fileID: 11400000, guid: 55ba9760cfa26c240b50cd6a787e2ecd, type: 2}
+  combatStance: {fileID: 11400000, guid: f1b9af7e2be5c2a479926ebf45885124, type: 2}
+  attack: {fileID: 11400000, guid: 65fd94a3ee9aa8540990a09c5be5bfa6, type: 2}
+  bossID: 0
+  bossIntroClip: {fileID: 8300000, guid: e65820c814d7fba4099c1d462b6f82f4, type: 3}
+  bossBattleLoopClip: {fileID: 8300000, guid: f71958c16dc5aa84589d4878759fabe8, type: 3}
+  bossFightIsActive:
+    m_InternalValue: 0
+  hasBeenAwakened:
+    m_InternalValue: 0
+  hasBeenDefeated:
+    m_InternalValue: 0
+  fogWalls: []
+  sleepAnimation: Sleep_01
+  awakenAnimation: Awaken_01
+  minHealthPercentageToShift: 50
+  phaseShiftAnimation: 
+  phase02CombatStanceState: {fileID: 11400000, guid: e9479357f6c77214d8bc1d9e1b1a2619,
+    type: 2}
+  sleepState: {fileID: 11400000, guid: 821754e80f34f1d4e8f79b2ee0c95942, type: 2}
+  durkSoundFXManager: {fileID: 0}
+  durkCombatManager: {fileID: 0}
 --- !u!114 &1787377180851898740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3077,6 +3080,8 @@ MonoBehaviour:
   currentTarget: {fileID: 0}
   lockOnTransform: {fileID: 0}
   currentAttackType: 0
+  canPerformRollingtAttack: 0
+  canPerformBackstepAttack: 0
   actionRecoveryTimer: 0
   enablePivot: 1
   distanceFromTarget: 0
@@ -3226,6 +3231,20 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 88c24195486dd4747ae7e5a1e84d6df0, type: 3}
   stompImpacts:
   - {fileID: 8300000, guid: c6a193a7fa8676e4fa745300ad84c2c9, type: 3}
+--- !u!114 &5757037074573504584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8158459887512676723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dad644f2113a1a644a29fb83490c731b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasFloatingHPBar: 0
+  characterHPBar: {fileID: 4540531111402741633}
 --- !u!1 &8166823560554336665
 GameObject:
   m_ObjectHideFlags: 0
@@ -3559,3 +3578,154 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8038260946382983050}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &7767199684568191026
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2629411346688818135}
+    m_Modifications:
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 65
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 3.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6236176046179243120, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_Name
+      value: CharacterUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 6604632723973811041, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6604632723973811041, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7176784546788615342, guid: 0df033dd48faf4c4f874b58910ecfe80,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0df033dd48faf4c4f874b58910ecfe80, type: 3}
+--- !u!224 &3332970851054156775 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5011298715452238805, guid: 0df033dd48faf4c4f874b58910ecfe80,
+    type: 3}
+  m_PrefabInstance: {fileID: 7767199684568191026}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4540531111402741633 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6109579333845880755, guid: 0df033dd48faf4c4f874b58910ecfe80,
+    type: 3}
+  m_PrefabInstance: {fileID: 7767199684568191026}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 217458025127a8b4f968be63e88d912c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -177,18 +177,7 @@ namespace XD
 
             // Animation Replicated
             character.characterNetworkManager.NotifyTheServerOfAttackActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, animationName, applyRootMotion);
-        }
-
-        // Call Animation = "straight_sword_light/Heavy_attack_01/02" + release(+)_full
-        public virtual void EnableCanDoCombo()
-        {
-           
-        }
-
-        public virtual void DisableCanDoCombo()
-        {
-           
-        }
+        }      
     }
 
     

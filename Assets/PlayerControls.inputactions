@@ -160,9 +160,27 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "QueRB",
+                    "type": "Button",
+                    "id": "aa23a74e-4d71-4fb6-8869-5448f385d7d8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "RT",
                     "type": "Button",
                     "id": "5edfa16b-c8d1-4c3a-85d3-7bb6296f8469",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "QueRT",
+                    "type": "Button",
+                    "id": "92a180e2-efc0-43f9-adf6-dc0514c6d1dd",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -334,6 +352,39 @@
                 },
                 {
                     "name": "",
+                    "id": "4233ba4a-7005-4e48-b390-2f9f185ae361",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "QueRB",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9c6fc842-3a91-4d05-8a1d-3366848eae42",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "QueRB",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "221904cb-3496-4228-b10d-8b9f8ea67e09",
+                    "path": "<HID::Microntek              USB Joystick          >/button6",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "QueRB",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "c5edcad2-d0d2-47d2-908e-57f57664e20b",
                     "path": "<Gamepad>/dpad/right",
                     "interactions": "",
@@ -428,6 +479,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "RT",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6b4e2204-7a92-403c-a087-274a3bdd3f26",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "QueRT",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fe4cea09-a079-48ea-b02c-ecf8642870a2",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "QueRT",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a0496de9-3bea-488d-86e8-c55131fd84de",
+                    "path": "<HID::Microntek              USB Joystick          >/button8",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "QueRT",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

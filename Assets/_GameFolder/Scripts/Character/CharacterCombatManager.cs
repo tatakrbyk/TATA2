@@ -19,6 +19,11 @@ namespace XD
 
         [Header("Attack Type")]
         public AttackType currentAttackType;
+
+        [Header("Attack Flags")]
+        public bool canPerformRollingtAttack = false;
+        public bool canPerformBackstepAttack = false;
+
         protected virtual void Awake()
         {
             character = GetComponent<CharacterManager>();
@@ -57,5 +62,37 @@ namespace XD
             }
         }
 
+        // Call: Player Roll Animation Events
+        public void EnableCanDoRollingAttack()
+        {
+            canPerformRollingtAttack = true;
+        }
+        // Call: Player Roll Animation Events
+        public void DisableCanDoRollingAttack()
+        {
+            canPerformRollingtAttack = false;
+        }
+
+        // Call: Player Backstep Animation Events
+        public void EnableCanDoBackstepAttack()
+        {
+            canPerformBackstepAttack = true;
+        }
+        // Call: Player BackStep Animation Events
+        public void DisableCanDoBackstepAttack()
+        {
+            canPerformBackstepAttack = false;
+        }
+
+        // Call Animation = "straight_sword_light/Heavy_attack_01/02" + release(+)_full
+        public virtual void EnableCanDoCombo()
+        {
+
+        }
+
+        public virtual void DisableCanDoCombo()
+        {
+
+        }
     }
 }

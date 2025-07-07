@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using Unity.VisualScripting;
 
 // Player And AI base sc
 namespace XD
@@ -19,6 +20,7 @@ namespace XD
         [HideInInspector] public CharacterCombatManager characterCombatManager;
         [HideInInspector] public CharacterSoundFXManager characterSoundFXManager;
         [HideInInspector] public CharacterLocomotionManager characterLocomotionManager;
+        [HideInInspector] public CharacterUIManager characterUIManager;
 
         [Header("Character Group")]
         public CharacterGroup characterGroup;
@@ -38,8 +40,17 @@ namespace XD
             characterCombatManager = GetComponent<CharacterCombatManager>();
             characterSoundFXManager = GetComponent<CharacterSoundFXManager>();
             characterLocomotionManager = GetComponent<CharacterLocomotionManager>();
+            characterUIManager = GetComponent<CharacterUIManager>();
         }
-        
+
+        protected virtual void OnEnable()
+        {
+        }
+
+        protected virtual void OnDisable()
+        {
+            
+        }
         protected virtual void Start()
         {
             IgnoreMyOwnColliders();

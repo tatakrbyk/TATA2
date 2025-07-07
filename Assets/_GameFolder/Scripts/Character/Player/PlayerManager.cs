@@ -72,6 +72,15 @@ namespace XD
                 playerNetworkManager.currentStamina.OnValueChanged += playerStatsManager.ResetStaminaRegeneraationTimer;
 
             }
+
+            // Only Update hp bar if this character is not the local character
+            if (!IsOwner)
+            {
+                characterNetworkManager.currentHealth.OnValueChanged += characterUIManager.OnHPChanged;
+                
+            }
+            
+
             // Stats
             playerNetworkManager.currentHealth.OnValueChanged += playerNetworkManager.CheckHP;
 
@@ -111,6 +120,10 @@ namespace XD
                 playerNetworkManager.currentStamina.OnValueChanged -= PlayerUIManager.Instance.playerUIHUDManager.SetNewStaminaValue;
                 playerNetworkManager.currentStamina.OnValueChanged -= playerStatsManager.ResetStaminaRegeneraationTimer;
 
+            }
+            if (!IsOwner)
+            {
+                characterNetworkManager.currentHealth.OnValueChanged -= characterUIManager.OnHPChanged;
             }
             // Stats
             playerNetworkManager.currentHealth.OnValueChanged -= playerNetworkManager.CheckHP;

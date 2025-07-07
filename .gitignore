@@ -88,3 +88,4 @@ crashlytics-build.properties
 # Ignore Addtion folder and its contents (e.g. animations, .fbx)
 Assets/_GameFolder/Art/Addtion/
 Assets/_GameFolder/Art/Animations/
+Assets/_GameFolder/Art/Audio/

@@ -86,9 +86,13 @@ namespace XD
         }
         private void HandleGroundedMovement()
         {
-            if(!player.playerLocomotionManager.canMove) { return; }
-            
-            GetMovementValues();
+            if(player.playerLocomotionManager.canMove || player.playerLocomotionManager.canRotate) 
+            {
+                GetMovementValues();
+            }
+
+            if(!player.characterLocomotionManager.canMove) { return; }
+
 
             moveDirection = PlayerCamera.Instance.transform.forward * verticalMovement; 
             moveDirection = moveDirection + PlayerCamera.Instance.transform.right * horizontalMovement;
