@@ -48,7 +48,7 @@ namespace XD
 
         public void StartNewGame()
         {
-            StartCoroutine(WorldSaveGameManager.Instance.LoadWorldScene());
+            WorldSaveGameManager.Instance.LoadWorldScene(WorldSaveGameManager.Instance.GetWorldSceneIndex());
         }
         public void OpenLoadGameMenu()
         {

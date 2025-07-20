@@ -21,6 +21,24 @@ namespace XD
         [Header("Damage Animation")]
         public string lastDamageAnimationPlayed;
 
+        [Header("Ping Hit Reactions")]
+        [SerializeField] private string hit_React_Forward_Ping_01 = "hit_React_Forward_Ping_01";
+        [SerializeField] private string hit_React_Forward_Ping_02 = "hit_React_Forward_Ping_02";
+        
+        [SerializeField] private string hit_React_Backward_Ping_01 = "hit_React_Backward_Ping_01";
+        [SerializeField] private string hit_React_Backward_Ping_02 = "hit_React_Backward_Ping_02";
+        
+        [SerializeField] private string hit_React_Left_Ping_01 = "hit_React_Left_Ping_01";
+        [SerializeField] private string hit_React_Left_Ping_02 = "hit_React_Left_Ping_02";
+        
+        [SerializeField] private string hit_React_Right_Ping_01 = "hit_React_Right_Ping_01";
+        [SerializeField] private string hit_React_Right_Ping_02 = "hit_React_Right_Ping_02";
+
+        public List<string> forward_Ping_Damage = new List<string>();
+        public List<string> backward_Ping_Damage = new List<string>();
+        public List<string> left_Ping_Damage = new List<string>();
+        public List<string> right_Ping_Damage = new List<string>();
+
         [Header("Hit React Animation")]
         [SerializeField] private string hit_React_Forward_Medium_01 = "hit_React_Forward_Medium_01";
         [SerializeField] private string hit_React_Forward_Medium_02 = "hit_React_Forward_Medium_02";
@@ -38,6 +56,10 @@ namespace XD
         public List<string> backward_Medium_Damage = new List<string>();
         public List<string> left_Medium_Damage = new List<string>();
         public List<string> right_Medium_Damage = new List<string>();
+
+        
+
+
         protected virtual void Awake()
         {
             character = GetComponent<CharacterManager>();
@@ -48,6 +70,20 @@ namespace XD
 
         protected virtual void Start()
         {
+            // Ping
+            forward_Ping_Damage.Add(hit_React_Forward_Ping_01);
+            forward_Ping_Damage.Add(hit_React_Forward_Ping_02);
+            
+            backward_Ping_Damage.Add(hit_React_Backward_Ping_01);
+            backward_Ping_Damage.Add(hit_React_Backward_Ping_02);
+            
+            left_Ping_Damage.Add(hit_React_Left_Ping_01);
+            left_Ping_Damage.Add(hit_React_Left_Ping_02);
+            
+            right_Ping_Damage.Add(hit_React_Right_Ping_01);
+            right_Ping_Damage.Add(hit_React_Right_Ping_02);
+             
+            // Medium
             forward_Medium_Damage.Add(hit_React_Forward_Medium_01);
             forward_Medium_Damage.Add(hit_React_Forward_Medium_02);
 
@@ -158,7 +194,7 @@ namespace XD
             character.characterNetworkManager.NotifyTheServerOfActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, animationName, applyRootMotion);
         }
 
-        public virtual void PlayAttackActionAnimation(AttackType attackType,
+        public virtual void PlayAttackActionAnimation(WeaponItem weapon, AttackType attackType,
             string animationName,
             bool isPerformingAction,
             bool applyRootMotion = true,
@@ -169,6 +205,9 @@ namespace XD
             // Keep Track of attack Type ( Light, Heavy, etc. )
             character.characterCombatManager.currentAttackType = attackType;
             character.characterCombatManager.lastAttackAnimationPerformed = animationName;
+
+            UpdateAnimatorController(weapon.weaponAnimator);
+
             character.characterAnimatorManager.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(animationName, 0.2f);
             character.isPerformingAction = isPerformingAction;
@@ -178,8 +217,10 @@ namespace XD
             // Animation Replicated
             character.characterNetworkManager.NotifyTheServerOfAttackActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, animationName, applyRootMotion);
         }      
+
+        public void UpdateAnimatorController(AnimatorOverrideController weaponController)
+        {
+            character.animator.runtimeAnimatorController = weaponController;
+        }
     }
-
-    
-
 }

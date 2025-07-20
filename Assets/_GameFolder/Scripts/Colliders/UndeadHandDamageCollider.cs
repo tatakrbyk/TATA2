@@ -15,6 +15,12 @@ namespace XD
             damageCollider = GetComponent<Collider>();
             undeadCharacter = GetComponentInParent<AICharacterManager>();
         }
+
+        protected override void GetBlockingDotValues(CharacterManager damageTarget)
+        {
+            directionFromAttackToDamageTarget = undeadCharacter.transform.position - damageTarget.transform.position;
+            float dotValueFromAttackToDamageTarget = Vector3.Dot(directionFromAttackToDamageTarget, damageTarget.transform.forward); // Facing In the correct Direction
+        }
         protected override void DamageTarget(CharacterManager damageTarget)
         {
             if (charactersDamaged.Contains(damageTarget)) { return; }
@@ -26,6 +32,7 @@ namespace XD
             damageEffect.fireDamage = fireDamage;
             damageEffect.lightningDamage = lightningDamage;
             damageEffect.holyDamage = holyDamage;
+            damageEffect.poiseDamage = poiseDamage;
             damageEffect.contactPoint = contactPoint;
             damageEffect.angleHitFrom = Vector3.SignedAngle(undeadCharacter.transform.forward, damageTarget.transform.forward, Vector3.up);
 

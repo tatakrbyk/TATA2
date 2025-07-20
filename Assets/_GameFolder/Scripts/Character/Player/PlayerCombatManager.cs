@@ -73,7 +73,7 @@ namespace XD
                     staminaDeduted = 0;
                     break;
             }
-            Debug.Log($"Stamina Deduted: {staminaDeduted}");
+            
             player.playerNetworkManager.currentStamina.Value -= Mathf.RoundToInt(staminaDeduted); 
         }
 

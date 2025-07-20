@@ -17,11 +17,17 @@ namespace XD
         public float lightningDamage = 0;
         public float holyDamage = 0;
 
+        [Header("Poise")]
+        public float poiseDamage = 0;
+
         protected Vector3 contactPoint;
 
         [Header("Characters Damaged")]
         protected List<CharacterManager> charactersDamaged = new List<CharacterManager>();
 
+        [Header("Blocks")]
+        protected Vector3 directionFromAttackToDamageTarget;
+        protected float dotValueFromAttackToDamageTarget; // Facing In the correct Direction
         protected virtual void Awake()
         {
            
@@ -36,11 +42,41 @@ namespace XD
             {
                 contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
 
-
+                CheckForBlock(damageTarget);
                 DamageTarget(damageTarget);
             }
         }
 
+        protected virtual void CheckForBlock(CharacterManager damageTarget)
+        {
+            // If this character has already been damaged, do not proceed  
+            if(charactersDamaged.Contains(damageTarget)) { return; }
+
+            GetBlockingDotValues(damageTarget);
+
+            if (damageTarget.characterNetworkManager.isBlocking.Value && dotValueFromAttackToDamageTarget > 0.3f)
+            {
+                
+                charactersDamaged.Add(damageTarget);
+                TakeBlockedDamageEffect damageEffect = Instantiate(WorldCharacterEffectsManager.Instance.takeBlockedDamageEffect);
+
+                damageEffect.physicalDamage = physicalDamage;
+                damageEffect.magicDamage = magicDamage;
+                damageEffect.fireDamage = fireDamage;
+                damageEffect.lightningDamage = lightningDamage;
+                damageEffect.holyDamage = holyDamage;
+                damageEffect.poiseDamage = poiseDamage;
+                damageEffect.staminaDamage = poiseDamage;
+                damageEffect.contactPoint = contactPoint;
+                
+                damageTarget.characterEffectsManager.ProcessInstantEffect(damageEffect);
+            }
+        }
+        protected virtual void GetBlockingDotValues(CharacterManager damageTarget)
+        {
+            directionFromAttackToDamageTarget = transform.position - damageTarget.transform.position;
+            dotValueFromAttackToDamageTarget = Vector3.Dot(directionFromAttackToDamageTarget, damageTarget.transform.forward); // Facing In the correct Direction
+        }
         protected virtual void DamageTarget(CharacterManager damageTarget)
         {
             if(charactersDamaged.Contains(damageTarget)){ return; }
@@ -52,6 +88,7 @@ namespace XD
             damageEffect.fireDamage = fireDamage;
             damageEffect.lightningDamage = lightningDamage;
             damageEffect.holyDamage = holyDamage;
+            damageEffect.poiseDamage = poiseDamage;
             damageEffect.contactPoint = contactPoint;
 
             damageTarget.characterEffectsManager.ProcessInstantEffect(damageEffect);

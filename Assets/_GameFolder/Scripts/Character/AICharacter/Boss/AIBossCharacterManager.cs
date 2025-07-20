@@ -81,7 +81,7 @@ namespace XD
 
             if(!hasBeenAwakened.Value)
             {
-                characterAnimatorManager.PlayActionAnimation(sleepAnimation, true);
+                animator.Play(sleepAnimation);
             }
         }
 

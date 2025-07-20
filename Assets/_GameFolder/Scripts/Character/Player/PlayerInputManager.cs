@@ -33,14 +33,21 @@ namespace XD
         public float cameraVerticalInput;
 
         [Header("Player ACTIONS INPUT")]
-        [SerializeField] bool dodgeInput = false;
-        [SerializeField] bool sprintInput = false;
-        [SerializeField] bool jumpInput = false;
-        [SerializeField] bool switchRightWeaponInput = false;
-        [SerializeField] bool switchLeftWeaponInput = false;
+        [SerializeField] bool dodge_Input = false;
+        [SerializeField] bool sprint_Input = false;
+        [SerializeField] bool jump_Input = false;
+        [SerializeField] bool switchRightWeapon_Input = false;
+        [SerializeField] bool switchLeftWeapon_Input = false;
+        [SerializeField] bool interaction_Input = false;
 
         [Header("Bumper INPUTS")]
         [SerializeField] bool RB_Input = false;
+        [SerializeField] bool LB_Input = false;
+
+        [Header("Two Hand Inputs")]
+        [SerializeField] bool two_Hand_Input = false;
+        [SerializeField] bool two_Hand_Right_Weapon_Input = false;
+        [SerializeField] bool two_Hand_Left_Weapon_Input = false;
 
         [Header("Qued Inputs")]
         [SerializeField] private bool input_Que_Is_Active = false; 
@@ -109,23 +116,40 @@ namespace XD
                 playerControls.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
                 
                 // Rool & Backstep
-                playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
-                playerControls.PlayerActions.Jump.performed += i => jumpInput = true;
+                playerControls.PlayerActions.Dodge.performed += i => dodge_Input = true;
+                playerControls.PlayerActions.Jump.performed += i => jump_Input = true;
 
                 // Sprint 
-                playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
-                playerControls.PlayerActions.Sprint.canceled += i => sprintInput = false;
+                playerControls.PlayerActions.Sprint.performed += i => sprint_Input = true;
+                playerControls.PlayerActions.Sprint.canceled += i => sprint_Input = false;
+
+                playerControls.PlayerActions.Interact.performed += i => interaction_Input = true;
 
                 // Mouse Left Click (Attack)
                 playerControls.PlayerActions.RB.performed += i => RB_Input = true;
-               
+
+                // Left Alt?
+                playerControls.PlayerActions.LB.performed += i => LB_Input = true;
+                playerControls.PlayerActions.LB.canceled += i => player.playerNetworkManager.isBlocking.Value = false;
+
                 playerControls.PlayerActions.RT.performed += i => RT_Input = true;
                 playerControls.PlayerActions.HoldRT.performed += i => Hold_RT_Input = true;
                 playerControls.PlayerActions.HoldRT.canceled += i => Hold_RT_Input = false;
-                 
+
+                // Twp Hand Inputs
+                playerControls.PlayerActions.TwoHandWeapon.performed += i => two_Hand_Input = true;
+                playerControls.PlayerActions.TwoHandWeapon.canceled += i => two_Hand_Input = false;
+
+                playerControls.PlayerActions.TwoHandRightWeapon.performed += i => two_Hand_Right_Weapon_Input = true;
+                playerControls.PlayerActions.TwoHandRightWeapon.canceled += i => two_Hand_Right_Weapon_Input = false;
+
+                playerControls.PlayerActions.TwoHandLeftWeapon.performed += i => two_Hand_Left_Weapon_Input = true;
+                playerControls.PlayerActions.TwoHandLeftWeapon.canceled += i => two_Hand_Left_Weapon_Input = false;
+
+
                 // Switch Weapons
-                playerControls.PlayerActions.SwitchLeftWeapon.performed += i => switchLeftWeaponInput = true;
-                playerControls.PlayerActions.SwitchRightWeapon.performed += i => switchRightWeaponInput = true;
+                playerControls.PlayerActions.SwitchLeftWeapon.performed += i => switchLeftWeapon_Input = true;
+                playerControls.PlayerActions.SwitchRightWeapon.performed += i => switchRightWeapon_Input = true;
 
                 // Lock On
                 playerControls.PlayerActions.LockOn.performed += i => lockOn_Input = true;
@@ -134,6 +158,7 @@ namespace XD
 
                 playerControls.PlayerActions.QueRB.performed += i => QueInput(ref que_RB_Input);
                 playerControls.PlayerActions.QueRT.performed += i => QueInput(ref que_RT_Input);
+
 
             }
 
@@ -164,6 +189,7 @@ namespace XD
 
         private void HandleAllInputs()
         {
+            HandleTwoHandInput();
             HandleLockOnInput();
             HandleLockOnSwitchTargetInput(); 
             HandlePlayerMovementInput();
@@ -172,11 +198,13 @@ namespace XD
             HandleSprintInput();
             HandleJumpInput();
             HandleRBInput();
+            HandleLBInput();
             HandleRTInput();
             HandleChargeRTInput();
             HandleSwitchRightWeaponInput();
             HandleSwitchLeftWeaponInput();
             HandleQuedInputs();
+            HandleInteractionInput();
         }
         #region Movements
         private void HandlePlayerMovementInput()
@@ -231,9 +259,9 @@ namespace XD
         #region ACTIONS
         private void HandleDodgeInput()
         {
-            if (dodgeInput)
+            if (dodge_Input)
             {
-                dodgeInput = false;
+                dodge_Input = false;
 
                 //  TODO: If any UI or menu is open, return and don't dodge
                 player.playerLocomotionManager.AttemptToPerformDodge();
@@ -242,7 +270,7 @@ namespace XD
 
         private void HandleSprintInput()
         {
-            if(sprintInput)
+            if(sprint_Input)
             {
                 player.playerLocomotionManager.HandleSprinting();
             }
@@ -254,9 +282,9 @@ namespace XD
 
         private void HandleJumpInput()
         {
-            if (jumpInput)
+            if (jump_Input)
             {
-                jumpInput = false;
+                jump_Input = false;
 
                 // TODO: If we have a uý window open, simply return without doing anything
 
@@ -266,6 +294,7 @@ namespace XD
 
         private void HandleRBInput()
         {
+            if(two_Hand_Input) { return; }
             if(RB_Input)
             {
                 RB_Input = false;
@@ -277,7 +306,21 @@ namespace XD
                 player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentRightHandWeapon.oh_RB_Action, player.playerInventoryManager.currentRightHandWeapon); 
             }
         }
+        private void HandleLBInput()
+        {
+            if (two_Hand_Input) { return; }
 
+            if (LB_Input)
+            {
+                LB_Input = false;
+
+                // TODO: If we have a uý window open, simply return without doing anything
+                player.playerNetworkManager.SetCharacterActionHand(false);
+
+                // TODO: If we are two handing the weapon, use the two handed action
+                player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentLeftHandWeapon.oh_LB_Action, player.playerInventoryManager.currentLeftHandWeapon);
+            }
+        }
         private void HandleRTInput()
         {
             if(RT_Input)
@@ -292,6 +335,54 @@ namespace XD
             }
         }
 
+        private void HandleTwoHandInput()
+        {
+            if(!two_Hand_Input) { return; }
+
+            if(two_Hand_Right_Weapon_Input)
+            {
+                RB_Input = false;
+                two_Hand_Right_Weapon_Input = false;
+                player.playerNetworkManager.isBlocking.Value = false;
+
+                if(player.playerNetworkManager.IsTwoHandingWeapon.Value)
+                {
+                    // If we are two handing a weapon already, change the is twohaning weapon bool to false whic triggers an " OnValueChanged" func
+                    // which UnTwohands current weapon
+                    player.playerNetworkManager.IsTwoHandingWeapon.Value = false;
+                    return;
+                }
+                else
+                {
+                    // If we are not already two handing, change the right two hand bool to true which triggers an "OnValueChanged" func
+                    // This function two hands the right weapon
+                    player.playerNetworkManager.IsTwoHandingRightWeapon.Value = true;
+                    return;
+                }
+            }
+
+            if (two_Hand_Left_Weapon_Input)
+            {
+                LB_Input = false;
+                two_Hand_Left_Weapon_Input = false;
+                player.playerNetworkManager.isBlocking.Value = false;
+
+                if (player.playerNetworkManager.IsTwoHandingWeapon.Value)
+                {
+                    // If we are two handing a weapon already, change the is twohaning weapon bool to false whic triggers an " OnValueChanged" func
+                    // which UnTwohands current weapon
+                    player.playerNetworkManager.IsTwoHandingWeapon.Value = false;
+                    return;
+                }
+                else
+                {
+                    // If we are not already two handing, change the left two hand bool to true which triggers an "OnValueChanged" func
+                    // This function two hands the left weapon
+                    player.playerNetworkManager.IsTwoHandingLeftWeapon.Value = true;
+                    return;
+                }
+            }
+        }
         private void HandleChargeRTInput()
         {
             // Check for a charge
@@ -307,7 +398,7 @@ namespace XD
         {
             if(player.playerNetworkManager.isLockedOn.Value)
             {
-                Debug.Log("lockOn_Input: " + lockOn_Input);
+                
                 if (player.playerCombatManager.currentTarget == null) {  return; }
                 
                 if(player.playerCombatManager.currentTarget.isDead.Value)
@@ -377,19 +468,29 @@ namespace XD
         }
         private void HandleSwitchRightWeaponInput()
         {
-            if(switchRightWeaponInput)
+            if(switchRightWeapon_Input)
             {
-                switchRightWeaponInput = false;
+                switchRightWeapon_Input = false;
                 player.playerEquipmentManager.SwitchRightWeapon();
             }
         }
 
         private void HandleSwitchLeftWeaponInput()
         {
-            if (switchLeftWeaponInput)
+            if (switchLeftWeapon_Input)
             {
-                switchLeftWeaponInput = false;
+                switchLeftWeapon_Input = false;
                 player.playerEquipmentManager.SwitchLeftWeapon();
+            }
+        }
+
+        private void HandleInteractionInput()
+        {
+            if(interaction_Input)
+            {
+                interaction_Input = false;
+
+                player.playerInteractionManager.Interact();                
             }
         }
         #endregion

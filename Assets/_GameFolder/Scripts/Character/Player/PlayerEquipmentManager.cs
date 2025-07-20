@@ -8,14 +8,20 @@ namespace XD
     {
         PlayerManager player;
 
-        public WeaponModelInstantiationSlot rightHandSlot;
-        public WeaponModelInstantiationSlot leftHandSlot;
-        
+        [Header("Weapon Model Instantiation Slots")]
+        public WeaponModelInstantiationSlot rightHandWeaponSlot;
+        public WeaponModelInstantiationSlot leftHandWeaponSlot;
+        public WeaponModelInstantiationSlot leftHandShieldSlot;
+        public WeaponModelInstantiationSlot backSlot;
+
+        [Header("Weapon Managers")]
         [SerializeField] private WeaponManager rightWeaponManager;
         [SerializeField] private WeaponManager leftWeaponManager;
 
+        [Header("Weapon Models")]
         public GameObject rightHandWeaponModel;
         public GameObject leftHandWeaponModel;
+
         protected override void Awake()
         {
             base.Awake();
@@ -40,11 +46,19 @@ namespace XD
             {
                 if(weaponSlot.weaponSlot == WeaponModelSlot.RightHand)
                 {
-                    rightHandSlot = weaponSlot;
+                    rightHandWeaponSlot = weaponSlot;
                 }
-                else if (weaponSlot.weaponSlot == WeaponModelSlot.LeftHand)
+                else if (weaponSlot.weaponSlot == WeaponModelSlot.LeftHandWeaponSlot)
                 {
-                    leftHandSlot = weaponSlot;
+                    leftHandWeaponSlot = weaponSlot;
+                }
+                else if (weaponSlot.weaponSlot == WeaponModelSlot.LeftHandShieldSlot)
+                {
+                    leftHandShieldSlot = weaponSlot;
+                }
+                else if (weaponSlot.weaponSlot == WeaponModelSlot.BackSlot)
+                {
+                    backSlot = weaponSlot;
                 }
             }
         }
@@ -125,12 +139,13 @@ namespace XD
         {
             if (player.playerInventoryManager.currentRightHandWeapon != null)
             {
-                rightHandSlot.UnloadWeapon();
+                rightHandWeaponSlot.UnloadWeapon();
 
                 rightHandWeaponModel = Instantiate(player.playerInventoryManager.currentRightHandWeapon.weaponModel);
-                rightHandSlot.LoadWeapon(rightHandWeaponModel);
+                rightHandWeaponSlot.PlaceWeaponModelIntoSlot(rightHandWeaponModel);
                 rightWeaponManager = rightHandWeaponModel.GetComponent<WeaponManager>();
                 rightWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentRightHandWeapon);
+                player.playerAnimatorManager.UpdateAnimatorController(player.playerInventoryManager.currentRightHandWeapon.weaponAnimator);
             }
         }
 
@@ -207,15 +222,103 @@ namespace XD
         {
             if (player.playerInventoryManager.currentLeftHandWeapon != null)
             {
+                if(leftHandWeaponSlot.currentWeaponModel != null)
+                {
+                    leftHandWeaponSlot.UnloadWeapon();
+                }
 
+                if(leftHandShieldSlot.currentWeaponModel != null)
+                {
+                    leftHandShieldSlot.UnloadWeapon();
+                }
+                
                 leftHandWeaponModel = Instantiate(player.playerInventoryManager.currentLeftHandWeapon.weaponModel);
-                leftHandSlot.LoadWeapon(leftHandWeaponModel);
+
+                switch (player.playerInventoryManager.currentLeftHandWeapon.weaponModelType)
+                {
+                    case WeaponModelType.Shield:
+                        leftHandShieldSlot.PlaceWeaponModelIntoSlot(leftHandWeaponModel);
+                        break;
+                    case WeaponModelType.Weapon:
+                        leftHandWeaponSlot.PlaceWeaponModelIntoSlot(leftHandWeaponModel);
+                        break;
+                    default:
+                        break;
+                }
+
                 leftWeaponManager = leftHandWeaponModel.GetComponent<WeaponManager>();
                 leftWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentLeftHandWeapon);
             }
         }
         #endregion
 
+        #region Two Handing Weapon
+        public void UnTwoHandWeapon()
+        {
+            player.playerAnimatorManager.UpdateAnimatorController(player.playerInventoryManager.currentRightHandWeapon.weaponAnimator);
+
+            if(player.playerInventoryManager.currentLeftHandWeapon.weaponModelType == WeaponModelType.Weapon)
+            {
+                leftHandWeaponSlot.PlaceWeaponModelIntoSlot(leftHandWeaponModel);
+            }
+            else if (player.playerInventoryManager.currentLeftHandWeapon.weaponModelType == WeaponModelType.Shield)
+            {
+                leftHandShieldSlot.PlaceWeaponModelIntoSlot(leftHandWeaponModel);
+            }
+
+            rightHandWeaponSlot.PlaceWeaponModelIntoSlot(rightHandWeaponModel);
+
+            rightWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentRightHandWeapon);
+            leftWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentLeftHandWeapon);
+        }
+
+        public void TwoHandRightWeapon()
+        { 
+            if(player.playerInventoryManager.currentRightHandWeapon == WorldItemDatabase.Instance.unarmedWeapon)
+            {
+                if(player.IsOwner)
+                {
+                    player.playerNetworkManager.IsTwoHandingRightWeapon.Value = false;
+                    player.playerNetworkManager.IsTwoHandingWeapon.Value = false;
+                }
+
+                return;
+            }
+
+            player.playerAnimatorManager.UpdateAnimatorController(player.playerInventoryManager.currentRightHandWeapon.weaponAnimator);
+
+            backSlot.PlaceWeaponModelInUnequippedSlot(leftHandWeaponModel, player.playerInventoryManager.currentLeftHandWeapon.weaponClass, player);
+
+            // Place the two handed weapon model in the main (right hand)
+            rightHandWeaponSlot.PlaceWeaponModelIntoSlot(rightHandWeaponModel);
+
+            rightWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentRightHandWeapon);
+            leftWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentLeftHandWeapon);
+        }
+        public void TwoHandLeftWeapon()
+        {
+            if (player.playerInventoryManager.currentLeftHandWeapon == WorldItemDatabase.Instance.unarmedWeapon)
+            {
+                if (player.IsOwner)
+                {
+                    player.playerNetworkManager.IsTwoHandingLeftWeapon.Value = false;
+                    player.playerNetworkManager.IsTwoHandingWeapon.Value = false;
+                }
+
+                return;
+            }
+
+            player.playerAnimatorManager.UpdateAnimatorController(player.playerInventoryManager.currentLeftHandWeapon.weaponAnimator);
+
+            backSlot.PlaceWeaponModelInUnequippedSlot(rightHandWeaponModel, player.playerInventoryManager.currentRightHandWeapon.weaponClass, player);
+
+            // Place the two handed weapon model in the main (right hand)
+            rightHandWeaponSlot.PlaceWeaponModelIntoSlot(leftHandWeaponModel);
+
+            rightWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentRightHandWeapon);
+            leftWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentLeftHandWeapon);
+        }
+        #endregion
         #region Damage Colliders
         // Call: Main_Light_Attack_01 Events
         public void OpenDamageCollider()

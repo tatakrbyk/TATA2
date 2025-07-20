@@ -74,6 +74,14 @@ MonoBehaviour:
   holyDamage: 0
   characterCausingDamage: {fileID: 0}
   light_Attack_01_Modifier: 0
+  light_Attack_02_Modifier: 0
+  heavy_Attack_01_Modifier: 0
+  heavy_Attack_02_Modifier: 0
+  charge_Attack_01_Modifier: 0
+  charge_Attack_02_Modifier: 0
+  running_Attack_01_Modifier: 0
+  rolling_Attack_01_Modifier: 0
+  backstep_Attack_01_Modifier: 0
 --- !u!1 &1340056658926372741
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,4 +243,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1102a4def8b309a44bf6010e59aecf2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meleeDamageCollider: {fileID: 563954681776143072}
+  meleeDamageCollider: {fileID: 0}

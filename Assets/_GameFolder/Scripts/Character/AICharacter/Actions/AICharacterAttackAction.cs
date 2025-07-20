@@ -25,7 +25,7 @@ namespace XD
 
         public void AttemptToPerformAction(AICharacterManager aiCharacter)
         {
-            aiCharacter.characterAnimatorManager.PlayAttackActionAnimation(attackType, attackActionName, true);
+            aiCharacter.characterAnimatorManager.PlayActionAnimation(attackActionName, true);
         }
     }
 

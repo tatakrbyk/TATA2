@@ -62,10 +62,12 @@ namespace XD
             if(footSteps.Length > 0)
             {
                 PlaySoundFX(WorldSoundFXManager.Instance.ChooseRandomSFXFromArray(footSteps));
-                Debug.Log("XD");
-
             }
 
+        }
+        public virtual void PlayBlockSoundFX()
+        {
+            
         }
     }
 

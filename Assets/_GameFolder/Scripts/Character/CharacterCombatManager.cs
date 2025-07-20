@@ -23,6 +23,7 @@ namespace XD
         [Header("Attack Flags")]
         public bool canPerformRollingtAttack = false;
         public bool canPerformBackstepAttack = false;
+        public bool canBlock = true;
 
         protected virtual void Awake()
         {
@@ -44,7 +45,7 @@ namespace XD
                 }
             }
         }
-        // Call: Player Roll Animation Events
+        // Call: Player Roll Animation Events, Fog Walk anim
         public void EnableIsInvulnerable()
         {
             if (character.IsOwner)

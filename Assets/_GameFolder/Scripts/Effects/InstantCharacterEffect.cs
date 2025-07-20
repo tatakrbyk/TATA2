@@ -11,7 +11,7 @@ namespace XD
 
         public virtual void ProcessEffect(CharacterManager character)
         {
-
+            
         }
     }
 

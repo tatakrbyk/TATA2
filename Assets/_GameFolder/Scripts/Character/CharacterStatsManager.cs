@@ -13,7 +13,22 @@ namespace XD
         private float staminaRegenerationTimer = 0;
         private float staminaTickTimer = 0;
         [SerializeField] float staminaRegenerationDelay = 2;
-        protected virtual void Awake()
+
+        [Header("Blocking Absorptions")]
+        public float blockingPhysicalAbsorption;
+        public float blockingFireAbsorption;
+        public float blockingMagicAbsorption;
+        public float blockingLightningAbsorption;
+        public float blockingHolyAbsorption;
+        public float blockingStability;
+
+        [Header("Poise")]
+        public float totalPoisedDamage;             // How much poise damage we have taken
+        public float offensivePoiseBonus;           // gaine from using items (weapons, etc)
+        public float basePoiseDefense;              // gained from using items (armor, etc )
+        public float defaultPoiseResetTime = 8;     // The time it takes for poise damage to reset( must not be hit in the time or it will reset)
+        public float poiseResetTimer = 0;           // Timer to reset poise damage
+        protected virtual void Awake()      
         {
             character = GetComponent<CharacterManager>();
         }
@@ -21,6 +36,11 @@ namespace XD
         protected virtual void Start()
         {
 
+        }
+
+        protected virtual void Update()
+        {
+            HandlePoiseResetTimer();    
         }
         public int CalculateHealthBasedOnVitalityLevel(int vitality)
         {
@@ -67,6 +87,18 @@ namespace XD
             if(currentStaminaAmount < prevStaminaAmount)
             {
                 staminaRegenerationTimer = 0;
+            }
+        }
+
+        public virtual void HandlePoiseResetTimer()
+        {
+            if (poiseResetTimer > 0)
+            {
+                poiseResetTimer -= Time.deltaTime;
+            }
+            else
+            {
+                totalPoisedDamage = 0;
             }
         }
     }

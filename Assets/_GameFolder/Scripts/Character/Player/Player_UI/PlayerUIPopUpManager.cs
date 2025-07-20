@@ -7,6 +7,10 @@ namespace XD
 {
     public class PlayerUIPopUpManager : MonoBehaviour
     {
+        [Header("Message Pop Up")]
+        [SerializeField] TextMeshProUGUI popUpMessageText;
+        [SerializeField] GameObject popUpMessageGameObject;
+
         [Header("DIED POP UP")]
         [SerializeField] GameObject diedPopUpGameObject;
         [SerializeField] TextMeshProUGUI diedPopUpBackgroundText;
@@ -17,8 +21,26 @@ namespace XD
         [SerializeField] GameObject bossDefeatedPopUpGameObject;
         [SerializeField] TextMeshProUGUI bossDefeatedPopUpBackgroundText;
         [SerializeField] TextMeshProUGUI bossDefeatedPopUpText;
-        [SerializeField] CanvasGroup bossDefeatedPopUpCanvasGroup; 
+        [SerializeField] CanvasGroup bossDefeatedPopUpCanvasGroup;
 
+        [Header("Grace Restred POP UP")]
+        [SerializeField] GameObject graceRestoredPopUpGameObject;
+        [SerializeField] TextMeshProUGUI graceRestoredPopUpBackgroundText;
+        [SerializeField] TextMeshProUGUI graceRestoredPopUpText;
+        [SerializeField] CanvasGroup graceRestoredPopUpCanvasGroup;
+
+        public void CloseAllPopUpWindows()
+        {
+            popUpMessageGameObject.SetActive(false);
+            PlayerUIManager.Instance.popUpWindowIsOpen = false;
+        }
+
+        public void SendPlayerMessagePopUp(string messageText)
+        {
+            PlayerUIManager.Instance.popUpWindowIsOpen = true;
+            popUpMessageText.text = messageText;
+            popUpMessageGameObject.SetActive(true); 
+        }
         public void SendYouDiedPopUp()
         {
             // Activate post processing effects 
@@ -48,6 +70,20 @@ namespace XD
 
         }
 
+        public void SendGraceRestoredPopUp(string graceRestoredMessage)
+        {
+            graceRestoredPopUpText.text = graceRestoredMessage;
+            graceRestoredPopUpBackgroundText.text = graceRestoredMessage;
+
+            graceRestoredPopUpGameObject.SetActive(true);
+            graceRestoredPopUpBackgroundText.characterSpacing = 0;
+
+            // Pop Up Aniamtion
+            StartCoroutine(StretchPopUpTextOverTime(graceRestoredPopUpBackgroundText, 8, 19f));
+            StartCoroutine(FadeInPopUpOverTime(graceRestoredPopUpCanvasGroup, 5));
+            StartCoroutine(WaitThenFadeOutPopUpOverTime(graceRestoredPopUpCanvasGroup, 2, 5));
+
+        }
         private IEnumerator StretchPopUpTextOverTime(TextMeshProUGUI text, float duration, float stretchAmount)
         {
             if(duration > 0f)

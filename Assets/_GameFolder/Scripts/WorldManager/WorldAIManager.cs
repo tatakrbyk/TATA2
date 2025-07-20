@@ -59,16 +59,26 @@ namespace XD
         {
             return spawnedInBosses.FirstOrDefault(boss => boss.bossID == ID);
         }
-        public void DeSpawnCharacter()
+
+        public void ResetAllCharacters()
+        {
+            DeSpawnAllCharacter();
+            foreach(var characterSpawner in aiCharacterSpawners)
+            {
+                characterSpawner.AttemptToSpawnCharacter();
+            }   
+        }
+        public void DeSpawnAllCharacter()
         {
             foreach (var character in spawnedInCharacters)
             {
                 character.GetComponent<NetworkObject>().Despawn();
-                spawnedInCharacters.Remove(character);
             }
+            spawnedInCharacters.Clear();
         }
 
         private void DisableAllCharacters()
-        {  }
+        { 
+        }
     }
 }

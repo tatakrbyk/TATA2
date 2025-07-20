@@ -16,8 +16,11 @@ MonoBehaviour:
   itemName: Straight Sword
   itemIcon: {fileID: 21300000, guid: 95d911b3fbbf55a4f90afa2c15e8ebb9, type: 3}
   itemDescription: A Staight sword.
+  weaponAnimator: {fileID: 22100000, guid: 860b7ccd33b900f4b99c90c7f0b2f45a, type: 2}
+  weaponModelType: 0
   weaponModel: {fileID: 5586741155246535272, guid: a5edc3d1fe97d62469bd831aefdd9def,
     type: 3}
+  weaponClass: 0
   strenghtREQ: 10
   dexREQ: 10
   intREQ: 0
@@ -34,12 +37,32 @@ MonoBehaviour:
   heavy_Attack_02_Modifier: 1.6
   charge_Attack_01_Modifier: 2
   charge_Attack_02_Modifier: 2.2
+  running_Attack_01_Modifier: 1.1
+  rolling_Attack_01_Modifier: 1.1
+  backstep_Attack_01_Modifier: 1.1
   baseStaminaCost: 20
   lightAttackStaminaCostMultiplier: 0.9
+  heavyAttackStaminaCostMultiplier: 1.3
+  chargedAttackStaminaCostMultiplier: 1.5
+  runningAttackStaminaCostMultiplier: 1.1
+  rollingAttackStaminaCostMultiplier: 1.1
+  backstepAttackStaminaCostMultiplier: 1.1
+  physicalBaseDamageAbsorption: 50
+  magicBaseDamageAbsorption: 50
+  fireBaseDamageAbsorption: 50
+  holyBaseDamageAbsorption: 50
+  lightningBaseDamageAbsorption: 50
+  stability: 1
   oh_RB_Action: {fileID: 11400000, guid: 24e4623539aba5d409b4bfab9bc22e37, type: 2}
   oh_RT_Action: {fileID: 11400000, guid: e3c8087f2211d264195e565abd112532, type: 2}
+  oh_LB_Action: {fileID: 11400000, guid: 7662dd7843b71ea4cb768eb9226266fd, type: 2}
   whooshes:
   - {fileID: 8300000, guid: 5e1303e6a15539f4d96e4e517bba53b4, type: 3}
   - {fileID: 8300000, guid: ed807a514e651774992c1527ffd6ce76, type: 3}
   - {fileID: 8300000, guid: f8b27efb12fd6f34bbdbc71f725667ef, type: 3}
   - {fileID: 8300000, guid: d037080ed16c9c24fb792888bb855e02, type: 3}
+  blocking:
+  - {fileID: 8300000, guid: afa889003c8d08744b9e304567288cd4, type: 3}
+  - {fileID: 8300000, guid: e38dd11f748e93749969cfa8da331d85, type: 3}
+  - {fileID: 8300000, guid: 680f95569f221fc41bf9b3e9ee5bf5b2, type: 3}
+  - {fileID: 8300000, guid: 3a417f5209292004bbef08b6382a59e1, type: 3}

@@ -16,6 +16,7 @@ namespace XD
 
         [Header("Damage")]
         [SerializeField] private int baseDamage = 25;
+        [SerializeField] private int basePoiseDamage = 25;
         [SerializeField] private float attack01DamageModifier = 1.0f;
         [SerializeField] private float attack02DamageModifier = 1.4f;
         [SerializeField] private float attack03DamageModifier = 1.6f;
@@ -58,18 +59,21 @@ namespace XD
         {
             aiCharacter.characterSoundFXManager.PlayAttackGruntSoundFX();
             clubDamageCollider.physicalDamage = baseDamage * attack01DamageModifier;
+            clubDamageCollider.poiseDamage = basePoiseDamage * attack01DamageModifier;
         }
 
         public void SetAttack02Damage()
         {
             aiCharacter.characterSoundFXManager.PlayAttackGruntSoundFX();
             clubDamageCollider.physicalDamage = baseDamage * attack02DamageModifier;
+            clubDamageCollider.poiseDamage = basePoiseDamage * attack02DamageModifier;
         }
 
         public void SetAttack03Damage()
         {
             aiCharacter.characterSoundFXManager.PlayAttackGruntSoundFX();
             clubDamageCollider.physicalDamage = baseDamage * attack03DamageModifier;
+            clubDamageCollider.poiseDamage = basePoiseDamage * attack03DamageModifier;
         }
 
         public void OpenClubDamageCollider()

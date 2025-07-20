@@ -19,6 +19,13 @@ namespace XD
         
         public NetworkVariable<bool> isUsingRightHand = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<bool> isUsingLeftHand = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+        [Header("Two Hanging)")]
+        public NetworkVariable<int> currentWeaponBeingTwoHanded = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> IsTwoHandingWeapon = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> IsTwoHandingRightWeapon = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> IsTwoHandingLeftWeapon = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
         protected override void Awake()
         {
             base.Awake();
@@ -80,9 +87,76 @@ namespace XD
         {
             WeaponItem newWeapon = Instantiate(WorldItemDatabase.Instance.GetWeaponByID(newID));
             player.playerCombatManager.currentWeaponBeingUsed = newWeapon;
-            
+
+            if(player.IsOwner) {  return; }
+            if(player.playerCombatManager.currentWeaponBeingUsed != null)
+            {
+                player.playerAnimatorManager.UpdateAnimatorController(player.playerCombatManager.currentWeaponBeingUsed.weaponAnimator);
+            }
         }
 
+        public override void OnIsBlockingChanged(bool oldStatus, bool newStatus)
+        {
+            base.OnIsBlockingChanged(oldStatus, newStatus);
+
+            if(IsOwner)
+            {
+                player.playerStatsManager.blockingPhysicalAbsorption = player.playerCombatManager.currentWeaponBeingUsed.physicalDamage * player.playerCombatManager.currentWeaponBeingUsed.physicalBaseDamageAbsorption;
+                player.playerStatsManager.blockingMagicAbsorption = player.playerCombatManager.currentWeaponBeingUsed.magicDamage * player.playerCombatManager.currentWeaponBeingUsed.physicalBaseDamageAbsorption;
+                player.playerStatsManager.blockingFireAbsorption = player.playerCombatManager.currentWeaponBeingUsed.fireDamage * player.playerCombatManager.currentWeaponBeingUsed.physicalBaseDamageAbsorption;
+                player.playerStatsManager.blockingLightningAbsorption = player.playerCombatManager.currentWeaponBeingUsed.lightningDamage * player.playerCombatManager.currentWeaponBeingUsed.physicalBaseDamageAbsorption;
+                player.playerStatsManager.blockingHolyAbsorption = player.playerCombatManager.currentWeaponBeingUsed.holyDamage * player.playerCombatManager.currentWeaponBeingUsed.physicalBaseDamageAbsorption;
+                player.playerStatsManager.blockingStability = player.playerCombatManager.currentWeaponBeingUsed.stability;
+            }
+        }
+
+        public  void OnIsTwoHandingWeaponChanged(bool oldStatus, bool newStatus)
+        {
+            if(!IsTwoHandingWeapon.Value)
+            {
+                if(IsOwner)
+                {
+                    IsTwoHandingLeftWeapon.Value = false;
+                    IsTwoHandingRightWeapon.Value = false;
+                }
+                player.playerEquipmentManager.UnTwoHandWeapon();
+                player.playerEffectsManager.RemoveStaticEffect(WorldCharacterEffectsManager.Instance.twoHandingEffect.staticEffectID);
+            }
+            else
+            {
+                StaticCharacterEffect twoHandEffect = Instantiate(WorldCharacterEffectsManager.Instance.twoHandingEffect);
+                player.playerEffectsManager.AddStaticEffect(twoHandEffect);
+            }
+            player.animator.SetBool("IsTwoHandingWeapon", IsTwoHandingWeapon.Value);
+        }
+
+        public void OnIsTwoHandingRightWeaponChanged(bool oldStatus, bool newStatus)
+        {
+            if(!IsTwoHandingRightWeapon.Value) { return; }
+
+            if(IsOwner)
+            {
+                currentWeaponBeingTwoHanded.Value = currentRightHandWeaponID.Value;
+                IsTwoHandingWeapon.Value = true;
+            }
+            player.playerInventoryManager.currentTwoHandWeapon = player.playerInventoryManager.currentRightHandWeapon;
+            player.playerEquipmentManager.TwoHandRightWeapon();
+        }
+
+        public void OnIsTwoHandingLeftWeaponChanged(bool oldStatus, bool newStatus)
+        {
+            if(!IsTwoHandingLeftWeapon.Value) { return; }
+
+            if (IsOwner)
+            {
+                currentWeaponBeingTwoHanded.Value = currentLeftHandWeaponID.Value;
+                IsTwoHandingWeapon.Value = true;
+            }
+            player.playerInventoryManager.currentTwoHandWeapon = player.playerInventoryManager.currentLeftHandWeapon;
+            player.playerEquipmentManager.TwoHandLeftWeapon();
+        }
+
+        #region ItemAction
         // Item Actions
         [ServerRpc]
         public void NotifyTheServerOfWeaponActionServerRpc(ulong clientID, int actionID, int WeaponID)
@@ -115,6 +189,8 @@ namespace XD
                 Debug.LogError("Weapon Action with ID: " + actionID + " not found!");
             }
         }
+
+        #endregion
     }
 
 }

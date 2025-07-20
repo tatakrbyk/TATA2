@@ -35,7 +35,7 @@ namespace XD
             RaycastHit hit;
             if (Physics.Raycast(transform.position, character.transform.TransformDirection(Vector3.down), out hit, distanceToGround, WorldUtilityManager.Instance.GetEnvironmentLayers()))
             {
-                Debug.Log("Raycast hit: " + hit.transform.name);
+                
                 hasTouchedGround = true;
 
                 if(!hasPlayedFootStepSFX)
@@ -54,7 +54,7 @@ namespace XD
             {
                 hasPlayedFootStepSFX = true;
                 PlayFootStepSoundFX();
-                Debug.Log("Footstep sound played");
+                
             }
         }
 

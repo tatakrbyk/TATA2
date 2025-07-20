@@ -13,6 +13,10 @@ namespace XD
         [HideInInspector] public PlayerUIHUDManager playerUIHUDManager;
         [HideInInspector] public PlayerUIPopUpManager playerUIPopUpManager;
 
+        [Header("UI Flags")]
+        public bool menuWindowIsOpen = false;  // Inventory screen, Equipment menu, Blacksmith menu, etc.
+        public bool popUpWindowIsOpen = false; // Item Pick up, Dialog pop up, etc.
+
         private void Awake()
         {
             if (instance == null)

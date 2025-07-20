@@ -33,10 +33,26 @@ namespace XD
     public enum WeaponModelSlot
     {
         RightHand,
-        LeftHand,
+        LeftHandWeaponSlot,
+        LeftHandShieldSlot,
+        BackSlot
         // RightHips,
         // LeftHips,
-        // Back
+        
+    }
+
+    public enum WeaponModelType
+    {
+        Weapon,
+        Shield,
+    }
+
+    public enum WeaponClass
+    {
+        StraightSword,
+        Spear,
+        MediumShield,
+        Fist
     }
     
     public enum AttackType
@@ -53,5 +69,14 @@ namespace XD
         RollingAttack01,
         BackstepAttack01,
 
+    }
+
+    public enum DamageIntensity
+    {
+        Ping,
+        Light,
+        Medium,
+        Heavy,
+        Colossal
     }
 }

@@ -17,6 +17,8 @@ namespace XD
         [HideInInspector] public PlayerInventoryManager playerInventoryManager;
         [HideInInspector] public PlayerEquipmentManager playerEquipmentManager;
         [HideInInspector] public PlayerCombatManager playerCombatManager;
+        [HideInInspector] public PlayerInteractionManager playerInteractionManager;
+        [HideInInspector] public PlayerEffectsManager playerEffectsManager;
         protected override void Awake()
         {
             base.Awake();
@@ -28,6 +30,8 @@ namespace XD
             playerInventoryManager = GetComponent<PlayerInventoryManager>();
             playerEquipmentManager = GetComponent<PlayerEquipmentManager>();
             playerCombatManager = GetComponent<PlayerCombatManager>();
+            playerInteractionManager = GetComponent<PlayerInteractionManager>();
+            playerEffectsManager = GetComponent<PlayerEffectsManager>();
         }
         protected override void Update()
         {
@@ -91,6 +95,12 @@ namespace XD
             playerNetworkManager.currentRightHandWeaponID.OnValueChanged += playerNetworkManager.OnCurrentRightHandWeaponIDChange;
             playerNetworkManager.currentLeftHandWeaponID.OnValueChanged += playerNetworkManager.OnCurrentLeftHandWeaponIDChange;
             playerNetworkManager.currentWeaponBeingUsed.OnValueChanged += playerNetworkManager.OnCurrentWeaponBeingUsedIDChange; 
+            playerNetworkManager.isBlocking.OnValueChanged += playerNetworkManager.OnIsBlockingChanged;
+
+            // Two Hand
+            playerNetworkManager.IsTwoHandingWeapon.OnValueChanged += playerNetworkManager.OnIsTwoHandingWeaponChanged;
+            playerNetworkManager.IsTwoHandingRightWeapon.OnValueChanged += playerNetworkManager.OnIsTwoHandingRightWeaponChanged;
+            playerNetworkManager.IsTwoHandingLeftWeapon.OnValueChanged += playerNetworkManager.OnIsTwoHandingLeftWeaponChanged;
 
             // FLAGS
             playerNetworkManager.isChargingAttack.OnValueChanged += playerNetworkManager.OnIsChargingAttackChanged;
@@ -135,6 +145,12 @@ namespace XD
             playerNetworkManager.currentRightHandWeaponID.OnValueChanged -= playerNetworkManager.OnCurrentRightHandWeaponIDChange;
             playerNetworkManager.currentLeftHandWeaponID.OnValueChanged -= playerNetworkManager.OnCurrentLeftHandWeaponIDChange;
             playerNetworkManager.currentWeaponBeingUsed.OnValueChanged -= playerNetworkManager.OnCurrentWeaponBeingUsedIDChange;
+            //playerNetworkManager.isBlocking.OnValueChanged -= playerNetworkManager.OnIsBlockingChanged;
+
+            // Two Hand
+            playerNetworkManager.IsTwoHandingWeapon.OnValueChanged -= playerNetworkManager.OnIsTwoHandingWeaponChanged;
+            playerNetworkManager.IsTwoHandingRightWeapon.OnValueChanged -= playerNetworkManager.OnIsTwoHandingRightWeaponChanged;
+            playerNetworkManager.IsTwoHandingLeftWeapon.OnValueChanged -= playerNetworkManager.OnIsTwoHandingLeftWeaponChanged;
 
             // FLAGS
             playerNetworkManager.isChargingAttack.OnValueChanged -= playerNetworkManager.OnIsChargingAttackChanged;
@@ -222,8 +238,15 @@ namespace XD
             playerNetworkManager.OnCurrentRightHandWeaponIDChange(0, playerNetworkManager.currentRightHandWeaponID.Value);
             playerNetworkManager.OnCurrentLeftHandWeaponIDChange(0, playerNetworkManager.currentLeftHandWeaponID.Value);
 
+            // Sync Two Hand Status
+            playerNetworkManager.OnIsTwoHandingRightWeaponChanged(false, playerNetworkManager.IsTwoHandingRightWeapon.Value);
+            playerNetworkManager.OnIsTwoHandingLeftWeaponChanged(false, playerNetworkManager.IsTwoHandingLeftWeapon.Value);
+
+            // SYNC BLOCK STATUS 
+            playerNetworkManager.OnIsBlockingChanged(false, playerNetworkManager.isBlocking.Value);
+
             // Lock On
-            if(playerNetworkManager.isLockedOn.Value)
+            if (playerNetworkManager.isLockedOn.Value)
             {
                 playerNetworkManager.OnLockOnTargetIDChange(0, playerNetworkManager.currentTargetNetworkObjectID.Value);
             }

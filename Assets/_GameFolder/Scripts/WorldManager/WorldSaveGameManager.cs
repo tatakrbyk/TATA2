@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -239,7 +240,7 @@ namespace XD
             player.playerNetworkManager.vitality.Value = 15;
             player.playerNetworkManager.endurance.Value = 12;
             SaveGame();
-            StartCoroutine(LoadWorldScene());
+            LoadWorldScene(WorldSceneIndex);
         }
         public void LoadGame()
         {
@@ -251,7 +252,7 @@ namespace XD
             saveFileDataWriter.saveFileName = saveFileName;
             currentCharacterData = saveFileDataWriter.LoadSaveFile();
 
-            StartCoroutine(LoadWorldScene());
+            LoadWorldScene(WorldSceneIndex);
         }
 
         public void SaveGame()
@@ -316,12 +317,14 @@ namespace XD
         }
 
         
-        public IEnumerator LoadWorldScene()
+        public void LoadWorldScene(int buildIndex)
         {
-            AsyncOperation loadOperation = SceneManager.LoadSceneAsync(currentCharacterData.sceneIndex);
+            //AsyncOperation loadOperation = SceneManager.LoadSceneAsync(currentCharacterData.sceneIndex);
 
+            string worldScene = SceneUtility.GetScenePathByBuildIndex(buildIndex);
+            NetworkManager.Singleton.SceneManager.LoadScene(worldScene, LoadSceneMode.Single);
             player.LoadGameDataFromCurrentCharacterData(ref currentCharacterData);
-            yield return null;
+            //yield return null;
         }
 
         
