@@ -14,6 +14,7 @@ namespace XD
 
         [Header("VFX")]
         [SerializeField] private GameObject bloodSplatterVFX;
+        [SerializeField] private GameObject criticalBloodSplatterVFX;
 
         [Header("Static Effects")]
         public List<StaticCharacterEffect> staticEffects = new List<StaticCharacterEffect>();
@@ -40,6 +41,18 @@ namespace XD
             }
         }
 
+        public void PlayCriticalBloodSplatterVFX(Vector2 contactPoint)
+        {
+            if ((bloodSplatterVFX != null))
+            {
+                GameObject bloodSplatter = Instantiate(criticalBloodSplatterVFX, contactPoint, Quaternion.identity);
+            }
+            else
+            {
+                GameObject bloodSplatter = Instantiate(WorldCharacterEffectsManager.Instance.criticalBloodSplatterVFX, contactPoint, Quaternion.identity);
+
+            }
+        }
         public void AddStaticEffect(StaticCharacterEffect effect)
         {
             staticEffects.Add(effect);

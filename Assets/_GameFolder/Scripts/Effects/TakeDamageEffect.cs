@@ -20,7 +20,7 @@ namespace XD
         public float holyDamage = 0;
 
         [Header("Final Damage")]
-        private int finalDamageDealt = 0;
+        protected int finalDamageDealt = 0;
 
         [Header("Poise")]
         public float poiseDamage = 0;
@@ -55,9 +55,11 @@ namespace XD
             PlayDamageSFX(character);
             PlayDamageVFX(character);
 
+            // Run this after all other functions that would attempt to play an animation upon being damaged & After stance/poise damage is calculated 
+            CalculateStanceDamage(character);
         }
 
-        private void CalculateDamage(CharacterManager character)
+        protected virtual void CalculateDamage(CharacterManager character)
         {
             if (!character.IsOwner) { return; }
 
@@ -83,6 +85,8 @@ namespace XD
 
             character.characterStatsManager.totalPoisedDamage -= poiseDamage;
 
+            character.characterCombatManager.previousPoiseDamageTaken = poiseDamage;
+
             float remainingPoise = character.characterStatsManager.basePoiseDefense +
                 character.characterStatsManager.offensivePoiseBonus +
                 character.characterStatsManager.totalPoisedDamage;
@@ -92,17 +96,28 @@ namespace XD
                 poiseIsBroken = true;
             }
 
-
             // Since the character has been hit, we reset the poise reset timer
             character.characterStatsManager.poiseResetTimer = character.characterStatsManager.defaultPoiseResetTime;
         }
 
-        private void PlayDamageVFX(CharacterManager character)
+        protected void CalculateStanceDamage(CharacterManager character)
+        {
+            AICharacterManager aICharacter = character as AICharacterManager;
+
+            // You can optionally give weapons their own stance Damage Values, ore use poise damage 
+            int stanceDamage = Mathf.RoundToInt(poiseDamage);   
+            if(aICharacter != null)
+            {
+                aICharacter.aiCharacterCombatManager.DamageStance(stanceDamage);
+            }
+
+        }
+        protected void PlayDamageVFX(CharacterManager character)
         {
             character.characterEffectsManager.PlayBloodSplatterVFX(contactPoint);
         }
 
-        private void PlayDamageSFX(CharacterManager character)
+        protected void PlayDamageSFX(CharacterManager character)
         {
             AudioClip physicalDamageSFX = WorldSoundFXManager.Instance.ChooseRandomSFXFromArray(WorldSoundFXManager.Instance.physicalDamageSFX);
             character.characterSoundFXManager.PlaySoundFX(physicalDamageSFX);
@@ -110,7 +125,7 @@ namespace XD
         }
 
         // Hit React Animations
-        private void PlayDirectionalBasedDamageAnimation(CharacterManager character)
+        protected void PlayDirectionalBasedDamageAnimation(CharacterManager character)
         {
             if(!character.IsOwner) { return; }
             if(character.isDead.Value) { return; }

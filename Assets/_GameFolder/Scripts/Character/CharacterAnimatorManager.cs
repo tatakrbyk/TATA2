@@ -194,6 +194,25 @@ namespace XD
             character.characterNetworkManager.NotifyTheServerOfActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, animationName, applyRootMotion);
         }
 
+        public virtual void PlayActionAnimationInstantly(
+            string animationName,
+            bool isPerformingAction,
+            bool applyRootMotion = true,
+            bool canRotate = false,
+            bool canMove = false)
+        {
+
+            this.applyRootMotion = applyRootMotion;
+            character.animator.Play(animationName);
+            // Can be used to stop character from attempting new actions 
+            // This flag will turn true if you are stunned
+            character.isPerformingAction = isPerformingAction;
+            character.characterLocomotionManager.canRotate = canRotate;
+            character.characterLocomotionManager.canMove = canMove;
+
+            // Animation Replicated
+            character.characterNetworkManager.NotifyTheServerOfInstantActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, animationName, applyRootMotion);
+        }
         public virtual void PlayAttackActionAnimation(WeaponItem weapon, AttackType attackType,
             string animationName,
             bool isPerformingAction,

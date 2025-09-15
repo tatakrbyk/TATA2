@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2d488be95b38974c9d5b0c7911041c3, type: 3}
   m_Name: Spear
   m_EditorClassIdentifier: 
-  itemID: 2
+  itemID: 3
   itemName: Spear
-  itemIcon: {fileID: 21300022, guid: 09e4c6a7d75923945afe43953ef58ad2, type: 3}
+  itemIcon: {fileID: 21300000, guid: 112bd143ef60b5c45a84013151e2e585, type: 3}
   itemDescription: A Spear sword.
+  itemWeight: 0
   weaponAnimator: {fileID: 22100000, guid: 9278d386aa3957e44968b21f91380b8f, type: 2}
   weaponModelType: 0
   weaponModel: {fileID: 5586741155246535272, guid: f449251740cb239459ccfc320c868c2c,

@@ -16,12 +16,15 @@ namespace XD
         public AudioClip[] physicalDamageSFX;
 
         [Header("Actions Sounds")]
+        public AudioClip pickUpItemSFX;
         public AudioClip rollSFX;
+        public AudioClip stanceBreakSFX;
+        public AudioClip criticalStrikeSFX;
 
         private void Awake()
         {
             if(instance == null)
-            {
+            {   
                 instance = this;
             }
             else

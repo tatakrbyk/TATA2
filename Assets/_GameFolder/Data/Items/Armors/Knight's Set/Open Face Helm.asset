@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f033d62ab5cbbf43b719bae5e819b7f, type: 3}
+  m_Name: Open Face Helm
+  m_EditorClassIdentifier: 
+  itemID: 6
+  itemName: Knight Helm
+  itemIcon: {fileID: 21300000, guid: 4144b2172856b924f9fd23df0ff1afb6, type: 3}
+  itemDescription: 
+  itemWeight: 4.6
+  physicalDamageAbsorption: 4.4
+  magicDamageAbsorption: 3.8
+  fireDamageAbsorption: 3.8
+  lightningDamageAbsorption: 3.4
+  holyDamageAbsorption: 3.1
+  immunity: 12
+  robustness: 32
+  focus: 8
+  vitality: 8
+  poise: 8
+  equipmentModels:
+  - {fileID: 11400000, guid: d4bb7af5c59e8394692da0d9c857fc51, type: 2}
+  headEquipmentType: 2

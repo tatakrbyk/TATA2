@@ -65,6 +65,17 @@ namespace XD
             }
 
         }
+
+        // Call Anim Event
+        public virtual void PlayStanceBreakSoundFX()
+        {
+            audioSource.PlayOneShot(WorldSoundFXManager.Instance.stanceBreakSFX);
+        }
+
+        public virtual void PlayCriticalStrikeSoundFX()
+        {
+            audioSource.PlayOneShot(WorldSoundFXManager.Instance.criticalStrikeSFX);
+        }
         public virtual void PlayBlockSoundFX()
         {
             

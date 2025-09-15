@@ -2,11 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace XD
 {
     public class PlayerUIPopUpManager : MonoBehaviour
     {
+        [Header("Item Pop Up")]
+        [SerializeField] private GameObject itemPopUpGameObject;
+        [SerializeField] private Image ItemIcon;
+        [SerializeField] private TextMeshProUGUI itemName;
+        [SerializeField] private TextMeshProUGUI itemAmount;
+
         [Header("Message Pop Up")]
         [SerializeField] TextMeshProUGUI popUpMessageText;
         [SerializeField] GameObject popUpMessageGameObject;
@@ -32,7 +39,24 @@ namespace XD
         public void CloseAllPopUpWindows()
         {
             popUpMessageGameObject.SetActive(false);
+            itemPopUpGameObject.SetActive(false);
             PlayerUIManager.Instance.popUpWindowIsOpen = false;
+        }
+        
+        public void SendItemPopUp(Item item, int amount)
+        {
+            itemAmount.enabled = false;
+            ItemIcon.sprite = item.itemIcon;
+            itemName.text = item.itemName;
+
+            if(amount > 1)
+            {
+                itemAmount.enabled = true;
+                itemAmount.text = "x" + amount.ToString();
+            }
+
+            itemPopUpGameObject.SetActive(true);
+            PlayerUIManager.Instance.popUpWindowIsOpen = true;  
         }
 
         public void SendPlayerMessagePopUp(string messageText)

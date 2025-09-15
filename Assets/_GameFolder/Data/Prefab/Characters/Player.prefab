@@ -2478,8 +2478,8 @@ GameObject:
   - component: {fileID: 4341532465408963799}
   - component: {fileID: 5696538670068022424}
   - component: {fileID: 3743640853575237322}
+  - component: {fileID: 880611602801248189}
   - component: {fileID: 9088729737547424229}
-  - component: {fileID: 6486900137172647568}
   - component: {fileID: -8781292665237518300}
   - component: {fileID: 5131140196758353755}
   - component: {fileID: 940805120943773914}
@@ -2706,41 +2706,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &9088729737547424229
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8258507028766157828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94bca1aeaea075c43900168bbfb9fe0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isDead:
-    m_InternalValue: 0
-  characterController: {fileID: 0}
-  animator: {fileID: 0}
-  characterNetworkManager: {fileID: 0}
-  characterEffectsManager: {fileID: 0}
-  characterAnimatorManager: {fileID: 0}
-  characterCombatManager: {fileID: 0}
-  characterStatsManager: {fileID: 0}
-  characterSoundFXManager: {fileID: 0}
-  characterLocomotionManager: {fileID: 0}
-  characterUIManager: {fileID: 0}
-  characterGroup: 0
-  isPerformingAction: 0
-  playerAnimatorManager: {fileID: 0}
-  playerLocomotionManager: {fileID: 0}
-  playerNetworkManager: {fileID: 0}
-  playerStatsManager: {fileID: 0}
-  playerInventoryManager: {fileID: 0}
-  playerEquipmentManager: {fileID: 0}
-  playerCombatManager: {fileID: 0}
-  playerInteractionManager: {fileID: 0}
---- !u!114 &6486900137172647568
+--- !u!114 &880611602801248189
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2796,6 +2762,8 @@ MonoBehaviour:
   vitality:
     m_InternalValue: 10
   endurance:
+    m_InternalValue: 10
+  strength:
     m_InternalValue: 10
   characterName:
     m_InternalValue:
@@ -2884,6 +2852,52 @@ MonoBehaviour:
     m_InternalValue: 0
   IsTwoHandingLeftWeapon:
     m_InternalValue: 0
+  isMale:
+    m_InternalValue: 1
+  headEquipmentID:
+    m_InternalValue: -1
+  bodyEquipmentID:
+    m_InternalValue: -1
+  legEquipmentID:
+    m_InternalValue: -1
+  handEquipmentID:
+    m_InternalValue: -1
+--- !u!114 &9088729737547424229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8258507028766157828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94bca1aeaea075c43900168bbfb9fe0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDead:
+    m_InternalValue: 0
+  characterController: {fileID: 0}
+  animator: {fileID: 0}
+  characterNetworkManager: {fileID: 0}
+  characterEffectsManager: {fileID: 0}
+  characterAnimatorManager: {fileID: 0}
+  characterCombatManager: {fileID: 0}
+  characterStatsManager: {fileID: 0}
+  characterSoundFXManager: {fileID: 0}
+  characterLocomotionManager: {fileID: 0}
+  characterUIManager: {fileID: 0}
+  characterGroup: 0
+  isPerformingAction: 0
+  playerAnimatorManager: {fileID: 0}
+  playerLocomotionManager: {fileID: 0}
+  playerNetworkManager: {fileID: 0}
+  playerStatsManager: {fileID: 0}
+  playerInventoryManager: {fileID: 0}
+  playerEquipmentManager: {fileID: 0}
+  playerCombatManager: {fileID: 0}
+  playerInteractionManager: {fileID: 0}
+  playerEffectsManager: {fileID: 0}
+  playerBodyManager: {fileID: 0}
 --- !u!114 &-8781292665237518300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2904,6 +2918,15 @@ MonoBehaviour:
   blockingLightningAbsorption: 0
   blockingHolyAbsorption: 0
   blockingStability: 0
+  armorPhysicalDamageAbsorption: 0
+  armorMagicDamageAbsorption: 0
+  armorFireDamageAbsorption: 0
+  armorLightningDamageAbsorption: 0
+  armorHolyDamageAbsorption: 0
+  armorImmunity: 0
+  armorRobustness: 0
+  armorFocus: 0
+  armorVitality: 0
   totalPoisedDamage: 0
   offensivePoiseBonus: 0
   basePoiseDefense: 0
@@ -2958,6 +2981,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e6eb2b118287b694b97119ca19ebed79, type: 2}
   - {fileID: 11400000, guid: 1cc0e871fa33b9241952b4b6f6bfe963, type: 2}
   leftHandWeaponIndex: 0
+  headEquipment: {fileID: 0}
+  bodyEquipment: {fileID: 0}
+  legEquipment: {fileID: 0}
+  handEquipment: {fileID: 0}
 --- !u!114 &2932592689745444931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2974,10 +3001,77 @@ MonoBehaviour:
   leftHandWeaponSlot: {fileID: 0}
   leftHandShieldSlot: {fileID: 0}
   backSlot: {fileID: 0}
-  rightWeaponManager: {fileID: 0}
-  leftWeaponManager: {fileID: 0}
   rightHandWeaponModel: {fileID: 0}
   leftHandWeaponModel: {fileID: 0}
+  DebugEquipNewItems: 0
+  hatsObject: {fileID: 0}
+  hats: []
+  hoodsObject: {fileID: 0}
+  hoods: []
+  faceCoversObject: {fileID: 0}
+  faceCovers: []
+  helmetAccessoriesObject: {fileID: 0}
+  helmetAccessories: []
+  backAccessoriesObject: {fileID: 0}
+  backAccessories: []
+  hipAccessoriesObject: {fileID: 0}
+  hipAccessories: []
+  rightShoulderObject: {fileID: 0}
+  rightShoulders: []
+  rightElbowObject: {fileID: 0}
+  rightElbows: []
+  rightKneeObject: {fileID: 0}
+  rightKnees: []
+  leftShoulderObject: {fileID: 0}
+  leftShoulders: []
+  leftElbowObject: {fileID: 0}
+  leftElbows: []
+  leftKneeObject: {fileID: 0}
+  leftKnees: []
+  maleFullHelmetObject: {fileID: 0}
+  maleHeadFullHelmets: []
+  maleFullBodyObject: {fileID: 0}
+  maleBodies: []
+  maleRightUpperArmObject: {fileID: 0}
+  maleRightUpperArms: []
+  maleRightLowerArmObject: {fileID: 0}
+  maleRightLowerArms: []
+  maleRightHandObject: {fileID: 0}
+  maleRightHands: []
+  maleLeftUpperArmObject: {fileID: 0}
+  maleLeftUpperArms: []
+  maleLeftLowerArmObject: {fileID: 0}
+  maleLeftLowerArms: []
+  maleLeftHandObject: {fileID: 0}
+  maleLeftHands: []
+  maleHipsObject: {fileID: 0}
+  maleHips: []
+  maleRightLegObject: {fileID: 0}
+  maleRightLegs: []
+  maleLeftLegObject: {fileID: 0}
+  maleLeftLegs: []
+  femaleFullHelmetObject: {fileID: 0}
+  femaleHeadFullHelmets: []
+  femaleFullBodyObject: {fileID: 0}
+  femaleBodies: []
+  femaleRightUpperArmObject: {fileID: 0}
+  femaleRightUpperArms: []
+  femaleRightLowerArmObject: {fileID: 0}
+  femaleRightLowerArms: []
+  femaleRightHandObject: {fileID: 0}
+  femaleRightHands: []
+  femaleLeftUpperArmObject: {fileID: 0}
+  femaleLeftUpperArms: []
+  femaleLeftLowerArmObject: {fileID: 0}
+  femaleLeftLowerArms: []
+  femaleLeftHandObject: {fileID: 0}
+  femaleLeftHands: []
+  femaleHipsObject: {fileID: 0}
+  femaleHips: []
+  femaleRightLegObject: {fileID: 0}
+  femaleRightLegs: []
+  femaleLeftLegObject: {fileID: 0}
+  femaleLeftLegs: []
 --- !u!114 &9196352062907680859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3078,6 +3172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bloodSplatterVFX: {fileID: 0}
+  staticEffects: []
   effectToTest: {fileID: 11400000, guid: 194b99f51b9e74a488f6a77c63c1e3de, type: 2}
   processEffect: 0
 --- !u!114 &6562332819644719895

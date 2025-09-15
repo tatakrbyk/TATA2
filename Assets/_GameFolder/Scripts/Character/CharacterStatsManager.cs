@@ -22,6 +22,20 @@ namespace XD
         public float blockingHolyAbsorption;
         public float blockingStability;
 
+        [Header("Armor Absorptions")]
+
+        public float armorPhysicalDamageAbsorption;
+        public float armorMagicDamageAbsorption;
+        public float armorFireDamageAbsorption;
+        public float armorLightningDamageAbsorption;
+        public float armorHolyDamageAbsorption;
+
+        [Header("Armor Resistances")] 
+        public float armorImmunity;          // Resistance To Rot and Poison
+        public float armorRobustness;        // Resistance To Bleed and Frostbite
+        public float armorFocus;             // Resistance To Sleep and Madness
+        public float armorVitality;          // Resistance To Death Curse
+
         [Header("Poise")]
         public float totalPoisedDamage;             // How much poise damage we have taken
         public float offensivePoiseBonus;           // gaine from using items (weapons, etc)

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,6 +6,7 @@ namespace XD
 {
     public class PlayerUIHUDManager : MonoBehaviour
     {
+        [SerializeField] CanvasGroup[] canvasGroup;
         [Header("Stats Bars")]
         [SerializeField] UI_StatBar healthBar;
         [SerializeField] UI_StatBar staminaBar;
@@ -17,6 +19,23 @@ namespace XD
         public Transform bossHealthBarParent;
         public GameObject bossHealthBarObject;
 
+        public void ToggleHUD(bool status)
+        {
+            if(status)
+            {
+                foreach(var canvas in canvasGroup)
+                {
+                    canvas.alpha = 1f;
+                }                
+            }
+            else
+            {
+                foreach (var canvas in canvasGroup)
+                {
+                    canvas.alpha = 0f;
+                }
+            }
+        }
         public void RefreshHUD()
         {
             healthBar.gameObject.SetActive(false);

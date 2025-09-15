@@ -81,6 +81,27 @@ namespace XD
             
             return damageIntensity;
         }
+
+        public Vector3 GetRipostingPositionBasedOnWeaponClass(WeaponClass weaponClass)
+        {
+            Vector3 position = new Vector3(0.11f, 0, 0.7f);
+
+            switch(weaponClass)
+            {
+                case WeaponClass.StraightSword:      // Change position here if you desire
+                    break;
+                case WeaponClass.Spear:              // Change position here if you desire
+                    break;
+                case WeaponClass.MediumShield:       // Change position here if you desire
+                    break;
+                case WeaponClass.Fist:               // Change position here if you desire
+                    break;
+                default:
+                    break;
+            }
+
+            return position;
+        }
     }
 
 }

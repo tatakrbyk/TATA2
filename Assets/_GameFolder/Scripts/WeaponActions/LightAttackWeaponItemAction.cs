@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 namespace XD
 {
@@ -57,6 +58,8 @@ namespace XD
                 PerformBackstepAttack(playerPerformAction, weaponPerformAction);
                 return;
             }
+            
+            playerPerformAction.characterCombatManager.AttemptCriticalAttack();
             PerformLightAttack(playerPerformAction, weaponPerformAction);
         }
 

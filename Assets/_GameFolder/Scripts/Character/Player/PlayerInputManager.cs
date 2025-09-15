@@ -59,6 +59,10 @@ namespace XD
         [Header("Trigger INPUTS")]
         [SerializeField] bool RT_Input = false; 
         [SerializeField] bool Hold_RT_Input = false;
+
+        [Header("UI Inputs")]
+        [SerializeField] bool openCharacterMenuInput = false;
+        [SerializeField] bool closeMenuInput = false;
         private void Awake()
         {
             if (instance == null)
@@ -159,6 +163,10 @@ namespace XD
                 playerControls.PlayerActions.QueRB.performed += i => QueInput(ref que_RB_Input);
                 playerControls.PlayerActions.QueRT.performed += i => QueInput(ref que_RT_Input);
 
+                // UI Inputs
+                playerControls.PlayerActions.Dodge.performed += i => closeMenuInput = true;
+                playerControls.PlayerActions.OpenCharacterMenu.performed += i => openCharacterMenuInput = true;
+
 
             }
 
@@ -205,6 +213,8 @@ namespace XD
             HandleSwitchLeftWeaponInput();
             HandleQuedInputs();
             HandleInteractionInput();
+            HandleCloseUIInputs();
+            HandleOpenCharacterMenuInput();
         }
         #region Movements
         private void HandlePlayerMovementInput()
@@ -285,6 +295,9 @@ namespace XD
             if (jump_Input)
             {
                 jump_Input = false;
+                
+                if(PlayerUIManager.Instance.menuWindowIsOpen) { return; }
+
 
                 // TODO: If we have a uý window open, simply return without doing anything
 
@@ -471,6 +484,8 @@ namespace XD
             if(switchRightWeapon_Input)
             {
                 switchRightWeapon_Input = false;
+
+                if (PlayerUIManager.Instance.menuWindowIsOpen) { return; }
                 player.playerEquipmentManager.SwitchRightWeapon();
             }
         }
@@ -480,6 +495,7 @@ namespace XD
             if (switchLeftWeapon_Input)
             {
                 switchLeftWeapon_Input = false;
+                if (PlayerUIManager.Instance.menuWindowIsOpen) { return; }   
                 player.playerEquipmentManager.SwitchLeftWeapon();
             }
         }
@@ -538,6 +554,30 @@ namespace XD
 
                     input_Que_Is_Active = false;
                     que_Input_Timer = 0;
+                }
+            }
+        }
+
+        private void HandleOpenCharacterMenuInput()
+        {
+            if(openCharacterMenuInput)
+            {
+                openCharacterMenuInput = false;
+
+                PlayerUIManager.Instance.playerUIPopUpManager.CloseAllPopUpWindows();
+                PlayerUIManager.Instance.CloseAllMenuWindows();
+                PlayerUIManager.Instance.playerUICharacterMenuManager.OpenCharacterMenu();
+            }
+        }
+        private void HandleCloseUIInputs()
+        {
+            if(closeMenuInput)
+            {
+                closeMenuInput = false;
+              
+                if (PlayerUIManager.Instance.menuWindowIsOpen)
+                {
+                    PlayerUIManager.Instance.CloseAllMenuWindows();
                 }
             }
         }

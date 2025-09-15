@@ -76,6 +76,7 @@ namespace XD
         }
         public void Interact()
         {
+            PlayerUIManager.Instance.playerUIPopUpManager.CloseAllPopUpWindows();
             if(currentInteractableActions.Count == 0) { return; }
             if (currentInteractableActions[0] != null)
             {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace XD
 {
-    public class WeaponItem : Item
+    public class WeaponItem : EquipmentItem
     {
         [Header("Animations")]
         public AnimatorOverrideController weaponAnimator;
@@ -48,6 +48,7 @@ namespace XD
         public float running_Attack_01_Modifier = 1.1f;
         public float rolling_Attack_01_Modifier = 1.1f;
         public float backstep_Attack_01_Modifier = 1.1f;
+        public float riposte_Attack_01_Modifier = 3.3f;
         // Weapon modifiers
         // Light Attack modifier
         // Heavy Attack modifier

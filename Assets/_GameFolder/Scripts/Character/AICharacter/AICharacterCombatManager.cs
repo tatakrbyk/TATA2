@@ -26,12 +26,82 @@ namespace XD
         [Header("Attack Rotation Speed")]
         public float attackRotationSpeed = 25f;
 
+        [Header("Stance/Posture Settings")]
+        public float maxStance = 150;
+        public float currentStance;
+        [SerializeField] float stanceRegeneratedPersecond = 15f;
+        [SerializeField] private bool ignoreStanceBreak = false;
+
+        [Header("Stance/Posture Timer")]
+        [SerializeField] private float stanceRegenerationTimer = 0;  // player continue hit not regenerate stance
+        [SerializeField] private float defaultTimeUntilStanceRegenerationBegins = 15f;
+        private float stanceTickTimer = 0;
+
         protected override void Awake()
         {
             base.Awake();
 
             aiCharacter = GetComponent<AICharacterManager>();
             lockOnTransform = GetComponentInChildren<LockOnTransform>().transform;
+        }
+
+        private void FixedUpdate()
+        {
+            HandleStanceBreak();
+        }
+        private void HandleStanceBreak()
+        {
+            if (!aiCharacter.IsOwner) { return; }
+            if (aiCharacter.isDead.Value) { return; }
+
+            if (stanceRegenerationTimer > 0)
+            {
+                stanceRegenerationTimer -= Time.deltaTime;
+            }
+            else
+            {
+                stanceRegenerationTimer = 0;
+
+                if (currentStance < maxStance)
+                {
+                    currentStance += stanceRegeneratedPersecond * Time.deltaTime;
+
+                    stanceTickTimer += Time.deltaTime;
+                    if (stanceTickTimer >= 1)
+                    {
+                        stanceTickTimer = 0;
+                        currentStance += stanceRegeneratedPersecond;
+                    }
+                }
+                else
+                {
+                    currentStance = maxStance;
+                }
+            }
+
+            if(currentStance <= 0)
+            {
+                DamageIntensity previousDamageIntensity = WorldUtilityManager.Instance.GetDamageIntensityBasedOnPoiseDamage(previousPoiseDamageTaken);
+
+                if(previousDamageIntensity == DamageIntensity.Colossal)
+                {
+                    currentStance = 1;
+                    return;
+                }
+
+                currentStance = maxStance;
+
+                if(ignoreStanceBreak) { return; }
+
+                aiCharacter.characterAnimatorManager.PlayActionAnimation("Stance_Break_01", true);
+            }
+        }
+
+        public void DamageStance(int stanceDamage)
+        {
+            // When stance is damaged, The timer is reset, Meaning Constant attacks give no chance at recovering stance that is lost 
+            stanceRegenerationTimer = defaultTimeUntilStanceRegenerationBegins;
+            currentStance -= stanceDamage;
         }
         public void FindATargetViaLineOfSight(AICharacterManager aiCharacter)
         {

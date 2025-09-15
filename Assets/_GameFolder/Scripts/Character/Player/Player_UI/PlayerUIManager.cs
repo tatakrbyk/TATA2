@@ -12,6 +12,8 @@ namespace XD
 
         [HideInInspector] public PlayerUIHUDManager playerUIHUDManager;
         [HideInInspector] public PlayerUIPopUpManager playerUIPopUpManager;
+        [HideInInspector] public PlayerUICharacterMenuManager playerUICharacterMenuManager;
+        [HideInInspector] public PlayerUIEquipmentManager playerUIEquipmentManager;
 
         [Header("UI Flags")]
         public bool menuWindowIsOpen = false;  // Inventory screen, Equipment menu, Blacksmith menu, etc.
@@ -29,7 +31,9 @@ namespace XD
             }
 
             playerUIHUDManager = GetComponentInChildren<PlayerUIHUDManager>();
-            playerUIPopUpManager = GetComponentInChildren<PlayerUIPopUpManager>(); 
+            playerUIPopUpManager = GetComponentInChildren<PlayerUIPopUpManager>();
+            playerUICharacterMenuManager = GetComponentInChildren<PlayerUICharacterMenuManager>();
+            playerUIEquipmentManager = GetComponentInChildren<PlayerUIEquipmentManager>();
         }
 
         private void Start()
@@ -48,5 +52,10 @@ namespace XD
             }
         }
 
+        public void CloseAllMenuWindows()
+        { 
+            playerUICharacterMenuManager.CloseCharacterMenu();
+            playerUIEquipmentManager.CloseEquipmentManagerMenu();
+        }
     }
 }

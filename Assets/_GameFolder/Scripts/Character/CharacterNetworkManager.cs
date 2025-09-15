@@ -39,6 +39,8 @@ namespace XD
         public NetworkVariable<bool> isSprinting = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<bool> isJumping = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<bool> isChargingAttack = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> isRipostable = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> isBeginCriticallyDamaged = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         [Header("Resources")]
         public NetworkVariable<float> currentStamina = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -69,6 +71,11 @@ namespace XD
                     currentHealth.Value = maxHealth.Value;
                 }
             }
+        }
+
+        public virtual void OnIsDeadChanged(bool oldStatus, bool newStatus)
+        {
+            character.animator.SetBool("IsDead", character. isDead.Value);     
         }
         public void OnLockOnTargetIDChange(ulong oldID, ulong newID)
         {
@@ -132,7 +139,35 @@ namespace XD
             character.characterAnimatorManager.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(animationID, 0.2f);
         }
-#endregion
+
+        // Instantly
+
+        [ServerRpc]
+        public void NotifyTheServerOfInstantActionAnimationServerRpc(ulong clientID, string animationID, bool applyRootMotion)
+        {
+            // If the character is the host/server, we play the animation for all clients (client Rpc)
+            if (IsServer)
+            {
+                PlayInstantActionAnimationForAllClientsClientRpc(clientID, animationID, applyRootMotion);
+            }
+        }
+
+        [ClientRpc]
+        public void PlayInstantActionAnimationForAllClientsClientRpc(ulong clientID, string animationID, bool applyRootMotion)
+        {
+            // We make sure to not run the function on the character who sent it ( So we dont play the animation twice)
+            if (clientID != NetworkManager.Singleton.LocalClientId)
+            {
+                PerformInstantActionAnimationFromServer(animationID, applyRootMotion);
+            }
+        }
+
+        private void PerformInstantActionAnimationFromServer(string animationID, bool applyRootMotion)
+        {
+            character.characterAnimatorManager.applyRootMotion = applyRootMotion;
+            character.animator.Play(animationID);
+        }
+        #endregion
         #region Attack Action Animation
         [ServerRpc]
         public void NotifyTheServerOfAttackActionAnimationServerRpc(ulong clientID, string animationID, bool applyRootMotion)
@@ -210,6 +245,73 @@ namespace XD
             damageEffect.characterCausingDamage = characterCausingDamage;
             
             damagedCharacter.characterEffectsManager.ProcessInstantEffect(damageEffect);
+        }
+        #endregion
+
+        #region Riposte (Critical Attack)
+
+        [ServerRpc(RequireOwnership = false)]
+        public void NotifyTheServerOfRiposteServerRPC(
+            ulong damageCharacterID,
+            ulong characterCausingDamageID,
+            string criticalDamageAnimation, int weaponID,
+            float physicalDamage, float magicDamage, float fireDamage, float holyDamage, float poiseDamage
+            )
+        {
+            if (IsServer)
+            {
+                NotifyTheServerOfRiposteClientRPC(
+                    damageCharacterID, characterCausingDamageID, criticalDamageAnimation, weaponID,
+                    physicalDamage, magicDamage, fireDamage, holyDamage, poiseDamage
+                    );
+            }
+        }
+
+        [ClientRpc]
+        public void NotifyTheServerOfRiposteClientRPC(
+            ulong damageCharacterID,
+            ulong characterCausingDamageID,
+            string criticalDamageAnimation, int weaponID,
+            float physicalDamage, float magicDamage, float fireDamage, float holyDamage, float poiseDamage)
+        {
+            ProcessRiposteFromServer(
+                   damageCharacterID, characterCausingDamageID, criticalDamageAnimation, weaponID,
+                   physicalDamage, magicDamage, fireDamage, holyDamage, poiseDamage
+                   );
+
+        }
+
+        private void ProcessRiposteFromServer(
+            ulong damageCharacterID,
+            ulong characterCausingDamageID,
+            string criticalDamageAnimation, int weaponID,
+            float physicalDamage, float magicDamage, float fireDamage, float holyDamage, float poiseDamage)
+        {
+            CharacterManager damagedCharacter = NetworkManager.Singleton.SpawnManager.SpawnedObjects[damageCharacterID].gameObject.GetComponent<CharacterManager>();
+            CharacterManager characterCausingDamage = NetworkManager.Singleton.SpawnManager.SpawnedObjects[characterCausingDamageID].gameObject.GetComponent<CharacterManager>();
+            WeaponItem weapon = WorldItemDatabase.Instance.GetWeaponByID(weaponID);
+            TakeCriticalDamageEffect damageEffect = Instantiate(WorldCharacterEffectsManager.Instance.takeCriticalDamageEffect);
+
+            if(damagedCharacter.IsOwner)
+            {
+                damagedCharacter.characterNetworkManager.isBeginCriticallyDamaged.Value = true;
+            }
+
+            damageEffect.physicalDamage = physicalDamage;
+            damageEffect.magicDamage = magicDamage;
+            damageEffect.fireDamage = fireDamage;
+            damageEffect.holyDamage = holyDamage;
+            damageEffect.poiseDamage = poiseDamage;
+
+            damageEffect.characterCausingDamage = characterCausingDamage;
+
+            damagedCharacter.characterEffectsManager.ProcessInstantEffect(damageEffect);
+            damagedCharacter.characterAnimatorManager.PlayActionAnimationInstantly(criticalDamageAnimation, true);
+
+
+            // Move the enemy to the proper riposte position
+
+            StartCoroutine(damagedCharacter.characterCombatManager.ForceMoveEnemyCharacterToRipostePosition(characterCausingDamage, WorldUtilityManager.Instance.GetRipostingPositionBasedOnWeaponClass(weapon.weaponClass)));
         }
         #endregion
     }

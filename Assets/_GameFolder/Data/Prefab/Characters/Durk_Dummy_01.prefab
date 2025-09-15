@@ -1077,6 +1077,7 @@ MonoBehaviour:
   fireDamage: 0
   lightningDamage: 0
   holyDamage: 0
+  poiseDamage: 0
 --- !u!1 &2486371938647057687
 GameObject:
   m_ObjectHideFlags: 0
@@ -2565,6 +2566,7 @@ MonoBehaviour:
   fireDamage: 0
   lightningDamage: 0
   holyDamage: 0
+  poiseDamage: 0
   bossCharacter: {fileID: 0}
 --- !u!1 &7443354504026359641
 GameObject:
@@ -2988,6 +2990,10 @@ MonoBehaviour:
     m_InternalValue: 0
   currentTargetNetworkObjectID:
     m_InternalValue: 0
+  isBlocking:
+    m_InternalValue: 0
+  isAttacking:
+    m_InternalValue: 0
   isInvulnerable:
     m_InternalValue: 0
   isLockedOn:
@@ -3010,6 +3016,8 @@ MonoBehaviour:
     m_InternalValue: 10
   endurance:
     m_InternalValue: 10
+  strength:
+    m_InternalValue: 10
 --- !u!114 &6322904211495576853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3030,6 +3038,7 @@ MonoBehaviour:
   characterEffectsManager: {fileID: 0}
   characterAnimatorManager: {fileID: 0}
   characterCombatManager: {fileID: 0}
+  characterStatsManager: {fileID: 0}
   characterSoundFXManager: {fileID: 0}
   characterLocomotionManager: {fileID: 0}
   characterUIManager: {fileID: 0}
@@ -3082,6 +3091,7 @@ MonoBehaviour:
   currentAttackType: 0
   canPerformRollingtAttack: 0
   canPerformBackstepAttack: 0
+  canBlock: 1
   actionRecoveryTimer: 0
   enablePivot: 1
   distanceFromTarget: 0
@@ -3095,6 +3105,7 @@ MonoBehaviour:
   durkStompCollider: {fileID: 3924542131770878660}
   stompAttackAreaOfEffectRadius: 1.5
   baseDamage: 25
+  basePoiseDamage: 25
   attack01DamageModifier: 1
   attack02DamageModifier: 1.4
   attack03DamageModifier: 1.6
@@ -3134,6 +3145,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   staminaRegenerationAmount: 2
   staminaRegenerationDelay: 2
+  blockingPhysicalAbsorption: 0
+  blockingFireAbsorption: 0
+  blockingMagicAbsorption: 0
+  blockingLightningAbsorption: 0
+  blockingHolyAbsorption: 0
+  blockingStability: 0
+  armorPhysicalDamageAbsorption: 0
+  armorMagicDamageAbsorption: 0
+  armorFireDamageAbsorption: 0
+  armorLightningDamageAbsorption: 0
+  armorHolyDamageAbsorption: 0
+  armorImmunity: 0
+  armorRobustness: 0
+  armorFocus: 0
+  armorVitality: 0
+  totalPoisedDamage: 0
+  offensivePoiseBonus: 0
+  basePoiseDefense: 0
+  defaultPoiseResetTime: 8
+  poiseResetTimer: 0
 --- !u!114 &3882180106931624024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3159,6 +3190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bloodSplatterVFX: {fileID: 0}
+  staticEffects: []
 --- !u!114 &7672094677841754617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3185,6 +3217,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   applyRootMotion: 1
   lastDamageAnimationPlayed: 
+  hit_React_Forward_Ping_01: hit_React_Forward_Ping_01
+  hit_React_Forward_Ping_02: hit_React_Forward_Ping_02
+  hit_React_Backward_Ping_01: hit_React_Backward_Ping_01
+  hit_React_Backward_Ping_02: hit_React_Backward_Ping_02
+  hit_React_Left_Ping_01: hit_React_Left_Ping_01
+  hit_React_Left_Ping_02: hit_React_Left_Ping_02
+  hit_React_Right_Ping_01: hit_React_Right_Ping_01
+  hit_React_Right_Ping_02: hit_React_Right_Ping_02
+  forward_Ping_Damage: []
+  backward_Ping_Damage: []
+  left_Ping_Damage: []
+  right_Ping_Damage: []
   hit_React_Forward_Medium_01: hit_React_Forward_Medium_01
   hit_React_Forward_Medium_02: hit_React_Forward_Medium_02
   hit_React_Backward_Medium_01: hit_React_Backward_Medium_01
@@ -3398,7 +3442,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5080645460179521349}
-  - component: {fileID: 4756758122796782611}
+  - component: {fileID: 1905501912893250461}
   m_Layer: 7
   m_Name: LockOnTarget
   m_TagString: Untagged
@@ -3421,7 +3465,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2919515884457950707}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4756758122796782611
+--- !u!114 &1905501912893250461
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
