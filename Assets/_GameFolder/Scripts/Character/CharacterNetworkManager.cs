@@ -33,6 +33,8 @@ namespace XD
 
         [Header("Flags")]
         public NetworkVariable<bool> isBlocking = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> isParrying = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> isParryable = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<bool> isAttacking = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<bool> isInvulnerable = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<bool> isLockedOn = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -312,6 +314,101 @@ namespace XD
             // Move the enemy to the proper riposte position
 
             StartCoroutine(damagedCharacter.characterCombatManager.ForceMoveEnemyCharacterToRipostePosition(characterCausingDamage, WorldUtilityManager.Instance.GetRipostingPositionBasedOnWeaponClass(weapon.weaponClass)));
+        }
+        #endregion
+
+        #region Backstab (Critical Attack)
+
+        [ServerRpc(RequireOwnership = false)]
+        public void NotifyTheServerOfBackstabServerRPC(
+            ulong damageCharacterID,
+            ulong characterCausingDamageID,
+            string criticalDamageAnimation, int weaponID,
+            float physicalDamage, float magicDamage, float fireDamage, float holyDamage, float poiseDamage
+            )
+        {
+            if (IsServer)
+            {
+                NotifyTheServerOfRiposteClientRPC(
+                    damageCharacterID, characterCausingDamageID, criticalDamageAnimation, weaponID,
+                    physicalDamage, magicDamage, fireDamage, holyDamage, poiseDamage
+                    );
+            }
+        }
+
+        [ClientRpc]
+        public void NotifyTheServerOfBackstabClientRPC(
+            ulong damageCharacterID,
+            ulong characterCausingDamageID,
+            string criticalDamageAnimation, int weaponID,
+            float physicalDamage, float magicDamage, float fireDamage, float holyDamage, float poiseDamage)
+        {
+            ProcessBackstabFromServer(
+                   damageCharacterID, characterCausingDamageID, criticalDamageAnimation, weaponID,
+                   physicalDamage, magicDamage, fireDamage, holyDamage, poiseDamage
+                   );
+
+        }
+
+        private void ProcessBackstabFromServer(
+            ulong damageCharacterID,
+            ulong characterCausingDamageID,
+            string criticalDamageAnimation, int weaponID,
+            float physicalDamage, float magicDamage, float fireDamage, float holyDamage, float poiseDamage)
+        {
+            CharacterManager damagedCharacter = NetworkManager.Singleton.SpawnManager.SpawnedObjects[damageCharacterID].gameObject.GetComponent<CharacterManager>();
+            CharacterManager characterCausingDamage = NetworkManager.Singleton.SpawnManager.SpawnedObjects[characterCausingDamageID].gameObject.GetComponent<CharacterManager>();
+            WeaponItem weapon = WorldItemDatabase.Instance.GetWeaponByID(weaponID);
+            TakeCriticalDamageEffect damageEffect = Instantiate(WorldCharacterEffectsManager.Instance.takeCriticalDamageEffect);
+
+            if (damagedCharacter.IsOwner)
+            {
+                damagedCharacter.characterNetworkManager.isBeginCriticallyDamaged.Value = true;
+            }
+
+            damageEffect.physicalDamage = physicalDamage;
+            damageEffect.magicDamage = magicDamage;
+            damageEffect.fireDamage = fireDamage;
+            damageEffect.holyDamage = holyDamage;
+            damageEffect.poiseDamage = poiseDamage;
+
+            damageEffect.characterCausingDamage = characterCausingDamage;
+
+            damagedCharacter.characterEffectsManager.ProcessInstantEffect(damageEffect);
+            damagedCharacter.characterAnimatorManager.PlayActionAnimationInstantly(criticalDamageAnimation, true);
+
+
+            // Move the backstab target to the position of the backstabber
+
+            StartCoroutine(characterCausingDamage.characterCombatManager.ForceMoveEnemyCharacterToBackstabPosition(damagedCharacter, WorldUtilityManager.Instance.GetBackstabPositionBasedOnWeaponClass(weapon.weaponClass)));
+        }
+        #endregion
+        #region Parry
+        [ServerRpc(RequireOwnership = false)]
+        public void NotifyServerOfParryServerRpc(ulong parriedClientID)
+        { 
+            if(IsServer)
+            { 
+                NotifyServerOfParryClientRpc(parriedClientID);
+            }
+        }
+
+        [ClientRpc]
+        protected void NotifyServerOfParryClientRpc(ulong parriedClientID)
+        {
+            ProcessParryFromServer(parriedClientID);
+        }
+
+        protected void ProcessParryFromServer(ulong parriedClient)
+        {
+            CharacterManager parriedCharacter = NetworkManager.Singleton.SpawnManager.SpawnedObjects[parriedClient].gameObject.GetComponent<CharacterManager>();
+
+            if(parriedCharacter == null) { return; }
+
+            if (parriedCharacter.IsOwner)
+            {
+                parriedCharacter.characterAnimatorManager.PlayActionAnimationInstantly("Parried_01", true);
+            }
         }
         #endregion
     }

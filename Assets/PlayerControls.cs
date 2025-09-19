@@ -107,7 +107,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""id"": ""39a5487c-a83a-42b4-8ef2-b8f435cb35c5"",
                     ""path"": ""2DVector(mode=2)"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone"",
                     ""groups"": """",
                     ""action"": ""Movement"",
                     ""isComposite"": true,
@@ -555,7 +555,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""cb12c4f1-1bf9-45ad-b9f2-5639081a3ca2"",
-                    ""path"": ""<Keyboard>/z"",
+                    ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -874,7 +874,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""3d8fbed4-e243-4415-8588-6b9abd3410ca"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -885,7 +885,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""212a1807-a45d-4d2f-a1f5-7fb8b2edcb89"",
-                    ""path"": ""<Mouse>/rightButton"",
+                    ""path"": ""<Keyboard>/t"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -896,7 +896,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""3813c161-d27d-4c22-acdc-9994bf758736"",
-                    ""path"": ""<HID::Microntek              USB Joystick          >/button8"",
+                    ""path"": ""<HID::Microntek              USB Joystick          >/button7"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

@@ -48,7 +48,7 @@ namespace XD
         public float running_Attack_01_Modifier = 1.1f;
         public float rolling_Attack_01_Modifier = 1.1f;
         public float backstep_Attack_01_Modifier = 1.1f;
-        public float riposte_Attack_01_Modifier = 3.3f;
+        
         // Weapon modifiers
         // Light Attack modifier
         // Heavy Attack modifier
@@ -80,6 +80,7 @@ namespace XD
         public WeaponItemAction oh_RB_Action; // One Hand Right Bummper Action
         public WeaponItemAction oh_RT_Action; // One Hand Right Trigger Action
         public WeaponItemAction oh_LB_Action; // One Hand Left Bummper Action
+        public AshOfWar ashOfWarAction; // oh_LT_Action; // One Hand Left Trigger Action
 
         // Ash of war 
 

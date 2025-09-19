@@ -13,6 +13,17 @@ namespace XD
         [SerializeField] private GameObject menu;
 
         [Header("Weapon Slots")]
+        private Button rightHandSlot01Button;
+        private Button rightHandSlot02Button;
+        private Button rightHandSlot03Button;
+        private Button leftHandSlot01Button;
+        private Button leftHandSlot02Button;
+        private Button leftHandSlot03Button;
+        private Button headEquipmentSlotButton;
+        private Button bodyEquipmentSloButton;
+        private Button legsEquipmentSlotButton;
+        private Button handsEquipmentSlotButton;
+
         // Option 1
         [SerializeField] Image rightHandSlot01;
         [SerializeField] Image rightHandSlot02;
@@ -34,9 +45,24 @@ namespace XD
         [SerializeField] GameObject equipmentInventorySlotPrefab;
         [SerializeField] Transform equipmentInventoryContentWindow; 
         [SerializeField] Item currentSelectedItem;
+
+        private void Awake()
+        {
+            rightHandSlot01Button = rightHandSlot01.GetComponentInParent<Button>(true);
+            rightHandSlot02Button = rightHandSlot02.GetComponentInParent<Button>(true);
+            rightHandSlot03Button = rightHandSlot03.GetComponentInParent<Button>(true);
+            leftHandSlot01Button = leftHandSlot01.GetComponentInParent<Button>(true);
+            leftHandSlot02Button = leftHandSlot02.GetComponentInParent<Button>(true);
+            leftHandSlot03Button = leftHandSlot03.GetComponentInParent<Button>(true);
+            headEquipmentSlotButton = headEquipmentSlot.GetComponentInParent<Button>(true);
+            bodyEquipmentSloButton = bodyEquipmentSlot.GetComponentInParent<Button>(true);
+            legsEquipmentSlotButton = legsEquipmentSlot.GetComponentInParent<Button>(true);
+            handsEquipmentSlotButton = handsEquipmentSlot.GetComponentInParent<Button>(true);
+        }
         public void OpenEquipmentManagerMenu()
         {
             PlayerUIManager.Instance.menuWindowIsOpen = true;
+            ToggleEquipmentButtons(true);
             menu.SetActive(true);
             equipmentInventoryWindow.SetActive(false);
             ClearEquipmentInventory();
@@ -54,42 +80,58 @@ namespace XD
             RefreshEquipmentSlotIcons();
         }
 
+        private void ToggleEquipmentButtons(bool isEnabled)
+        {
+            rightHandSlot01Button.enabled = isEnabled;
+            rightHandSlot02Button.enabled = isEnabled;
+            rightHandSlot03Button.enabled = isEnabled;
+
+            leftHandSlot01Button.enabled = isEnabled;
+            leftHandSlot02Button.enabled = isEnabled;
+            leftHandSlot03Button.enabled = isEnabled;
+
+            headEquipmentSlotButton.enabled = isEnabled;
+            bodyEquipmentSloButton.enabled = isEnabled;
+            legsEquipmentSlotButton.enabled = isEnabled;
+            handsEquipmentSlotButton.enabled = isEnabled;
+        }
         // This func simply returns you to the last selected button when you are finished equipping a new item
         public void SelectLastSelectedEquipmentSlot()
         {
             Button lastSelectedButon = null;
 
-            switch(currentSelectedEquipmentSlot)
+            ToggleEquipmentButtons(true);
+            switch (currentSelectedEquipmentSlot)
             {
                 case EquipmentType.RightWeapon01:
-                    lastSelectedButon = rightHandSlot01.GetComponentInParent<Button>();
+                    lastSelectedButon = rightHandSlot01Button;
                     break;
                 case EquipmentType.RightWeapon02:
-                    lastSelectedButon = rightHandSlot02.GetComponentInParent<Button>();
+                    lastSelectedButon = rightHandSlot02Button;
                     break;
                 case EquipmentType.RightWeapon03:
-                    lastSelectedButon = rightHandSlot03.GetComponentInParent<Button>();
+                    lastSelectedButon = rightHandSlot03Button;
                     break;
                 case EquipmentType.LeftWeapon01:
-                    lastSelectedButon = leftHandSlot01.GetComponentInParent<Button>();
+                    lastSelectedButon = leftHandSlot01Button;
                     break;
                 case EquipmentType.LeftWeapon02:
-                    lastSelectedButon = leftHandSlot02.GetComponentInParent<Button>();
+                    lastSelectedButon = leftHandSlot02Button;
                     break;
                 case EquipmentType.LeftWeapon03:
-                    lastSelectedButon = leftHandSlot03.GetComponentInParent<Button>();                    
+                    lastSelectedButon = leftHandSlot03Button;
                     break;
                 case EquipmentType.Head:
-                    lastSelectedButon = headEquipmentSlot.GetComponentInParent<Button>();
+                    lastSelectedButon = headEquipmentSlotButton;
                     break;
                 case EquipmentType.Body:
-                    lastSelectedButon = bodyEquipmentSlot.GetComponentInParent<Button>();
+                    lastSelectedButon = bodyEquipmentSloButton;
                     break;
                 case EquipmentType.Legs:
-                    lastSelectedButon = legsEquipmentSlot.GetComponentInParent<Button>();
+                    lastSelectedButon = legsEquipmentSlotButton;
                     break;
                 case EquipmentType.Hands:
-                    lastSelectedButon = handsEquipmentSlot.GetComponentInParent<Button>();
+                    lastSelectedButon = handsEquipmentSlotButton;
                     break;
 
 
@@ -102,6 +144,8 @@ namespace XD
                 lastSelectedButon.Select();
                 lastSelectedButon.OnSelect(null);
             }
+
+            equipmentInventoryWindow.SetActive(false);
         }
 
         private void RefreshEquipmentSlotIcons()
@@ -239,6 +283,7 @@ namespace XD
         // Call. OnClick, PLAYER UI MANAGER Inspector Equipment Slots Window
         public void LoadEquipmentInventory()
         {
+            ToggleEquipmentButtons(false);
             equipmentInventoryWindow.SetActive(true);
 
             switch(currentSelectedEquipmentSlot)
@@ -296,7 +341,11 @@ namespace XD
 
             for(int i = 0; i < weaponsInInventory.Count; i++)
             {
+                // TODO: Send a player message that he none of item type in inventory
+                equipmentInventoryWindow.SetActive(false);
+                ToggleEquipmentButtons(true);
                 RefreshMenu();
+
                 return;
             }
 
@@ -340,6 +389,9 @@ namespace XD
 
             for (int i = 0; i < headEquipmentInInventory.Count; i++)
             {
+                // TODO: Send a player message that he none of item type in inventory
+                equipmentInventoryWindow.SetActive(false);
+                ToggleEquipmentButtons(true);
                 RefreshMenu();
                 return;
             }
@@ -383,6 +435,9 @@ namespace XD
 
             for (int i = 0; i < bodyEquipmentInInventory.Count; i++)
             {
+                // TODO: Send a player message that he none of item type in inventory
+                equipmentInventoryWindow.SetActive(false);
+                ToggleEquipmentButtons(true);
                 RefreshMenu();
                 return;
             }
@@ -426,6 +481,9 @@ namespace XD
 
             for (int i = 0; i < legsEquipmentInInventory.Count; i++)
             {
+                // TODO: Send a player message that he none of item type in inventory
+                equipmentInventoryWindow.SetActive(false);
+                ToggleEquipmentButtons(true);
                 RefreshMenu();
                 return;
             }
@@ -467,6 +525,9 @@ namespace XD
             }
             for (int i = 0; i < handsEquipmentInInventory.Count; i++)
             {
+                // TODO: Send a player message that he none of item type in inventory
+                equipmentInventoryWindow.SetActive(false);
+                ToggleEquipmentButtons(true);
                 RefreshMenu();
                 return;
             }

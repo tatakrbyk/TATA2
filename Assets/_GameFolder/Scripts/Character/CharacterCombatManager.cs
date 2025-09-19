@@ -28,11 +28,13 @@ namespace XD
         public bool canPerformRollingtAttack = false;
         public bool canPerformBackstepAttack = false;
         public bool canBlock = true;
+        public bool canBeBackstabbed = true;
 
         [Header("Critical Attack")]
         [SerializeField] private float criticalAttackDistanceCheck = 0.7f;
         public int pendingCriticalDamage;
         private Transform riposteReceiverTransform;
+        private Transform backstabReceiverTransform;
         protected virtual void Awake()
         {
             character = GetComponent<CharacterManager>();
@@ -81,8 +83,22 @@ namespace XD
                         if(targetViewableAngle >= -60 && targetViewableAngle <= 60)
                         {
                             AttemptRiposte(hit);
-                            Debug.Log("Attempting Riposte");
-                            break;
+                            return;
+                        }
+                    }
+
+                    if(targetCharacter.characterCombatManager.canBeBackstabbed)
+                    {
+                        if (targetViewableAngle <= 180 || targetViewableAngle >= 145)
+                        {
+                            AttemptedBackStab(hit);
+                            return;
+                        }
+
+                        if (targetViewableAngle >= -180 || targetViewableAngle <= -145)
+                        {
+                            AttemptedBackStab(hit);
+                            return;
                         }
                     }
                 }
@@ -93,6 +109,10 @@ namespace XD
         public virtual void AttemptRiposte(RaycastHit hit)
         {
 
+        }
+
+        public virtual void AttemptedBackStab(RaycastHit hit)
+        {
         }
 
         public virtual void ApplyCriticalDamage()
@@ -109,13 +129,13 @@ namespace XD
         {
             float timer = 0; 
 
-            while(timer < 0.5f)
+            while(timer < 0.2f)
             {
                 timer += Time.deltaTime;
 
                 if(riposteReceiverTransform == null)
                 {
-                    GameObject riposteTransformObject = new GameObject("Riposte Receiver Transform");
+                    GameObject riposteTransformObject = new GameObject("Riposte Transform");
                     riposteTransformObject.transform.parent = transform;
                     riposteTransformObject.transform.position = Vector3.zero;
                     riposteReceiverTransform = riposteTransformObject.transform;
@@ -124,6 +144,29 @@ namespace XD
                 riposteReceiverTransform.localPosition = ripostePosition;
                 enemyCharacter.transform.position = riposteReceiverTransform.position;
                 transform.rotation = Quaternion.LookRotation(-enemyCharacter.transform.forward);
+                yield return null;
+            }
+        }
+
+        public IEnumerator ForceMoveEnemyCharacterToBackstabPosition(CharacterManager enemyCharacter, Vector3 backstabPosition)
+        {
+            float timer = 0;
+
+            while (timer < 0.2f)
+            {
+                timer += Time.deltaTime;
+
+                if (backstabReceiverTransform == null)
+                {
+                    GameObject backstabTransformObject = new GameObject("Backstab Transform");
+                    backstabTransformObject.transform.parent = transform;
+                    backstabTransformObject.transform.position = Vector3.zero;
+                    backstabReceiverTransform = backstabTransformObject.transform;
+                }
+
+                backstabReceiverTransform.localPosition = backstabPosition;
+                enemyCharacter.transform.position = backstabReceiverTransform.position;
+                transform.rotation = Quaternion.LookRotation(enemyCharacter.transform.forward);
                 yield return null;
             }
         }
@@ -145,7 +188,22 @@ namespace XD
             }
         }
 
-        // Call: Stance_Break_01 (core_main_Stance_broken_f_01)
+        // Call:  Parry Animations (small,medium .. etc) Events
+        public void EnableIsParrying()
+        {
+            if (character.IsOwner)
+            {
+                character.characterNetworkManager.isParrying.Value = true;
+            }
+        }
+        public void DisableIsParrying()
+        {
+            if (character.IsOwner)
+            {
+                character.characterNetworkManager.isParrying.Value = false;
+            }
+        }
+        // Call: Stance_Break_01 (core_main_Stance_broken_f_01), Parry_victim 
         public void EnableIsRipostable()
         {
             if (character.IsOwner)
@@ -183,6 +241,11 @@ namespace XD
         }
 
         public virtual void DisableCanDoCombo()
+        {
+
+        }
+
+        public virtual void CloseAllDamageColliders()
         {
 
         }

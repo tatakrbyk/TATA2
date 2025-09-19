@@ -59,6 +59,14 @@ namespace XD
             leftHandDamageCollider.DisableDamageCollider();
         }
         #endregion
+
+        public override void CloseAllDamageColliders()
+        {
+            base.CloseAllDamageColliders();
+
+            rightHandDamageCollider.DisableDamageCollider();
+            leftHandDamageCollider.DisableDamageCollider();
+        }
     }
 
 }

@@ -102,6 +102,27 @@ namespace XD
 
             return position;
         }
+
+        public Vector3 GetBackstabPositionBasedOnWeaponClass(WeaponClass weaponClass)
+        {
+            Vector3 position = new Vector3(0.12f, 0, 0.74f);
+
+            switch (weaponClass)
+            {
+                case WeaponClass.StraightSword:      // Change position here if you desire
+                    break;
+                case WeaponClass.Spear:              // Change position here if you desire
+                    break;
+                case WeaponClass.MediumShield:       // Change position here if you desire
+                    break;
+                case WeaponClass.Fist:               // Change position here if you desire
+                    break;
+                default:
+                    break;
+            }
+
+            return position;
+        }
     }
 
 }

@@ -43,7 +43,12 @@ namespace XD
                 contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
 
                 CheckForBlock(damageTarget);
-                DamageTarget(damageTarget);
+                CheckForBlock(damageTarget);
+
+                if (!damageTarget.characterNetworkManager.isInvulnerable.Value)
+                {
+                    DamageTarget(damageTarget);
+                }
             }
         }
 
@@ -72,6 +77,12 @@ namespace XD
                 damageTarget.characterEffectsManager.ProcessInstantEffect(damageEffect);
             }
         }
+
+        protected virtual void CheckForParry(CharacterManager damageTarget)
+        {
+
+        }
+
         protected virtual void GetBlockingDotValues(CharacterManager damageTarget)
         {
             directionFromAttackToDamageTarget = transform.position - damageTarget.transform.position;
@@ -105,7 +116,6 @@ namespace XD
             damageCollider.enabled = false;
             charactersDamaged.Clear();
         }
-
     }
 
 }

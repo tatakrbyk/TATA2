@@ -123,7 +123,7 @@ namespace XD
 
                 // if we are not grounded, play an aerial death animation
 
-                if(!manuallySelectDeathAnimation)
+                if(!manuallySelectDeathAnimation && !characterNetworkManager.isBeginCriticallyDamaged.Value)
                 {
                     characterAnimatorManager.PlayActionAnimation("Death_01", true);  
                 }

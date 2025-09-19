@@ -30,6 +30,7 @@ namespace XD
                 character.characterNetworkManager.isAttacking.Value = false;
                 character.characterNetworkManager.isRipostable.Value = false;
                 character.characterNetworkManager.isBeginCriticallyDamaged.Value = false;
+                character.characterNetworkManager.isParrying.Value = false;
             }
         }
 

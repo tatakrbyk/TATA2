@@ -49,6 +49,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 99a0df018c3541247b359c706494deee, type: 2}
   - {fileID: 11400000, guid: 1cc0e871fa33b9241952b4b6f6bfe963, type: 2}
   - {fileID: 11400000, guid: d084d9f24c13fb14ea7d300526373dd7, type: 2}
+  - {fileID: 11400000, guid: 0f303510d9c5c1e488656c2de8227c6a, type: 2}
+  - {fileID: 11400000, guid: e6eb2b118287b694b97119ca19ebed79, type: 2}
+  - {fileID: 11400000, guid: dba1abd6cc78ca846a5607a6d32cf3c4, type: 2}
   headEquipment:
   - {fileID: 11400000, guid: 86753df7022b9dd44aa5b45675da64b8, type: 2}
   - {fileID: 11400000, guid: 94c359c6bce2a3e46bc42e0c44576a6f, type: 2}
@@ -58,3 +61,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 24bcd2687d8ca9546a3e3f982e692dd4, type: 2}
   handEquipment:
   - {fileID: 11400000, guid: 5c3f7d009eb47fe42a409d3d0bcd10cc, type: 2}
+  ashesOfWar:
+  - {fileID: 11400000, guid: 9388ecc051581024d9b1acc40af2383f, type: 2}

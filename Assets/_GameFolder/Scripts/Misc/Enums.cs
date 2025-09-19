@@ -56,7 +56,8 @@ namespace XD
         StraightSword,
         Spear,
         MediumShield,
-        Fist
+        Fist,
+        LightShield,
     }
     
     // Used To Tag Equipment Models With Specific Body Parts That They Will Cover

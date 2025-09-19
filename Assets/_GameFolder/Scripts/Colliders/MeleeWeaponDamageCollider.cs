@@ -38,14 +38,33 @@ namespace XD
 
             if (damageTarget != null)
             {
-                if(damageTarget == characterCausingDamage) { return; } // Prevent self damage
                 contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
+                if(damageTarget == characterCausingDamage) { return; } // Prevent self damage
 
+                if(!WorldUtilityManager.Instance.CanIDamageThisTarget(characterCausingDamage.characterGroup, damageTarget.characterGroup)) { return; }
 
-                DamageTarget(damageTarget);
+                CheckForParry(damageTarget);
+                CheckForBlock(damageTarget);
+
+                if (!damageTarget.characterNetworkManager.isInvulnerable.Value)
+                {
+                    DamageTarget(damageTarget);
+                }
             }
         }
+        protected override void CheckForParry(CharacterManager damageTarget)
+        {
+            if(charactersDamaged.Contains(damageTarget)) { return; }
+            if(!characterCausingDamage.characterNetworkManager.isParryable.Value) { return; }
+            if(!damageTarget.IsOwner) { return; }
 
+            if(damageTarget.characterNetworkManager.isParrying.Value)
+            {
+                charactersDamaged.Add(damageTarget);
+                damageTarget.characterNetworkManager.NotifyServerOfParryServerRpc(characterCausingDamage.NetworkObjectId);
+                damageTarget.characterAnimatorManager.PlayActionAnimationInstantly("Parry_Land_01", true);
+            }
+        }
         protected override void GetBlockingDotValues(CharacterManager damageTarget)
         {
             directionFromAttackToDamageTarget = characterCausingDamage.transform.position - damageTarget.transform.position;

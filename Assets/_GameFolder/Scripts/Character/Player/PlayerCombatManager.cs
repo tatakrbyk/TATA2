@@ -33,6 +33,13 @@ namespace XD
             }
         }
 
+        public override void CloseAllDamageColliders()
+        {
+            base.CloseAllDamageColliders();
+
+            player.playerEquipmentManager.rightWeaponManager.meleeDamageCollider.DisableDamageCollider();
+            player.playerEquipmentManager.leftWeaponManager.meleeDamageCollider.DisableDamageCollider();
+        }
         public override void AttemptRiposte(RaycastHit hit)
         {
             CharacterManager targetCharacter = hit.transform.gameObject.GetComponent<CharacterManager>();
@@ -47,10 +54,16 @@ namespace XD
             MeleeWeaponItem riposteWeapon;
             MeleeWeaponDamageCollider riposteCollider;
 
-            riposteWeapon = player.playerInventoryManager.currentRightHandWeapon as MeleeWeaponItem;
-            riposteCollider = player.playerEquipmentManager.rightWeaponManager.meleeDamageCollider;
-
-            Debug.Log("RiposteAnim");
+            if (player.playerNetworkManager.IsTwoHandingLeftWeapon.Value)
+            {
+                riposteWeapon = player.playerInventoryManager.currentLeftHandWeapon as MeleeWeaponItem;
+                riposteCollider = player.playerEquipmentManager.leftWeaponManager.meleeDamageCollider;
+            }
+            else
+            {
+                riposteWeapon = player.playerInventoryManager.currentRightHandWeapon as MeleeWeaponItem;
+                riposteCollider = player.playerEquipmentManager.rightWeaponManager.meleeDamageCollider;
+            }
 
             // NOTE: The Ripsote Animation will change depending on the weapon's animator controller, so the animation can be choosen there, the name will always be the same
             character.characterAnimatorManager.PlayActionAnimationInstantly("Riposte_01", true);
@@ -88,6 +101,69 @@ namespace XD
                 damageEffect.fireDamage,
                 damageEffect.holyDamage,
                 riposteCollider.poiseDamage);
+        }
+
+        public override void AttemptedBackStab(RaycastHit hit)
+        {
+            CharacterManager targetCharacter = hit.transform.gameObject.GetComponent<CharacterManager>();
+            if (targetCharacter == null) { return; }
+
+            // If some how since the initial check the character can no longer be riposted, return
+            if (!targetCharacter.characterCombatManager.canBeBackstabbed) { return; }
+
+            // If Somebody else is already performin a critical strike on the character ( or we already are), return
+            if (targetCharacter.characterNetworkManager.isBeginCriticallyDamaged.Value) { return; }
+
+            MeleeWeaponItem backstabWeapon;
+            MeleeWeaponDamageCollider backstabCollider;
+
+            if(player.playerNetworkManager.IsTwoHandingLeftWeapon.Value)
+            {
+                backstabWeapon = player.playerInventoryManager.currentLeftHandWeapon as MeleeWeaponItem;
+                backstabCollider = player.playerEquipmentManager.leftWeaponManager.meleeDamageCollider;
+            }
+            else
+            {
+                backstabWeapon = player.playerInventoryManager.currentRightHandWeapon as MeleeWeaponItem;
+                backstabCollider = player.playerEquipmentManager.rightWeaponManager.meleeDamageCollider;
+            }
+
+            // NOTE: The Ripsote Animation will change depending on the weapon's animator controller, so the animation can be choosen there, the name will always be the same
+            character.characterAnimatorManager.PlayActionAnimationInstantly("Backstab_01", true);
+
+            if (character.IsOwner)
+            {
+                character.characterNetworkManager.isInvulnerable.Value = true;
+            }
+
+            // Create  a new damage effect for this type of damage
+            TakeCriticalDamageEffect damageEffect = Instantiate(WorldCharacterEffectsManager.Instance.takeCriticalDamageEffect);
+
+            damageEffect.physicalDamage = backstabWeapon.physicalDamage;
+            damageEffect.holyDamage = backstabWeapon.holyDamage;
+            damageEffect.fireDamage = backstabWeapon.fireDamage;
+            damageEffect.lightningDamage = backstabWeapon.lightningDamage;
+            damageEffect.magicDamage = backstabWeapon.magicDamage;
+            damageEffect.poiseDamage = backstabCollider.poiseDamage;
+
+            damageEffect.physicalDamage *= backstabWeapon.backstab_Attack_01_Modifier;
+            damageEffect.holyDamage *= backstabWeapon.backstab_Attack_01_Modifier;
+            damageEffect.fireDamage *= backstabWeapon.backstab_Attack_01_Modifier;
+            damageEffect.lightningDamage *= backstabWeapon.backstab_Attack_01_Modifier;
+            damageEffect.magicDamage *= backstabWeapon.backstab_Attack_01_Modifier;
+            damageEffect.poiseDamage *= backstabWeapon.backstab_Attack_01_Modifier;
+
+            // Using a Server RPC send the riposte to the target, where they will play the proper animations ýn their end, take the damage
+            targetCharacter.characterNetworkManager.NotifyTheServerOfBackstabServerRPC(
+                targetCharacter.NetworkObjectId,
+                character.NetworkObjectId,
+                "Backstabbed_01",
+                backstabWeapon.itemID,
+                damageEffect.physicalDamage,
+                damageEffect.magicDamage,
+                damageEffect.fireDamage,
+                damageEffect.holyDamage,
+                backstabCollider.poiseDamage);
         }
 
         // Call: Main_Light_Attack_01 Events
@@ -164,6 +240,17 @@ namespace XD
         {
             player.playerCombatManager.canCommboWithMainHandWeapon = false;
             player.playerCombatManager.canCommboWithOffHandWeapon = false;
+        }
+
+        public WeaponItem SelectWeaponToPerformAshOfWar()
+        {
+            // TODO: Select weapon depending on setuo
+            WeaponItem selectedWeapon = player.playerInventoryManager.currentLeftHandWeapon;
+            player.playerNetworkManager.SetCharacterActionHand(false);
+            player.playerNetworkManager.currentWeaponBeingUsed.Value = selectedWeapon.itemID;
+
+            return selectedWeapon;
+
         }
     }
 

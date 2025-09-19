@@ -9,6 +9,7 @@ namespace XD
     {
         [Header("Attack")]
         [SerializeField] private string attackActionName;
+        [SerializeField] private bool isParryable = true;       
 
         [Header("Combo")]
         public AICharacterAttackAction comboAction;
@@ -26,6 +27,7 @@ namespace XD
         public void AttemptToPerformAction(AICharacterManager aiCharacter)
         {
             aiCharacter.characterAnimatorManager.PlayActionAnimation(attackActionName, true);
+            aiCharacter.aiCharacterNetworkManager.isParryable.Value = isParryable; 
         }
     }
 

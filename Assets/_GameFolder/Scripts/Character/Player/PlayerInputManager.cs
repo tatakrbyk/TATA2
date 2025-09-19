@@ -59,6 +59,7 @@ namespace XD
         [Header("Trigger INPUTS")]
         [SerializeField] bool RT_Input = false; 
         [SerializeField] bool Hold_RT_Input = false;
+        [SerializeField] bool LT_Input = false;
 
         [Header("UI Inputs")]
         [SerializeField] bool openCharacterMenuInput = false;
@@ -139,6 +140,8 @@ namespace XD
                 playerControls.PlayerActions.RT.performed += i => RT_Input = true;
                 playerControls.PlayerActions.HoldRT.performed += i => Hold_RT_Input = true;
                 playerControls.PlayerActions.HoldRT.canceled += i => Hold_RT_Input = false;
+                playerControls.PlayerActions.LT.performed += i => LT_Input = true;
+
 
                 // Twp Hand Inputs
                 playerControls.PlayerActions.TwoHandWeapon.performed += i => two_Hand_Input = true;
@@ -209,6 +212,7 @@ namespace XD
             HandleLBInput();
             HandleRTInput();
             HandleChargeRTInput();
+            HandleLTInput();
             HandleSwitchRightWeaponInput();
             HandleSwitchLeftWeaponInput();
             HandleQuedInputs();
@@ -344,7 +348,18 @@ namespace XD
                 player.playerNetworkManager.SetCharacterActionHand(true);
 
                 // TODO: If we are two handing the weapon, use the two handed action
-                player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentRightHandWeapon.oh_RT_Action, player.playerInventoryManager.currentRightHandWeapon);
+                player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentRightHandWeapon.oh_RT_Action, player.playerInventoryManager.currentRightHandWeapon);                
+            }
+        }
+
+        private void HandleLTInput()
+        {
+            if (LT_Input)
+            {
+                LT_Input = false;
+                
+                WeaponItem weaponPerformingAshOfWar = player.playerCombatManager.SelectWeaponToPerformAshOfWar();
+                weaponPerformingAshOfWar.ashOfWarAction.AttemptToPerformAction(player);
             }
         }
 

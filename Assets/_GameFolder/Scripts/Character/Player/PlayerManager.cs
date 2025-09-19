@@ -398,6 +398,8 @@ namespace XD
                 playerNetworkManager.OnLockOnTargetIDChange(0, playerNetworkManager.currentTargetNetworkObjectID.Value);
             }
         }        
+
+
     }
 }
   

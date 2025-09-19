@@ -29,6 +29,9 @@ namespace XD
         [Header("Hand Equipment")]
         [SerializeField] List<HandEquipmentItem> handEquipment = new List<HandEquipmentItem>();
 
+        [Header("Ashes of War")]
+        [SerializeField] List<AshOfWar> ashesOfWar = new List<AshOfWar>();
+
         [Header("Items Database")]
         // Every Item we have in the game
         private List<Item> items = new List<Item>();
@@ -64,7 +67,10 @@ namespace XD
             {
                 items.Add(hand);
             }
-
+            foreach (var ash in ashesOfWar)
+            {
+                items.Add(ash);
+            }
             // Assign of our items a unique item ID
             for (int i = 0; i < items.Count; i++)
             {
@@ -97,6 +103,10 @@ namespace XD
             return handEquipment.FirstOrDefault(hand => hand.itemID == ID);
         }
 
+        public AshOfWar GetAshOfWarByID(int ID)
+        {
+            return ashesOfWar.FirstOrDefault(ash => ash.itemID == ID);
+        }
     }
 
 }
