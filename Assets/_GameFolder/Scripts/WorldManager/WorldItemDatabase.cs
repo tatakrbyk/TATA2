@@ -14,6 +14,8 @@ namespace XD
 
         public WeaponItem unarmedWeapon;
 
+        public GameObject pickUpItemPrefab;
+
         [Header("Weapons Database")]
         [SerializeField] private List<WeaponItem> weapons = new List<WeaponItem>();
 
@@ -31,6 +33,9 @@ namespace XD
 
         [Header("Ashes of War")]
         [SerializeField] List<AshOfWar> ashesOfWar = new List<AshOfWar>();
+
+        [Header("Spells")]
+        [SerializeField] List<SpellItem> spells = new List<SpellItem>();
 
         [Header("Items Database")]
         // Every Item we have in the game
@@ -71,11 +76,20 @@ namespace XD
             {
                 items.Add(ash);
             }
+            foreach (var spell in spells)
+            {
+                items.Add(spell);
+            }
             // Assign of our items a unique item ID
             for (int i = 0; i < items.Count; i++)
             {
                 items[i].itemID = i;
             }
+        }
+
+        public Item GetItemByID(int ID)
+        {
+            return items.FirstOrDefault(item => item.itemID == ID);
         }
 
         public WeaponItem GetWeaponByID(int ID)
@@ -106,6 +120,11 @@ namespace XD
         public AshOfWar GetAshOfWarByID(int ID)
         {
             return ashesOfWar.FirstOrDefault(ash => ash.itemID == ID);
+        }
+
+        public SpellItem GetSpellByID(int ID)
+        {
+            return spells.FirstOrDefault(spell => spell.itemID == ID);
         }
     }
 

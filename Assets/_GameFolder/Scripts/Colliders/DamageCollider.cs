@@ -8,7 +8,7 @@ namespace XD
 
     public class DamageCollider : MonoBehaviour
     {
-        [SerializeField] protected Collider damageCollider;
+        public Collider damageCollider;
 
         [Header("Damage")]
         public float physicalDamage = 0;

@@ -249,5 +249,11 @@ namespace XD
         {
 
         }
+
+        // Used To Destroy things like a "Drawed Arrow" or "Spell Warm Up FX" When the character is poise broken
+        public void DestroyAllCurrentActionFX()
+        {
+            character.characterNetworkManager.DestroyAllCurrentActionFXServerRPC();
+        }
     }
 }

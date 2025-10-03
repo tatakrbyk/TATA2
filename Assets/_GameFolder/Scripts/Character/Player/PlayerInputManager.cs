@@ -42,7 +42,9 @@ namespace XD
 
         [Header("Bumper INPUTS")]
         [SerializeField] bool RB_Input = false;
+        [SerializeField] bool Hold_RB_Input = false;
         [SerializeField] bool LB_Input = false;
+        [SerializeField] bool Hold_LB_Input = false;
 
         [Header("Two Hand Inputs")]
         [SerializeField] bool two_Hand_Input = false;
@@ -132,10 +134,14 @@ namespace XD
 
                 // Mouse Left Click (Attack)
                 playerControls.PlayerActions.RB.performed += i => RB_Input = true;
+                playerControls.PlayerActions.Hold_RB.performed += i => Hold_RB_Input = true; // For Charge Attacks/Spell
+                playerControls.PlayerActions.Hold_RB.canceled += i => Hold_RB_Input = false;
 
                 // Left Alt?
                 playerControls.PlayerActions.LB.performed += i => LB_Input = true;
                 playerControls.PlayerActions.LB.canceled += i => player.playerNetworkManager.isBlocking.Value = false;
+                playerControls.PlayerActions.Hold_LB.performed += i => Hold_LB_Input = true;
+                playerControls.PlayerActions.Hold_LB.canceled += i => Hold_LB_Input = false;
 
                 playerControls.PlayerActions.RT.performed += i => RT_Input = true;
                 playerControls.PlayerActions.HoldRT.performed += i => Hold_RT_Input = true;
@@ -209,7 +215,9 @@ namespace XD
             HandleSprintInput();
             HandleJumpInput();
             HandleRBInput();
+            HandleHoldRBInput();
             HandleLBInput();
+            HandleHoldLBInput();
             HandleRTInput();
             HandleChargeRTInput();
             HandleLTInput();
@@ -323,6 +331,18 @@ namespace XD
                 player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentRightHandWeapon.oh_RB_Action, player.playerInventoryManager.currentRightHandWeapon); 
             }
         }
+
+        private void HandleHoldRBInput()
+        {
+            if(Hold_RB_Input)
+            {
+                player.playerNetworkManager.isChargingRightSpell.Value = true;
+            }
+            else
+            {
+                player.playerNetworkManager.isChargingRightSpell.Value = false;
+            }
+        }
         private void HandleLBInput()
         {
             if (two_Hand_Input) { return; }
@@ -337,6 +357,19 @@ namespace XD
                 // TODO: If we are two handing the weapon, use the two handed action
                 player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentLeftHandWeapon.oh_LB_Action, player.playerInventoryManager.currentLeftHandWeapon);
             }
+        }
+
+        private void HandleHoldLBInput()
+        {
+            if(Hold_LB_Input)
+            {
+                player.playerNetworkManager.isChargingLeftSpell.Value = true;
+            }
+            else
+            {
+                player.playerNetworkManager.isChargingLeftSpell.Value = false;
+            }
+
         }
         private void HandleRTInput()
         {

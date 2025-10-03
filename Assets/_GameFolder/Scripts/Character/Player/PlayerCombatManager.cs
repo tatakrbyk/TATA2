@@ -28,7 +28,8 @@ namespace XD
             {
                 weaponAction.AttemptToPerformAction(player, weaponPerformAction);
 
-                player.playerNetworkManager.NotifyTheServerOfWeaponActionServerRpc(NetworkManager.Singleton.LocalClientId, weaponAction.actionID, weaponPerformAction.itemID);
+                // Que 60 call, 
+                //player.playerNetworkManager.NotifyTheServerOfWeaponActionServerRpc(NetworkManager.Singleton.LocalClientId, weaponAction.actionID, weaponPerformAction.itemID);
 
             }
         }
@@ -242,6 +243,36 @@ namespace XD
             player.playerCombatManager.canCommboWithOffHandWeapon = false;
         }
 
+        // CALL ANIMATION = "sphand_main_projectile_01_charge"
+        public void InstantiateSpellWarmUpFX()
+        {
+            if(player.playerInventoryManager.currentSpell == null) { return; }
+
+            player.playerInventoryManager.currentSpell.InstantiateWarmUpSpellFX(player);
+        }
+
+        // CALL ANIMATION = "sphand_main_projectile_01_Release"
+        public void SuccessfullyCastSpell()
+        {
+            if(player.playerInventoryManager.currentSpell == null) { return; }
+            
+            player.playerInventoryManager.currentSpell.SuccessfullyCastSpell(player);
+        }
+
+        // CALL ANIMATION = "sphand_main_projectile_01_Release_full"
+        public void SuccessfullyCastSpellFullCharge()
+        {
+            if (player.playerInventoryManager.currentSpell == null) { return; }
+
+            player.playerInventoryManager.currentSpell.SuccessfullyCastSpellFullCharge(player);
+        }
+
+        public void SuccessfullyChargeSpell()
+        {
+            if (player.playerInventoryManager.currentSpell == null) { return; }
+
+            player.playerInventoryManager.currentSpell.SuccessfullyChargeSpell(player);
+        }
         public WeaponItem SelectWeaponToPerformAshOfWar()
         {
             // TODO: Select weapon depending on setuo

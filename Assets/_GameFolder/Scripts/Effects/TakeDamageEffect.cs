@@ -197,6 +197,7 @@ namespace XD
             {
                 // If we are poise broken restrict our movement and actions
                 character.characterAnimatorManager.PlayActionAnimation(damageAnimation, true);
+                character.characterCombatManager.DestroyAllCurrentActionFX();
             }
             else
             {

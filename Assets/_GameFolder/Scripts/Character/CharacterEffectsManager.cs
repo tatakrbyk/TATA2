@@ -12,6 +12,9 @@ namespace XD
 
         CharacterManager character;
 
+        [Header("Current Active FX")]
+        public GameObject activeSpellWarmUpFX;
+
         [Header("VFX")]
         [SerializeField] private GameObject bloodSplatterVFX;
         [SerializeField] private GameObject criticalBloodSplatterVFX;

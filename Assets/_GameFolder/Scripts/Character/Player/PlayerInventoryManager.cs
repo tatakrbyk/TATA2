@@ -23,6 +23,7 @@ namespace XD
         public BodyEquipmentItem bodyEquipment;
         public LegEquipmentItem legEquipment;
         public HandEquipmentItem handEquipment;
+        public SpellItem currentSpell;
 
         [Header("Inventory")]
         public List<Item> itemsInInventory;

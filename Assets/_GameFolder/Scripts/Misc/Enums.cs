@@ -59,6 +59,13 @@ namespace XD
         Fist,
         LightShield,
     }
+
+    // Used To Determina Which Item (Catalyst) is needed To Cast Spell
+    public enum SpellClass
+    {
+        Incantation,
+        Sorcery
+    }
     
     // Used To Tag Equipment Models With Specific Body Parts That They Will Cover
     public enum EquipmentModelType

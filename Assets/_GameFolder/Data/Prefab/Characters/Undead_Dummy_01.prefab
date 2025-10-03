@@ -1758,12 +1758,13 @@ GameObject:
   - component: {fileID: 3656248629817271160}
   - component: {fileID: 5580367547149359124}
   - component: {fileID: 3563381834843423091}
+  - component: {fileID: 1911625900715017200}
+  - component: {fileID: -945448480085856087}
   - component: {fileID: 1154829344195001629}
   - component: {fileID: 1295714884568355493}
   - component: {fileID: 5727384048379481388}
   - component: {fileID: 2610830903115301319}
   - component: {fileID: 3868016476789195593}
-  - component: {fileID: 1911625900715017200}
   - component: {fileID: 7865060671254687051}
   - component: {fileID: 9107838881957837572}
   m_Layer: 6
@@ -1974,7 +1975,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2720981275
+  GlobalObjectIdHash: 759506722
   InScenePlacedSourceGlobalObjectIdHash: 759506722
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -2016,6 +2017,10 @@ MonoBehaviour:
     m_InternalValue: 0
   isBlocking:
     m_InternalValue: 0
+  isParrying:
+    m_InternalValue: 0
+  isParryable:
+    m_InternalValue: 0
   isAttacking:
     m_InternalValue: 0
   isInvulnerable:
@@ -2027,6 +2032,10 @@ MonoBehaviour:
   isJumping:
     m_InternalValue: 0
   isChargingAttack:
+    m_InternalValue: 0
+  isRipostable:
+    m_InternalValue: 0
+  isBeginCriticallyDamaged:
     m_InternalValue: 0
   currentStamina:
     m_InternalValue: 0
@@ -2072,6 +2081,7 @@ MonoBehaviour:
   aiCharacterNetworkManager: {fileID: 0}
   aiCharacterCombatManager: {fileID: 0}
   aICharacterLocomotionManager: {fileID: 0}
+  aiCharacterInventoryManager: {fileID: 0}
   navMeshAgent: {fileID: 0}
   currentState: {fileID: 11400000, guid: c246c39a58116d24185c046c3483e6e5, type: 2}
   idle: {fileID: 11400000, guid: c246c39a58116d24185c046c3483e6e5, type: 2}
@@ -2097,6 +2107,60 @@ MonoBehaviour:
   canRotate: 1
   canMove: 1
   isGrounded: 1
+--- !u!114 &1911625900715017200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4538732985267078996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c02eeae6fa2810b44ad9dd0bf9d62d23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  applyRootMotion: 1
+  lastDamageAnimationPlayed: 
+  hit_React_Forward_Ping_01: hit_React_Forward_Ping_01
+  hit_React_Forward_Ping_02: hit_React_Forward_Ping_02
+  hit_React_Backward_Ping_01: hit_React_Backward_Ping_01
+  hit_React_Backward_Ping_02: hit_React_Backward_Ping_02
+  hit_React_Left_Ping_01: hit_React_Left_Ping_01
+  hit_React_Left_Ping_02: hit_React_Left_Ping_02
+  hit_React_Right_Ping_01: hit_React_Right_Ping_01
+  hit_React_Right_Ping_02: hit_React_Right_Ping_02
+  forward_Ping_Damage: []
+  backward_Ping_Damage: []
+  left_Ping_Damage: []
+  right_Ping_Damage: []
+  hit_React_Forward_Medium_01: hit_React_Forward_Medium_01
+  hit_React_Forward_Medium_02: hit_React_Forward_Medium_02
+  hit_React_Backward_Medium_01: hit_React_Backward_Medium_01
+  hit_React_Backward_Medium_02: hit_React_Backward_Medium_02
+  hit_React_Left_Medium_01: hit_React_Left_Medium_01
+  hit_React_Left_Medium_02: hit_React_Left_Medium_02
+  hit_React_Right_Medium_01: hit_React_Right_Medium_01
+  hit_React_Right_Medium_02: hit_React_Right_Medium_02
+  forward_Medium_Damage: []
+  backward_Medium_Damage: []
+  left_Medium_Damage: []
+  right_Medium_Damage: []
+--- !u!114 &-945448480085856087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4538732985267078996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 308ef9a0ae4aaa34199a6c34a789d2ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropItemChance: 100
+  droppableItems:
+  - {fileID: 11400000, guid: d084d9f24c13fb14ea7d300526373dd7, type: 2}
+  - {fileID: 11400000, guid: 5f1c64f94d3c67145b1f50c85c45f1d8, type: 2}
 --- !u!114 &1154829344195001629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2156,6 +2220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bloodSplatterVFX: {fileID: 0}
+  criticalBloodSplatterVFX: {fileID: 0}
   staticEffects: []
 --- !u!114 &2610830903115301319
 MonoBehaviour:
@@ -2188,44 +2253,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: ee8fec5dc5519f34bbc1da24eed24e75, type: 3}
   - {fileID: 8300000, guid: adede50ad3791524f95500f2b276235f, type: 3}
   footSteps: []
---- !u!114 &1911625900715017200
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4538732985267078996}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c02eeae6fa2810b44ad9dd0bf9d62d23, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  applyRootMotion: 1
-  lastDamageAnimationPlayed: 
-  hit_React_Forward_Ping_01: hit_React_Forward_Ping_01
-  hit_React_Forward_Ping_02: hit_React_Forward_Ping_02
-  hit_React_Backward_Ping_01: hit_React_Backward_Ping_01
-  hit_React_Backward_Ping_02: hit_React_Backward_Ping_02
-  hit_React_Left_Ping_01: hit_React_Left_Ping_01
-  hit_React_Left_Ping_02: hit_React_Left_Ping_02
-  hit_React_Right_Ping_01: hit_React_Right_Ping_01
-  hit_React_Right_Ping_02: hit_React_Right_Ping_02
-  forward_Ping_Damage: []
-  backward_Ping_Damage: []
-  left_Ping_Damage: []
-  right_Ping_Damage: []
-  hit_React_Forward_Medium_01: hit_React_Forward_Medium_01
-  hit_React_Forward_Medium_02: hit_React_Forward_Medium_02
-  hit_React_Backward_Medium_01: hit_React_Backward_Medium_01
-  hit_React_Backward_Medium_02: hit_React_Backward_Medium_02
-  hit_React_Left_Medium_01: hit_React_Left_Medium_01
-  hit_React_Left_Medium_02: hit_React_Left_Medium_02
-  hit_React_Right_Medium_01: hit_React_Right_Medium_01
-  hit_React_Right_Medium_02: hit_React_Right_Medium_02
-  forward_Medium_Damage: []
-  backward_Medium_Damage: []
-  left_Medium_Damage: []
-  right_Medium_Damage: []
 --- !u!114 &7865060671254687051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2239,12 +2266,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lastAttackAnimationPerformed: 
+  previousPoiseDamageTaken: 0
   currentTarget: {fileID: 0}
   lockOnTransform: {fileID: 0}
   currentAttackType: 0
   canPerformRollingtAttack: 0
   canPerformBackstepAttack: 0
   canBlock: 1
+  canBeBackstabbed: 1
+  criticalAttackDistanceCheck: 0.7
+  pendingCriticalDamage: 0
   actionRecoveryTimer: 0
   enablePivot: 1
   distanceFromTarget: 0
@@ -2254,6 +2285,12 @@ MonoBehaviour:
   minimumFOV: -35
   maximumFOV: 35
   attackRotationSpeed: 25
+  maxStance: 150
+  currentStance: 0
+  stanceRegeneratedPersecond: 15
+  ignoreStanceBreak: 0
+  stanceRegenerationTimer: 0
+  defaultTimeUntilStanceRegenerationBegins: 15
   rightHandDamageCollider: {fileID: 12328810439178201}
   leftHandDamageCollider: {fileID: 3735725771270222073}
   baseDamage: 25

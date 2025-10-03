@@ -6,7 +6,10 @@ namespace XD
 {
     public class CharacterInventoryManager : MonoBehaviour
     {
-        
+        protected virtual void Awake()
+        {
+
+        }
     }
 
 }

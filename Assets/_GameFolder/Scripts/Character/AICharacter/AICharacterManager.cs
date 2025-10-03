@@ -12,6 +12,7 @@ namespace XD
         [HideInInspector] public AICharacterNetworkManager aiCharacterNetworkManager;
         [HideInInspector] public AICharacterCombatManager aiCharacterCombatManager;
         [HideInInspector] public AICharacterLocomotionManager aICharacterLocomotionManager;
+        [HideInInspector] public AICharacterInventoryManager aiCharacterInventoryManager;
 
         [Header("Navmesh Agent")]
         public NavMeshAgent navMeshAgent;
@@ -33,6 +34,7 @@ namespace XD
             aiCharacterCombatManager = GetComponent<AICharacterCombatManager>();
             aiCharacterNetworkManager = GetComponent<AICharacterNetworkManager>();
             aICharacterLocomotionManager = GetComponent<AICharacterLocomotionManager>();
+            aiCharacterInventoryManager = GetComponent<AICharacterInventoryManager>();
             navMeshAgent = GetComponentInChildren<NavMeshAgent>();
             
         }

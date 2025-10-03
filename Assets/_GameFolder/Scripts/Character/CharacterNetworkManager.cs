@@ -115,6 +115,29 @@ namespace XD
             character.animator.SetBool("IsBlocking", isBlocking.Value);
         }
 
+        #region Destroy All Current Action FX
+
+        // Used To Cancel FX When Poise Broken
+        [ServerRpc]
+        public void DestroyAllCurrentActionFXServerRPC()
+        {
+            if(IsServer)
+            {
+                DestroyAllCurrentActionFXClientRPC();
+            }
+        }
+
+        [ClientRpc]
+        public void DestroyAllCurrentActionFXClientRPC()
+        {
+            if(character.characterEffectsManager.activeSpellWarmUpFX != null)
+            {
+                Destroy(character.characterEffectsManager.activeSpellWarmUpFX);
+            }
+        }
+
+        #endregion
+
         #region Animation Action
         [ServerRpc]
         public void NotifyTheServerOfActionAnimationServerRpc(ulong clientID, string animationID, bool applyRootMotion)
@@ -308,7 +331,11 @@ namespace XD
             damageEffect.characterCausingDamage = characterCausingDamage;
 
             damagedCharacter.characterEffectsManager.ProcessInstantEffect(damageEffect);
-            damagedCharacter.characterAnimatorManager.PlayActionAnimationInstantly(criticalDamageAnimation, true);
+            
+            if(damagedCharacter.IsOwner)
+            {            
+                damagedCharacter.characterAnimatorManager.PlayActionAnimationInstantly(criticalDamageAnimation, true);
+            }
 
 
             // Move the enemy to the proper riposte position
