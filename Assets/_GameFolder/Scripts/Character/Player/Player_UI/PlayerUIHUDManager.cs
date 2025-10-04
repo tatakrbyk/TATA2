@@ -10,10 +10,12 @@ namespace XD
         [Header("Stats Bars")]
         [SerializeField] UI_StatBar healthBar;
         [SerializeField] UI_StatBar staminaBar;
+        [SerializeField] UI_StatBar FocusPointBar;
 
         [Header("Quick Slots")]
         [SerializeField] Image leftWeaponQuickSlotIcon;
         [SerializeField] Image rightWeaponQuickSlotIcon;
+        [SerializeField] Image spellItemQuickSlotIcon;
 
         [Header("Boss Health BAR")]
         public Transform bossHealthBarParent;
@@ -43,6 +45,9 @@ namespace XD
 
             staminaBar.gameObject.SetActive(false);
             staminaBar.gameObject.SetActive(true);
+
+            FocusPointBar.gameObject.SetActive(false);
+            FocusPointBar.gameObject.SetActive(true);
         }
         public void SetNewHealthValue(int oldValue, int newValue)
         {
@@ -61,6 +66,15 @@ namespace XD
         public void SetMaxStaminaValue(int maxValue)
         {
             staminaBar.SetMaxStat(maxValue);
+        }
+
+        public void SetNewFocusPointValue(int oldValue, int newValue)
+        {
+            FocusPointBar.SetStat(newValue);
+        }
+        public void SetMaxFocusPointValue(int maxValue)
+        {
+            FocusPointBar.SetMaxStat(maxValue);
         }
 
         public void SetLeftWeaponQuickSlotIcon(int WeaponID)
@@ -107,6 +121,31 @@ namespace XD
 
             rightWeaponQuickSlotIcon.sprite = weapon.itemIcon;
             rightWeaponQuickSlotIcon.enabled = true;
+
+        }
+
+
+        public void SetSpellItemQuickSlotIcon(int spellID)
+        {
+            SpellItem spellItem = WorldItemDatabase.Instance.GetSpellByID(spellID);
+
+            if (spellItem == null)
+            {
+                Debug.LogError("Spell with ID " + spellID + " not found in the database.");
+                spellItemQuickSlotIcon.enabled = false;
+                spellItemQuickSlotIcon.sprite = null;
+                return;
+            }
+            if (spellItem.itemIcon == null)
+            {
+                Debug.LogError("Spell with ID " + spellID + " does not have an icon.");
+                spellItemQuickSlotIcon.enabled = false;
+                spellItemQuickSlotIcon.sprite = null;
+                return;
+            }
+
+            spellItemQuickSlotIcon.sprite = spellItem.itemIcon;
+            spellItemQuickSlotIcon.enabled = true;
 
         }
 

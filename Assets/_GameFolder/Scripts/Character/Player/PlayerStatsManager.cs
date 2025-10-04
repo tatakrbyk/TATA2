@@ -9,7 +9,7 @@ namespace XD
         PlayerManager player;
 
         protected override void Awake()
-        {
+        { 
             base.Awake();
             player = GetComponent<PlayerManager>();
         }
@@ -20,6 +20,7 @@ namespace XD
 
             CalculateHealthBasedOnVitalityLevel(player.playerNetworkManager.vitality.Value);
             CalculateStaminaBasedOnEnduranceLevel(player.playerNetworkManager.endurance.Value);
+            CalculateFocusPointsBasedOnMindLevel(player.playerNetworkManager.mind.Value);
         }
 
         public void CalculateTotalArmorAbsorption()

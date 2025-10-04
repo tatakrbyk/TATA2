@@ -25,10 +25,12 @@ namespace XD
         [Header("Resources")]
         public int currentHealth;
         public float currentStamina;
-        
+        public int currentFocusPoints;
+
         [Header("Stats")]
         public int vitality;
         public int endurance;
+        public int mind;
 
         [Header("Bossess")]
         public SerializableDictionary<int, bool> sitesOfGrace; // Int = Site Of Grace ID, bool = Activated Status
@@ -54,6 +56,9 @@ namespace XD
         public int leftWeapon01;
         public int leftWeapon02;
         public int leftWeapon03;
+
+        // TODO: Multiple Spell Slot
+        public int currentSpell;
 
         public CharacterSaveData()
         {

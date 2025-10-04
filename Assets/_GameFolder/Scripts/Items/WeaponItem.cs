@@ -41,8 +41,12 @@ namespace XD
         [Header("Attack Modifiers")]
         public float light_Attack_01_Modifier = 1.0f;
         public float light_Attack_02_Modifier = 1.2f;
+        public float light_Jumping_Attack_01_Modifier = 1.0f;
+
         public float heavy_Attack_01_Modifier = 1.4f;
         public float heavy_Attack_02_Modifier = 1.6f;
+        public float heavy_Jumping_Attack_01_Modifier = 1.8f;
+
         public float charge_Attack_01_Modifier = 2.0f;
         public float charge_Attack_02_Modifier = 2.2f;
         public float running_Attack_01_Modifier = 1.1f;
@@ -62,6 +66,7 @@ namespace XD
         public float runningAttackStaminaCostMultiplier = 1.1f;
         public float rollingAttackStaminaCostMultiplier = 1.1f;
         public float backstepAttackStaminaCostMultiplier = 1.1f;
+
 
         [Header("Weapon Blocking Absorptions")]
         public float physicalBaseDamageAbsorption = 50;

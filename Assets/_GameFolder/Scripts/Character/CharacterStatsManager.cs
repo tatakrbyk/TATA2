@@ -71,6 +71,12 @@ namespace XD
             stamina = endurance * 10;
             return Mathf.RoundToInt(stamina);
         }
+        public int CalculateFocusPointsBasedOnMindLevel(int mind)
+        {
+            int focusPoints = 0;
+            focusPoints = mind * 10;
+            return Mathf.RoundToInt(focusPoints);
+        }
 
         public virtual void RegenerateStamina()
         {

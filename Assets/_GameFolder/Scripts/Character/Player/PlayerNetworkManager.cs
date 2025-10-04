@@ -57,19 +57,27 @@ namespace XD
                 isUsingLeftHand.Value = true;
             }
         }
-        public void SetNewMaxHealthValue(int oldValue, int newValue)
+        public void SetNewMaxHealthValue(int oldValue, int newValue)  // Vitality
         {
             maxHealth.Value = player.playerStatsManager.CalculateHealthBasedOnVitalityLevel(newValue);
             PlayerUIManager.Instance.playerUIHUDManager.SetMaxHealthValue(maxHealth.Value);
             currentHealth.Value = maxHealth.Value;
         }
 
-        public void SetNewMaxStaminaValue(int oldValue, int newValue)
+        public void SetNewMaxStaminaValue(int oldValue, int newValue) // Endurance
         {
             maxStamina.Value = player.playerStatsManager.CalculateStaminaBasedOnEnduranceLevel(newValue);
             PlayerUIManager.Instance.playerUIHUDManager.SetMaxStaminaValue(maxStamina.Value);
             currentStamina.Value = maxStamina.Value;
         }
+
+        public void SetNewMaxFocusPointValue(int oldValue, int newValue) // Mind
+        {
+            maxFocusPoints.Value = player.playerStatsManager.CalculateFocusPointsBasedOnMindLevel(newValue);
+            PlayerUIManager.Instance.playerUIHUDManager.SetMaxFocusPointValue(maxFocusPoints.Value);
+            currentFocusPoints.Value = maxFocusPoints.Value;
+        }
+
 
         public void OnCurrentRightHandWeaponIDChange(int oldID, int newID)
         {
@@ -93,7 +101,7 @@ namespace XD
             {
                 PlayerUIManager.Instance.playerUIHUDManager.SetLeftWeaponQuickSlotIcon(newID);
             }
-        }
+        }     
 
         public void OnCurrentWeaponBeingUsedIDChange(int oldID, int newID)
         {
@@ -109,11 +117,20 @@ namespace XD
 
         public void OnCurrentSpellIDChange(int oldID, int newID)
         {
-            SpellItem newSpell = Instantiate(WorldItemDatabase.Instance.GetSpellByID(newID));
+            SpellItem newSpell = null;
+            
+            if(WorldItemDatabase.Instance.GetSpellByID(newID))
+            {
+                newSpell = Instantiate(WorldItemDatabase.Instance.GetSpellByID(newID));
+            }
 
             if(newSpell != null)
             {
                 player.playerInventoryManager.currentSpell = newSpell;
+                if (player.IsOwner)
+                {
+                    PlayerUIManager.Instance.playerUIHUDManager.SetSpellItemQuickSlotIcon(newID);
+                }
             }
             
         }

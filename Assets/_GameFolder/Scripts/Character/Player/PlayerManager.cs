@@ -71,12 +71,15 @@ namespace XD
                 // Update (if increase statü value )
                 playerNetworkManager.vitality.OnValueChanged += playerNetworkManager.SetNewMaxHealthValue;
                 playerNetworkManager.endurance.OnValueChanged += playerNetworkManager.SetNewMaxStaminaValue;
+                playerNetworkManager.mind.OnValueChanged += playerNetworkManager.SetNewMaxFocusPointValue;
 
                 // Update UI Stat Bars
                 playerNetworkManager.currentHealth.OnValueChanged += PlayerUIManager.Instance.playerUIHUDManager.SetNewHealthValue;
 
                 playerNetworkManager.currentStamina.OnValueChanged += PlayerUIManager.Instance.playerUIHUDManager.SetNewStaminaValue; 
                 playerNetworkManager.currentStamina.OnValueChanged += playerStatsManager.ResetStaminaRegeneraationTimer;
+
+                playerNetworkManager.currentFocusPoints.OnValueChanged += PlayerUIManager.Instance.playerUIHUDManager.SetNewFocusPointValue;
 
             }
 
@@ -138,12 +141,15 @@ namespace XD
                 // Update (if increase statü value )
                 playerNetworkManager.vitality.OnValueChanged -= playerNetworkManager.SetNewMaxHealthValue;
                 playerNetworkManager.endurance.OnValueChanged -= playerNetworkManager.SetNewMaxStaminaValue;
+                playerNetworkManager.mind.OnValueChanged -= playerNetworkManager.SetNewMaxFocusPointValue;
 
                 // Update UI Stat Bars
                 playerNetworkManager.currentHealth.OnValueChanged -= PlayerUIManager.Instance.playerUIHUDManager.SetNewHealthValue;
 
                 playerNetworkManager.currentStamina.OnValueChanged -= PlayerUIManager.Instance.playerUIHUDManager.SetNewStaminaValue;
                 playerNetworkManager.currentStamina.OnValueChanged -= playerStatsManager.ResetStaminaRegeneraationTimer;
+
+                playerNetworkManager.currentFocusPoints.OnValueChanged -= PlayerUIManager.Instance.playerUIHUDManager.SetNewFocusPointValue;
 
             }
             if (!IsOwner)
@@ -238,9 +244,12 @@ namespace XD
 
             currentCharacterData.currentHealth = playerNetworkManager.currentHealth.Value;
             currentCharacterData.currentStamina = playerNetworkManager.currentStamina.Value;
+            currentCharacterData.currentFocusPoints = playerNetworkManager.currentFocusPoints.Value;
+
 
             currentCharacterData.vitality = playerNetworkManager.vitality.Value;
             currentCharacterData.endurance = playerNetworkManager.endurance.Value;
+            currentCharacterData.mind = playerNetworkManager.mind.Value;
 
             // EQuipment
             currentCharacterData.headEquipment = playerNetworkManager.headEquipmentID.Value;
@@ -258,6 +267,11 @@ namespace XD
             currentCharacterData.leftWeapon01 = playerInventoryManager.weaponsInLeftHandSlots[0].itemID;
             currentCharacterData.leftWeapon02 = playerInventoryManager.weaponsInLeftHandSlots[1].itemID;
             currentCharacterData.leftWeapon03 = playerInventoryManager.weaponsInLeftHandSlots[2].itemID;
+
+            if(playerInventoryManager.currentSpell != null)
+            {
+                currentCharacterData.currentSpell = playerInventoryManager.currentSpell.itemID;
+            }
         }
         public void LoadGameDataFromCurrentCharacterData(ref CharacterSaveData currentCharacterData)
         {
@@ -271,20 +285,25 @@ namespace XD
 
             playerNetworkManager.vitality.Value = currentCharacterData.vitality;
             playerNetworkManager.endurance.Value = currentCharacterData.endurance;
+            playerNetworkManager.mind.Value = currentCharacterData.mind;
 
             // Health
             playerNetworkManager.maxHealth.Value = playerStatsManager.CalculateHealthBasedOnVitalityLevel(playerNetworkManager.vitality.Value);
             playerNetworkManager.currentHealth.Value = currentCharacterData.currentHealth;
-            PlayerUIManager.Instance.playerUIHUDManager.SetMaxHealthValue(playerNetworkManager.maxHealth.Value);
+            
             // Stamina
             playerNetworkManager.maxStamina.Value = playerStatsManager.CalculateStaminaBasedOnEnduranceLevel(playerNetworkManager.endurance.Value);
             playerNetworkManager.currentStamina.Value = currentCharacterData.currentStamina;
-            PlayerUIManager.Instance.playerUIHUDManager.SetMaxStaminaValue(playerNetworkManager.maxStamina.Value);
+            
+            // Mind 
+            playerNetworkManager.maxFocusPoints.Value = playerStatsManager.CalculateFocusPointsBasedOnMindLevel(playerNetworkManager.mind.Value);
+            playerNetworkManager.currentFocusPoints.Value = currentCharacterData.currentFocusPoints;
+            
 
             // Equipment
 
 
-            if(WorldItemDatabase.Instance.GetHeadEquipmentByID(currentCharacterData.bodyEquipment))
+            if (WorldItemDatabase.Instance.GetHeadEquipmentByID(currentCharacterData.bodyEquipment))
             {
                 HeadEquipmentItem headEquipment = Instantiate(WorldItemDatabase.Instance.GetHeadEquipmentByID(currentCharacterData.headEquipment));
                 playerInventoryManager.headEquipment = headEquipment;
@@ -372,6 +391,15 @@ namespace XD
             else
             {
                 playerNetworkManager.currentLeftHandWeaponID.Value = 0;
+            }
+            if (WorldItemDatabase.Instance.GetSpellByID(currentCharacterData.currentSpell))
+            {
+                SpellItem currentSpell = Instantiate(WorldItemDatabase.Instance.GetSpellByID(currentCharacterData.currentSpell));
+                playerNetworkManager.currentSpellID.Value = currentSpell.itemID;
+            }
+            else
+            {
+                playerNetworkManager.currentSpellID.Value = -1; // -1 Sets spell to null as its not a valid ID
             }
 
             playerEquipmentManager.EquipArmors();

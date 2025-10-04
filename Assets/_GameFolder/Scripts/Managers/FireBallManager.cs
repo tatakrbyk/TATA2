@@ -36,14 +36,10 @@ namespace XD
 
             if(spellTarget != null )
             {
-                transform.LookAt(spellTarget.transform);
+                transform.LookAt(spellTarget.characterCombatManager.lockOnTransform.position);
             }
 
-            if(fireBallRigidbody != null )
-            {
-                Vector3 currentVelocity = fireBallRigidbody.velocity;
-                fireBallRigidbody.velocity = transform.forward + currentVelocity;
-            }
+            
         }
 
         private void OnCollisionEnter(Collision collision)

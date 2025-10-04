@@ -134,6 +134,9 @@ namespace XD
         RollingAttack01,
         BackstepAttack01,
 
+        LightJumpingAttack01,
+        HeavyJumpingAttack01, 
+
     }
 
     // Used To Calculate Damage Animation Intensity

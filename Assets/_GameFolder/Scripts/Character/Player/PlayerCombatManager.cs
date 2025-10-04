@@ -183,10 +183,16 @@ namespace XD
                 case AttackType.LightAttack02:
                     staminaDeduted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.lightAttackStaminaCostMultiplier;
                     break;
+                case AttackType.LightJumpingAttack01:
+                    staminaDeduted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.lightAttackStaminaCostMultiplier;
+                    break;
                 case AttackType.HeavyAttack01:
                     staminaDeduted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.heavyAttackStaminaCostMultiplier;
                     break;
                 case AttackType.HeavyAttack02:
+                    staminaDeduted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.heavyAttackStaminaCostMultiplier;
+                    break;
+                case AttackType.HeavyJumpingAttack01:
                     staminaDeduted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.heavyAttackStaminaCostMultiplier;
                     break;
                 case AttackType.ChargedAttack01:
