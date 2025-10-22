@@ -58,6 +58,7 @@ namespace XD
         MediumShield,
         Fist,
         LightShield,
+        Bow
     }
 
     // Used To Determina Which Item (Catalyst) is needed To Cast Spell
@@ -66,7 +67,20 @@ namespace XD
         Incantation,
         Sorcery
     }
+
+    // Used To Determine Which Ranged Weapon Can Fire This Ammo
+    public enum ProjectileClass
+    {
+        Arrow,
+        Bolt
+    }
     
+    public enum ProjectileSlot
+    {
+        Main,
+        Secondary
+    }
+
     // Used To Tag Equipment Models With Specific Body Parts That They Will Cover
     public enum EquipmentModelType
     {

@@ -21,6 +21,9 @@ namespace XD
         public Transform bossHealthBarParent;
         public GameObject bossHealthBarObject;
 
+        [Header("Crosshair")]
+        public GameObject crosshair;
+
         public void ToggleHUD(bool status)
         {
             if(status)

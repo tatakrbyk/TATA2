@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace XD
@@ -10,11 +8,16 @@ namespace XD
         PlayerManager player;
 
         public WeaponItem currentWeaponBeingUsed;
+        public ProjectileSlot currentProjectileBeingUsed;
+
+        [Header("Projectile")]
+        private Vector3 projectileAimDirection;
 
         [Header("Flags")]
         public bool canCommboWithMainHandWeapon = false;
         public bool canCommboWithOffHandWeapon = false;
 
+        
         protected override void Awake()
         {
             base.Awake();
@@ -247,6 +250,120 @@ namespace XD
         {
             player.playerCombatManager.canCommboWithMainHandWeapon = false;
             player.playerCombatManager.canCommboWithOffHandWeapon = false;
+        }
+
+        // Call Animation = "Bow_th_fire_01"
+        public void ReleaseArrow()
+        {
+            if(player.IsOwner)
+            {
+                player.playerNetworkManager.hasArrowNotched.Value = false;
+            }
+            if (player.playerEffectsManager.activeDrawnProjectileFX != null)
+            {
+                Destroy(player.playerEffectsManager.activeDrawnProjectileFX);
+            }
+            player.characterSoundFXManager.PlaySoundFX(WorldSoundFXManager.Instance.ChooseRandomSFXFromArray(WorldSoundFXManager.Instance.releaseArrowSFX));
+
+            // Animate The Bow
+            Animator bowAnimator;
+
+            if (player.playerNetworkManager.IsTwoHandingLeftWeapon.Value)
+            {
+                bowAnimator = player.playerEquipmentManager.leftHandWeaponModel.GetComponentInChildren<Animator>();
+            }
+            else
+            {
+                bowAnimator = player.playerEquipmentManager.rightHandWeaponModel.GetComponentInChildren<Animator>();
+            }
+
+            bowAnimator.SetBool("IsDrawn", false);
+            bowAnimator.Play("Bow_Fire_01");
+
+            if(!player.IsOwner) { return; }
+
+            // The Projectile We Are Firing
+            RangedProjectileItem projectileItem = null;
+
+            switch(currentProjectileBeingUsed)
+            {
+                case ProjectileSlot.Main:
+                    projectileItem = player.playerInventoryManager.mainProjectile;
+                    break;
+                case ProjectileSlot.Secondary:
+                    projectileItem = player.playerInventoryManager.secondaryProjectile;
+                    break;
+                default:
+                    break;
+            }
+
+            if(projectileItem == null) { return; }
+            if(projectileItem.currentAmmoAmount <= 0) { return; }
+
+            Transform projectileInstantiationLocation;
+            GameObject projectileGameObject;
+            Rigidbody projectileRigidbody;
+            RangedProjectileDamageCollider projectileDamageCollider;
+
+            
+            // Subtract Ammo
+            projectileItem.currentAmmoAmount -= 1;
+            // TODO: Make And Update Aroow Count UI
+
+            projectileInstantiationLocation = player.playerCombatManager.lockOnTransform;
+            projectileGameObject = Instantiate(projectileItem.releaseProjectileModel, projectileInstantiationLocation);
+            projectileDamageCollider = projectileGameObject.GetComponent<RangedProjectileDamageCollider>();
+            projectileRigidbody = projectileGameObject.GetComponent<Rigidbody>();
+
+            // TODO: Make Formula To Set Range Projectile Damage
+            projectileDamageCollider.physicalDamage = 100;
+            projectileDamageCollider.characterShootingProjectile = player;
+
+            // Fire an arrow based on 1 of 3 varitions
+
+            float yRotationDuringFire = player.transform.localEulerAngles.y;
+            // Aiming
+            if(player.playerNetworkManager.isAiming.Value)
+            {   
+                Ray newRay = new Ray(lockOnTransform.position, PlayerCamera.Instance.aimDirection);
+                projectileAimDirection = newRay.GetPoint(5000);
+                projectileGameObject.transform.LookAt(projectileAimDirection);
+            }
+            else
+            {
+                // Locked And Not Aiming
+                if (player.playerCombatManager.currentTarget != null)
+                {
+                    Quaternion arrowRotation = Quaternion.LookRotation(player.playerCombatManager.currentTarget.characterCombatManager.lockOnTransform.position
+                        - projectileGameObject.transform.position);
+                    projectileGameObject.transform.rotation = arrowRotation;
+                }               
+                else
+                {
+                    Quaternion arrowRotation = Quaternion.LookRotation(player.transform.forward);
+                    projectileGameObject.transform.rotation = arrowRotation;
+
+                }
+
+            }
+
+            // Get all character colliders and ignore self
+            Collider[] characterColliders = player.GetComponentsInChildren<Collider>();
+            List<Collider> collidersArrowWillIgonore = new List<Collider>();
+
+            foreach(var item in characterColliders) {  collidersArrowWillIgonore.Add(item); }
+            foreach(Collider hitBox in collidersArrowWillIgonore)
+            {
+                Physics.IgnoreCollision(projectileDamageCollider.damageCollider, hitBox, true);
+            }
+
+            projectileRigidbody.AddForce(projectileGameObject.transform.forward * projectileItem.forwardVelocity);
+            projectileGameObject.transform.parent = null;
+
+            // TODO: Sync Arrow fire wih server RPC
+            player.playerNetworkManager.NotifyServerOfReleasedProjectileServerRpc(player.OwnerClientId, projectileItem.itemID, 
+                projectileAimDirection.x, projectileAimDirection.y, projectileAimDirection.z, yRotationDuringFire);
+
         }
 
         // CALL ANIMATION = "sphand_main_projectile_01_charge"

@@ -174,12 +174,11 @@ namespace XD
         {
             if (playerPerformAction.playerNetworkManager.IsTwoHandingWeapon.Value)
             {
-                PerformMainHandJumpingLightAttack(playerPerformAction, weaponPerformAction);
-
+                PerformTwoHandJumpingLightAttack(playerPerformAction, weaponPerformAction);
             }
             else
             {
-                PerformTwoHandJumpingLightAttack(playerPerformAction, weaponPerformAction);
+                PerformMainHandJumpingLightAttack(playerPerformAction, weaponPerformAction);
             }
         }
 

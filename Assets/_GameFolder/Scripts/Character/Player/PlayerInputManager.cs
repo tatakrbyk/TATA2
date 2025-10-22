@@ -140,6 +140,7 @@ namespace XD
                 // Left Alt?
                 playerControls.PlayerActions.LB.performed += i => LB_Input = true;
                 playerControls.PlayerActions.LB.canceled += i => player.playerNetworkManager.isBlocking.Value = false;
+                playerControls.PlayerActions.LB.canceled += i => player.playerNetworkManager.isAiming.Value = false;
                 playerControls.PlayerActions.Hold_LB.performed += i => Hold_LB_Input = true;
                 playerControls.PlayerActions.Hold_LB.canceled += i => Hold_LB_Input = false;
 
@@ -260,15 +261,36 @@ namespace XD
                 player.playerNetworkManager.isMoving.Value = false;
             }
 
-                // Not locked on
-            if (!player.playerNetworkManager.isLockedOn.Value || player.playerNetworkManager.isSprinting.Value)
+            if(!player.playerLocomotionManager.canRun)
             {
-                player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);       
+                if(moveAmount > 0.5f)
+                {
+                    moveAmount = 0.5f;
+                }
+                if(verticalInput > 0.5f)
+                {
+                    verticalInput = 0.5f;
+                }
+                if(horizontalInput > 0.5f)
+                {
+                    horizontalInput = 0.5f;
+                }
             }
-            else
-            { 
+                
+            if (player.playerNetworkManager.isLockedOn.Value && !player.playerNetworkManager.isSprinting.Value)
+            {
                 player.playerAnimatorManager.UpdateAnimatorMovementParameters(horizontalInput, verticalInput, player.playerNetworkManager.isSprinting.Value);
+                return;
             }
+            if(player.playerNetworkManager.isAiming.Value)
+            {
+                player.playerAnimatorManager.UpdateAnimatorMovementParameters(horizontalInput, verticalInput, player.playerNetworkManager.isSprinting.Value);
+                return;
+            }
+            
+            player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);       
+            
+            
         }
 
         private void HandleCameraMovementInput()
@@ -337,10 +359,12 @@ namespace XD
             if(Hold_RB_Input)
             {
                 player.playerNetworkManager.isChargingRightSpell.Value = true;
+                player.playerNetworkManager.isHoldingArrow.Value = true;
             }
             else
             {
                 player.playerNetworkManager.isChargingRightSpell.Value = false;
+                player.playerNetworkManager.isHoldingArrow.Value = false;
             }
         }
         private void HandleLBInput()
@@ -354,8 +378,15 @@ namespace XD
                 // TODO: If we have a uý window open, simply return without doing anything
                 player.playerNetworkManager.SetCharacterActionHand(false);
 
-                // TODO: If we are two handing the weapon, use the two handed action
-                player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentLeftHandWeapon.oh_LB_Action, player.playerInventoryManager.currentLeftHandWeapon);
+                if(player.playerNetworkManager.isUsingRightHand.Value)
+                {
+                    player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentRightHandWeapon.oh_LB_Action, player.playerInventoryManager.currentRightHandWeapon);
+
+                }
+                else
+                {
+                    player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentLeftHandWeapon.oh_LB_Action, player.playerInventoryManager.currentLeftHandWeapon);
+                }
             }
         }
 

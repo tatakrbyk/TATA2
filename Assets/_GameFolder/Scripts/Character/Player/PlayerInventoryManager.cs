@@ -25,6 +25,9 @@ namespace XD
         public HandEquipmentItem handEquipment;
         public SpellItem currentSpell;
 
+        [Header("Projectiles")]
+        public RangedProjectileItem mainProjectile;
+        public RangedProjectileItem secondaryProjectile;
         [Header("Inventory")]
         public List<Item> itemsInInventory;
 

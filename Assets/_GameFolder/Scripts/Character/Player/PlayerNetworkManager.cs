@@ -38,6 +38,13 @@ namespace XD
         public NetworkVariable<int> legEquipmentID = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> handEquipmentID = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
+        [Header("Projectiles")]
+        public NetworkVariable<int> mainProjectileID = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<int> secondaryProjectileID = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> hasArrowNotched = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);  // This lets us know if we already have a projectile loaded
+        public NetworkVariable<bool> isHoldingArrow = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner); // This lets us know if we are holding that projectile so it does not releasen
+        public NetworkVariable<bool> isAiming = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner); // This lets us know if we are "ZOOMED" in and using our aiming Camera
+
         protected override void Awake()
         {
             base.Awake();
@@ -135,6 +142,59 @@ namespace XD
             
         }
 
+        public void OnMainProjectileIDChange(int oldID, int newID)
+        {
+            RangedProjectileItem newProjectile = null;
+
+            if (WorldItemDatabase.Instance.GetProjectileByID(newID))
+            {
+                newProjectile = Instantiate(WorldItemDatabase.Instance.GetProjectileByID(newID));
+            }
+            if(newProjectile != null)
+            { 
+                player.playerInventoryManager.mainProjectile = newProjectile;
+            }
+        }
+
+        public void OnSecondaryProjectileIDChange(int oldID, int newID)
+        {
+            RangedProjectileItem newProjectile = null;
+            if (WorldItemDatabase.Instance.GetProjectileByID(newID))
+            {
+                newProjectile = Instantiate(WorldItemDatabase.Instance.GetProjectileByID(newID));
+            }
+            if (newProjectile != null)
+            {
+                player.playerInventoryManager.secondaryProjectile = newProjectile;
+            }
+        }
+
+        public void OnIsHoldingArrowChanged(bool oldStatus, bool newStatus)
+        {
+            player.animator.SetBool("IsHoldingArrow", isHoldingArrow.Value);
+        }
+
+        public void OnIsAimingChanged(bool oldStatus, bool newStatus)
+        {
+            Debug.Log("Aiming Status Changed: " + isAiming.Value);
+            if (!isAiming.Value)
+            {
+                PlayerCamera.Instance.cameraObject.transform.localEulerAngles = new Vector3(0,0,0);
+                PlayerCamera.Instance.cameraObject.fieldOfView = 60;
+                PlayerCamera.Instance.cameraObject.nearClipPlane = 0.3f;
+                PlayerCamera.Instance.cameraPivotTransform.localPosition = new Vector3(0, PlayerCamera.Instance.cameraPivotYPositionOffSet, 0);
+                PlayerUIManager.Instance.playerUIHUDManager.crosshair.SetActive(false);
+            }
+            else
+            {
+                PlayerCamera.Instance.gameObject.transform.eulerAngles = new Vector3(0,0,0);
+                PlayerCamera.Instance.cameraPivotTransform.eulerAngles = new Vector3(0,0,0);
+                PlayerCamera.Instance.cameraObject.fieldOfView = 40;
+                PlayerCamera.Instance.cameraObject.nearClipPlane = 1.3f;
+                PlayerCamera.Instance.cameraPivotTransform.localPosition = Vector3.zero;
+                PlayerUIManager.Instance.playerUIHUDManager.crosshair.SetActive(true);
+            }
+        }
         public void OnIsChargingRightSpellChanged(bool oldStatus, bool newStatus)
         {
             player.animator.SetBool("IsChargingRightSpell", isChargingRightSpell.Value);
@@ -301,7 +361,167 @@ namespace XD
             }
         }
 
+        [ClientRpc]
+        public override void DestroyAllCurrentActionFXClientRPC()
+        {
+            base.DestroyAllCurrentActionFXClientRPC();
+
+            // For Canvel Arrow Action 
+
+            if (hasArrowNotched.Value)
+            {
+
+                // Animate The Bow
+                Animator bowAnimator;
+
+                if (player.playerNetworkManager.IsTwoHandingLeftWeapon.Value)
+                {
+                    bowAnimator = player.playerEquipmentManager.leftHandWeaponModel.GetComponentInChildren<Animator>();
+                }
+                else
+                {
+                    bowAnimator = player.playerEquipmentManager.rightHandWeaponModel.GetComponentInChildren<Animator>();
+                }
+
+                bowAnimator.SetBool("IsDrawn", false);
+                bowAnimator.Play("Bow_Fire_01");
+                
+                if(player.IsOwner) { hasArrowNotched.Value = false; }   
+            }
+
+                
+        }
+
         #endregion
+
+        #region Draw Projectile
+
+        [ServerRpc]
+        public void NotifyServerOfDrawnProjectileServerRpc(int projectileID)
+        {
+            if (IsServer)
+            {
+                NotifyClientsOfDrawnProjectileClientRpc(projectileID);
+            }
+        }
+        [ClientRpc]
+        private void NotifyClientsOfDrawnProjectileClientRpc(int projectileID)
+        {
+            Animator bowAnimator = null;
+
+            if(IsTwoHandingLeftWeapon.Value)
+            {
+                bowAnimator = player.playerEquipmentManager.leftHandWeaponModel.GetComponentInChildren<Animator>();
+            }
+            else
+            {
+                bowAnimator = player.playerEquipmentManager.rightHandWeaponModel.GetComponentInChildren<Animator>();
+            }
+
+            if(bowAnimator != null)
+            {
+
+                bowAnimator.SetBool("IsDrawn", true);            
+                bowAnimator.Play("Bow_Drawn_01");
+
+            }
+            GameObject arrow = Instantiate(WorldItemDatabase.Instance.GetProjectileByID(projectileID).drawProjectileModel, player.playerEquipmentManager.leftHandWeaponSlot.transform);
+            player.playerEffectsManager.activeDrawnProjectileFX = arrow;
+
+            // Play SFX
+            player.characterSoundFXManager.PlaySoundFX(WorldSoundFXManager.Instance.ChooseRandomSFXFromArray(WorldSoundFXManager.Instance.notchArrowSFX));
+
+        }
+        #endregion
+
+        #region Release Projectile
+        
+        [ServerRpc]
+        public void NotifyServerOfReleasedProjectileServerRpc(ulong playerClientID, int projectileID, float xPosition, float yPosition, float zPosition, float yCharacterRotation)
+        {
+            if (IsServer)
+            {
+                NotifyClientsOfReleasedProjectileClientRpc(playerClientID, projectileID, xPosition, yPosition, zPosition, yCharacterRotation);  
+            }
+        }
+        [ClientRpc]
+        public void NotifyClientsOfReleasedProjectileClientRpc(ulong playerClientID, int projectileID, float xPosition, float yPosition, float zPosition, float yCharacterRotation)
+        {
+            if(playerClientID != NetworkManager.Singleton.LocalClientId) // Not call 2 times on the owner
+            {
+                PerformReleasedProjectileFromRPC(projectileID, xPosition, yPosition, zPosition, yCharacterRotation);
+            }            
+        }
+
+        private void PerformReleasedProjectileFromRPC(int projectileID, float xPosition, float yPosition, float zPosition, float yCharacterRotation)
+        {
+            // The Projectile We Are Firing
+            RangedProjectileItem projectileItem = null;
+
+            if(WorldItemDatabase.Instance.GetProjectileByID(projectileID) != null)
+            {
+                projectileItem = WorldItemDatabase.Instance.GetProjectileByID(projectileID);
+            }
+
+            if (projectileItem == null) { return; }
+
+            Transform projectileInstantiationLocation;
+            GameObject projectileGameObject;
+            Rigidbody projectileRigidbody;
+            RangedProjectileDamageCollider projectileDamageCollider;            
+
+            projectileInstantiationLocation = player.playerCombatManager.lockOnTransform;
+            projectileGameObject = Instantiate(projectileItem.releaseProjectileModel, projectileInstantiationLocation);
+            projectileDamageCollider = projectileGameObject.GetComponent<RangedProjectileDamageCollider>();
+            projectileRigidbody = projectileGameObject.GetComponent<Rigidbody>();
+
+            // TODO: Make Formula To Set Range Projectile Damage
+            projectileDamageCollider.physicalDamage = 100;
+            projectileDamageCollider.characterShootingProjectile = player;
+
+            // Fire an arrow based on 1 of 3 varitions
+
+            // Aiming
+            if (player.playerNetworkManager.isAiming.Value)
+            {
+                projectileGameObject.transform.LookAt(new Vector3(xPosition, yPosition, zPosition));
+            }
+            else
+            {
+                //  Locked And Not Aiming
+                if (player.playerCombatManager.currentTarget != null)
+                {
+                    Quaternion arrowRotation = Quaternion.LookRotation(player.playerCombatManager.currentTarget.characterCombatManager.lockOnTransform.position
+                        - projectileGameObject.transform.position);
+                    projectileGameObject.transform.rotation = arrowRotation;
+                }
+                // Unlocked and not aiming
+                else
+                {
+                    // Hint. If ypu want to do this on your own look at the forward direction value of the camera , and direct the arrww accordingly
+                    player.transform.rotation = Quaternion.Euler(player.transform.rotation.x, yCharacterRotation, player.transform.rotation.z);
+                    Quaternion arrowRotation = Quaternion.LookRotation(player.transform.forward);
+                    projectileGameObject.transform.rotation = arrowRotation;
+
+                }
+
+            }
+
+            // Get all character colliders and ignore self
+            Collider[] characterColliders = player.GetComponentsInChildren<Collider>();
+            List<Collider> collidersArrowWillIgonore = new List<Collider>();
+
+            foreach (var item in characterColliders) { collidersArrowWillIgonore.Add(item); }
+            foreach (Collider hitBox in collidersArrowWillIgonore)
+            {
+                Physics.IgnoreCollision(projectileDamageCollider.damageCollider, hitBox, true);
+            }
+
+            projectileRigidbody.AddForce(projectileGameObject.transform.forward * projectileItem.forwardVelocity);
+            projectileGameObject.transform.parent = null;
+        }
+        #endregion
+
     }
 
 }

@@ -11,7 +11,8 @@ namespace XD
 
         public PlayerManager player;
         public Camera cameraObject;
-        [SerializeField] private Transform cameraPivotTransform;
+        public Transform cameraPivotTransform;
+        public float cameraPivotYPositionOffSet = 1.5f;
 
 
         [Header("Locked On")]
@@ -46,7 +47,9 @@ namespace XD
         private float cameraZPosition; // For camera collisions , back and forth
         private float targetCameraZPozition; // For camera collisions
 
-
+        [Header("Ranged Aim")]
+        private Transform followTransformWhenAiming;
+        public Vector3 aimDirection;
         private void Awake()
         {
             if (instance == null)
@@ -85,14 +88,76 @@ namespace XD
 
         private void HandleFollowTarget()
         {
-            Vector3 targetCameraPosition = Vector3.SmoothDamp(transform.position, player.transform.position, ref cameraVelocity, cameraSmoothSpeed * Time.deltaTime);
-            transform.position = targetCameraPosition;
+            if(player.playerNetworkManager.isAiming.Value)
+            {
+                Vector3 targetCameraPosition = Vector3.SmoothDamp(transform.position, player.playerCombatManager.lockOnTransform.position, ref cameraVelocity, cameraSmoothSpeed * Time.deltaTime);
+                transform.position = targetCameraPosition;
+            }
+            else
+            {
+
+                Vector3 targetCameraPosition = Vector3.SmoothDamp(transform.position, player.transform.position, ref cameraVelocity, cameraSmoothSpeed * Time.deltaTime);
+                transform.position = targetCameraPosition;
+            }
+            /*
+            if(player.playerNetworkManager.isAiming.Value)
+            {
+                if(followTransformWhenAiming == null)
+                {
+                    followTransformWhenAiming = player.GetComponentInChildren<PlayerAimCameraFollowTransform>().transform;
+                    return;
+                }
+                Vector3 targetCameraPosition = Vector3.SmoothDamp(transform.position, followTransformWhenAiming.position, ref cameraVelocity, cameraSmoothSpeed * Time.deltaTime);
+                transform.position = targetCameraPosition;
+            }
+            else
+            {
+                Vector3 targetCameraPosition = Vector3.SmoothDamp(transform.position, player.transform.position, ref cameraVelocity, cameraSmoothSpeed * Time.deltaTime);
+                transform.position = targetCameraPosition;
+            }
+            */
         }
 
         private void HandleRotation()
         {
+            if(player.playerNetworkManager.isAiming.Value)
+            {
+                HandleAimRotations();
+            }
+            else
+            {
+                HandleStandardRotations();
+            }
+        }
+
+        private void HandleAimRotations()
+        {
+            if (!player.playerLocomotionManager.isGrounded)
+            {
+                player.playerNetworkManager.isAiming.Value = false;
+            }
+            if(player.isPerformingAction) { return; }
+
+            aimDirection = cameraObject.transform.forward.normalized;
+
+            // Left And Right Look
+            Vector3 cameraRotationY = Vector3.zero;
+            // Up And Down Look
+            Vector3 cameraRotationX = Vector3.zero;
+
+            leftAndRightLookAngle += (PlayerInputManager.Instance.cameraHorizontalInput * leftAndRightRotationSpeed) * Time.deltaTime;
+            upAndDownLookAngle -= (PlayerInputManager.Instance.cameraVerticalInput * upAndDownRotationSpeed) * Time.deltaTime;
+            upAndDownLookAngle = Mathf.Clamp(upAndDownLookAngle, minimumPivot, maximumPivot);
+
+            cameraRotationY.y = leftAndRightLookAngle;
+            cameraRotationX.x = upAndDownLookAngle;
+
+            cameraObject.transform.localEulerAngles = new Vector3(upAndDownLookAngle, leftAndRightLookAngle, 0);
+        }
+        private void HandleStandardRotations()
+        {
             // If locked on, Force rotation towards targets
-            if(player.playerNetworkManager.isLockedOn.Value)
+            if (player.playerNetworkManager.isLockedOn.Value)
             {
                 // This rotates tigis gameobject
                 Vector3 rotationDirection = player.playerCombatManager.currentTarget.characterCombatManager.lockOnTransform.position - transform.position;
@@ -137,8 +202,6 @@ namespace XD
                 cameraPivotTransform.localRotation = targetRotation;
 
             }
-
-            
         }
         
         private void HandleCollisions()
@@ -161,6 +224,13 @@ namespace XD
             if(Mathf.Abs(targetCameraZPozition) < cameraCollisionRadius)
             {
                 targetCameraZPozition = -cameraCollisionRadius;
+            }
+
+            if(player.playerNetworkManager.isAiming.Value) 
+            {
+                cameraObjectPosition.z = 0;
+                cameraObject.transform.localPosition = cameraObjectPosition;
+                return; 
             }
 
             cameraObjectPosition.z = Mathf.Lerp(cameraObject.transform.localPosition.z, targetCameraZPozition, cameraCollisionRadius);

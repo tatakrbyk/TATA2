@@ -81,6 +81,9 @@ namespace XD
 
                 playerNetworkManager.currentFocusPoints.OnValueChanged += PlayerUIManager.Instance.playerUIHUDManager.SetNewFocusPointValue;
 
+                // Resets Camera Rotation to Standart When Aimig Is Disabled
+                playerNetworkManager.isAiming.OnValueChanged += playerNetworkManager.OnIsAimingChanged;
+
             }
 
             // Only Update hp bar if this character is not the local character
@@ -110,7 +113,11 @@ namespace XD
             playerNetworkManager.bodyEquipmentID.OnValueChanged += playerNetworkManager.OnBodyEquipmentChanged;
             playerNetworkManager.legEquipmentID.OnValueChanged += playerNetworkManager.OnLegEquipmentChanged;
             playerNetworkManager.handEquipmentID.OnValueChanged += playerNetworkManager.OnHandEquipmentChanged;
-            
+            playerNetworkManager.mainProjectileID.OnValueChanged += playerNetworkManager.OnMainProjectileIDChange;
+            playerNetworkManager.secondaryProjectileID.OnValueChanged += playerNetworkManager.OnSecondaryProjectileIDChange;
+            playerNetworkManager.isHoldingArrow.OnValueChanged += playerNetworkManager.OnIsHoldingArrowChanged;
+
+
             // Spells
             playerNetworkManager.isChargingRightSpell.OnValueChanged += playerNetworkManager.OnIsChargingRightSpellChanged;
             playerNetworkManager.isChargingLeftSpell.OnValueChanged += playerNetworkManager.OnIsChargingLeftSpellChanged;
@@ -151,6 +158,9 @@ namespace XD
 
                 playerNetworkManager.currentFocusPoints.OnValueChanged -= PlayerUIManager.Instance.playerUIHUDManager.SetNewFocusPointValue;
 
+                // Resets Camera Rotation to Standart When Aimig Is Disabled
+                playerNetworkManager.isAiming.OnValueChanged -= playerNetworkManager.OnIsAimingChanged;
+
             }
             if (!IsOwner)
             {
@@ -177,6 +187,10 @@ namespace XD
             playerNetworkManager.bodyEquipmentID.OnValueChanged -= playerNetworkManager.OnBodyEquipmentChanged;
             playerNetworkManager.legEquipmentID.OnValueChanged -= playerNetworkManager.OnLegEquipmentChanged;
             playerNetworkManager.handEquipmentID.OnValueChanged -= playerNetworkManager.OnHandEquipmentChanged;
+
+            playerNetworkManager.mainProjectileID.OnValueChanged -= playerNetworkManager.OnMainProjectileIDChange;
+            playerNetworkManager.secondaryProjectileID.OnValueChanged -= playerNetworkManager.OnSecondaryProjectileIDChange;
+            playerNetworkManager.isHoldingArrow.OnValueChanged -= playerNetworkManager.OnIsHoldingArrowChanged;
 
             // Spells
             playerNetworkManager.isChargingRightSpell.OnValueChanged -= playerNetworkManager.OnIsChargingRightSpellChanged;
@@ -290,18 +304,19 @@ namespace XD
             // Health
             playerNetworkManager.maxHealth.Value = playerStatsManager.CalculateHealthBasedOnVitalityLevel(playerNetworkManager.vitality.Value);
             playerNetworkManager.currentHealth.Value = currentCharacterData.currentHealth;
-            
+            PlayerUIManager.Instance.playerUIHUDManager.SetMaxHealthValue(playerNetworkManager.maxHealth.Value);
+
             // Stamina
             playerNetworkManager.maxStamina.Value = playerStatsManager.CalculateStaminaBasedOnEnduranceLevel(playerNetworkManager.endurance.Value);
             playerNetworkManager.currentStamina.Value = currentCharacterData.currentStamina;
-            
+            PlayerUIManager.Instance.playerUIHUDManager.SetMaxStaminaValue(playerNetworkManager.maxStamina.Value);
+
             // Mind 
             playerNetworkManager.maxFocusPoints.Value = playerStatsManager.CalculateFocusPointsBasedOnMindLevel(playerNetworkManager.mind.Value);
             playerNetworkManager.currentFocusPoints.Value = currentCharacterData.currentFocusPoints;
-            
+            PlayerUIManager.Instance.playerUIHUDManager.SetMaxFocusPointValue(playerNetworkManager.maxFocusPoints.Value);
 
             // Equipment
-
 
             if (WorldItemDatabase.Instance.GetHeadEquipmentByID(currentCharacterData.bodyEquipment))
             {
@@ -405,10 +420,27 @@ namespace XD
             playerEquipmentManager.EquipArmors();
 
             playerInventoryManager.rightHandWeaponIndex = currentCharacterData.rightWeaponIndex;
-            playerNetworkManager.currentRightHandWeaponID.Value = playerInventoryManager.weaponsInRightHandSlots[currentCharacterData.rightWeaponIndex].itemID;
+
+            if(currentCharacterData.rightWeaponIndex >= 0)
+            {
+                playerNetworkManager.currentRightHandWeaponID.Value = playerInventoryManager.weaponsInRightHandSlots[currentCharacterData.rightWeaponIndex].itemID;
+            }
+            else
+            {
+                playerNetworkManager.currentRightHandWeaponID.Value = WorldItemDatabase.Instance.unarmedWeapon.itemID;
+            }
 
             playerInventoryManager.leftHandWeaponIndex = currentCharacterData.leftWeaponIndex;
-            playerNetworkManager.currentLeftHandWeaponID.Value = playerInventoryManager.weaponsInLeftHandSlots[currentCharacterData.leftWeaponIndex].itemID;
+
+            if(currentCharacterData.leftWeaponIndex >= 0)
+            {
+                playerNetworkManager.currentLeftHandWeaponID.Value = playerInventoryManager.weaponsInLeftHandSlots[currentCharacterData.leftWeaponIndex].itemID;
+            }
+            else
+            {
+                playerNetworkManager.currentLeftHandWeaponID.Value = WorldItemDatabase.Instance.unarmedWeapon.itemID;
+            }
+            
         }
          
         // When a player late joins the server
@@ -425,8 +457,12 @@ namespace XD
             playerNetworkManager.OnHeadEquipmentChanged(0, playerNetworkManager.headEquipmentID.Value);
             playerNetworkManager.OnBodyEquipmentChanged(0, playerNetworkManager.bodyEquipmentID.Value);
             playerNetworkManager.OnLegEquipmentChanged(0, playerNetworkManager.legEquipmentID.Value);
-            playerNetworkManager.OnHandEquipmentChanged(0, playerNetworkManager.handEquipmentID.Value);           
+            playerNetworkManager.OnHandEquipmentChanged(0, playerNetworkManager.handEquipmentID.Value);
 
+            // Sync Projectiles
+            playerNetworkManager.OnMainProjectileIDChange(0, playerNetworkManager.mainProjectileID.Value);
+            playerNetworkManager.OnSecondaryProjectileIDChange(0, playerNetworkManager.secondaryProjectileID.Value);
+            playerNetworkManager.OnIsHoldingArrowChanged(false, playerNetworkManager.isHoldingArrow.Value);
 
             // Sync Two Hand Status
             playerNetworkManager.OnIsTwoHandingRightWeaponChanged(false, playerNetworkManager.IsTwoHandingRightWeapon.Value);

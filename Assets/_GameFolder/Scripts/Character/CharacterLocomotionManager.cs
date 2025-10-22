@@ -23,6 +23,7 @@ namespace XD
         public bool isRolling = false;
         public bool canRotate = true;
         public bool canMove = true;
+        public bool canRun = true;
         public bool isGrounded = true;
 
 

@@ -27,8 +27,8 @@ namespace XD
 
         [Header("Jump")]
         private float jumpStaminaCost = 10;
-        private float jumpHeight = 4;
-        private float jumpForwardSpeed = 5;
+        private float jumpHeight = 2f;
+        private float jumpForwardSpeed = 8;
         private float freeFallSpeed = 2;
         private Vector3 jumpDirection;
 
@@ -38,7 +38,6 @@ namespace XD
 
             player = GetComponent<PlayerManager>();
         }
-
         protected override void Update()
         {
             base.Update();
@@ -93,11 +92,20 @@ namespace XD
 
             if(!player.characterLocomotionManager.canMove) { return; }
 
-
-            moveDirection = PlayerCamera.Instance.transform.forward * verticalMovement; 
-            moveDirection = moveDirection + PlayerCamera.Instance.transform.right * horizontalMovement;
-            moveDirection.Normalize();
-            moveDirection.y = 0;
+            if (player.playerNetworkManager.isAiming.Value)
+            {
+                moveDirection = transform.forward * verticalMovement;
+                moveDirection = moveDirection + transform.right * horizontalMovement;
+                moveDirection.Normalize();
+                moveDirection.y = 0;
+            }
+            else
+            {
+                moveDirection = PlayerCamera.Instance.transform.forward * verticalMovement;
+                moveDirection = moveDirection + PlayerCamera.Instance.transform.right * horizontalMovement;
+                moveDirection.Normalize();
+                moveDirection.y = 0;
+            }
 
             if(player.playerNetworkManager.isSprinting.Value)
             {
@@ -144,12 +152,35 @@ namespace XD
 
         private void HandleRotation()
         {
-            if(player.isDead.Value) { return; }
-            if(!player.playerLocomotionManager.canRotate) { return; }
+            if (player.isDead.Value) { return; }
+            if (!player.playerLocomotionManager.canRotate) { return; }
 
-            if(player.playerNetworkManager.isLockedOn.Value)
+            if (player.playerNetworkManager.isAiming.Value)
             {
-                if(player.playerNetworkManager.isSprinting.Value || player.playerLocomotionManager.isRolling)
+                HandleAimingRotation();
+            }
+            else
+            {
+                HandleStandardRotation();
+            }
+        }
+
+        private void HandleAimingRotation()
+        {
+            Vector3 targetDirection;
+            targetDirection = PlayerCamera.Instance.cameraObject.transform.forward;
+            targetDirection.y = 0;
+            targetDirection.Normalize();
+
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+            Quaternion finalRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            transform.rotation = finalRotation;
+        }
+        private void HandleStandardRotation()
+        {
+            if (player.playerNetworkManager.isLockedOn.Value)
+            {
+                if (player.playerNetworkManager.isSprinting.Value || player.playerLocomotionManager.isRolling)
                 {
                     Vector3 targetDirection = Vector3.zero;
                     targetDirection = PlayerCamera.Instance.cameraObject.transform.forward * verticalMovement;
@@ -157,7 +188,7 @@ namespace XD
                     targetDirection.Normalize();
                     targetDirection.y = 0;
 
-                    if(targetDirection == Vector3.zero)
+                    if (targetDirection == Vector3.zero)
                     {
                         targetDirection = transform.forward;
                     }
@@ -170,10 +201,10 @@ namespace XD
                 {
                     if (player.playerCombatManager.currentTarget == null) { return; }
 
-                    Vector3 targetDirection;    
+                    Vector3 targetDirection;
                     targetDirection = player.playerCombatManager.currentTarget.transform.position - transform.position;
-                    targetDirection.Normalize();
                     targetDirection.y = 0;
+                    targetDirection.Normalize();
 
                     Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
                     Quaternion finalRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
@@ -188,13 +219,13 @@ namespace XD
                 targetRotationDirection.Normalize();
                 targetRotationDirection.y = 0;
 
-                if(targetRotationDirection == Vector3.zero )
+                if (targetRotationDirection == Vector3.zero)
                 {
                     targetRotationDirection = transform.forward;
                 }
 
                 Quaternion newRotation = Quaternion.LookRotation(targetRotationDirection);
-                Quaternion targetRotation = Quaternion.Slerp( transform.rotation, newRotation, rotationSpeed * Time.deltaTime);
+                Quaternion targetRotation = Quaternion.Slerp(transform.rotation, newRotation, rotationSpeed * Time.deltaTime);
                 transform.rotation = targetRotation;
 
             }
@@ -257,6 +288,7 @@ namespace XD
             }
 
             player.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
+            player.playerNetworkManager.DestroyAllCurrentActionFXServerRPC();
 
         }
 
@@ -286,11 +318,11 @@ namespace XD
                 }
                 else if(PlayerInputManager.Instance.moveAmount >= 0.5) // Walk
                 {
-                    jumpDirection *= 0.5f; 
+                    jumpDirection *= 0.2f; // .5
                 }
                 else if (PlayerInputManager.Instance.moveAmount < 0.5) // Walk
                 {
-                    jumpDirection *= 0.25f;
+                    jumpDirection *= 0.1f; // .25
                 }
             }
         }

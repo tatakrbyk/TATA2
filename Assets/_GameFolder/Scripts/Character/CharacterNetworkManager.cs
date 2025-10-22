@@ -55,8 +55,8 @@ namespace XD
         public NetworkVariable<int> maxFocusPoints = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         [Header("Stats")]
         public NetworkVariable<int> vitality = new NetworkVariable<int>(10, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        public NetworkVariable<int> endurance = new NetworkVariable<int>(10, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        public NetworkVariable<int> mind = new NetworkVariable<int>(10, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<int> endurance = new NetworkVariable<int>(15, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<int> mind = new NetworkVariable<int>(5, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> strength = new NetworkVariable<int>(10, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         protected virtual void Awake()
@@ -132,11 +132,16 @@ namespace XD
         }
 
         [ClientRpc]
-        public void DestroyAllCurrentActionFXClientRPC()
+        public virtual void DestroyAllCurrentActionFXClientRPC()
         {
             if(character.characterEffectsManager.activeSpellWarmUpFX != null)
             {
                 Destroy(character.characterEffectsManager.activeSpellWarmUpFX);
+            }
+
+            if (character.characterEffectsManager.activeDrawnProjectileFX != null)
+            {
+                Destroy(character.characterEffectsManager.activeDrawnProjectileFX);
             }
         }
 

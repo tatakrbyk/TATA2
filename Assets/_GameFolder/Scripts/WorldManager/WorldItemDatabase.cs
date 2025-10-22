@@ -37,6 +37,9 @@ namespace XD
         [Header("Spells")]
         [SerializeField] List<SpellItem> spells = new List<SpellItem>();
 
+        [Header("Projectiles")]
+        [SerializeField] List<RangedProjectileItem> projectiles = new List<RangedProjectileItem>();
+
         [Header("Items Database")]
         // Every Item we have in the game
         private List<Item> items = new List<Item>();
@@ -79,6 +82,10 @@ namespace XD
             foreach (var spell in spells)
             {
                 items.Add(spell);
+            }
+            foreach (var projectile in projectiles)
+            {
+                items.Add(projectile);
             }
             // Assign of our items a unique item ID
             for (int i = 0; i < items.Count; i++)
@@ -125,6 +132,10 @@ namespace XD
         public SpellItem GetSpellByID(int ID)
         {
             return spells.FirstOrDefault(spell => spell.itemID == ID);
+        }
+        public RangedProjectileItem GetProjectileByID(int ID)
+        {
+            return projectiles.FirstOrDefault(projectile => projectile.itemID == ID);
         }
     }
 

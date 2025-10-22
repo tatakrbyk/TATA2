@@ -240,5 +240,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bossIntroPlayer: {fileID: 632026216761736685}
   bossLoopPlayer: {fileID: 8282642673428719115}
-  physicalDamageSFX: []
+  physicalDamageSFX:
+  - {fileID: 8300000, guid: 3df9bbbc130ccb344af5f3fc793a630f, type: 3}
+  - {fileID: 8300000, guid: e82879725b40ce444bca27d19a75f42c, type: 3}
+  - {fileID: 8300000, guid: 7cbd6cd765888ff418d01d98bd1ce9c2, type: 3}
+  pickUpItemSFX: {fileID: 0}
   rollSFX: {fileID: 8300000, guid: 97667819521401e418e44999547624a0, type: 3}
+  stanceBreakSFX: {fileID: 0}
+  criticalStrikeSFX: {fileID: 0}
+  releaseArrowSFX:
+  - {fileID: 8300000, guid: 73602dfa679026644b990fc1f4a6019f, type: 3}
+  - {fileID: 8300000, guid: ad90d2a4b1edc1c44b74e0c676f7ba29, type: 3}
+  - {fileID: 8300000, guid: 8ad154ec2912a1444b41a21e0c1ecb8a, type: 3}
+  notchArrowSFX:
+  - {fileID: 8300000, guid: e15ae41825bb0034190b95a1fc214bd3, type: 3}

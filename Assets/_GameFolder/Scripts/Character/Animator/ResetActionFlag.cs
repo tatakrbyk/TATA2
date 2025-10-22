@@ -18,6 +18,7 @@ namespace XD
             character.isPerformingAction = false;
             character.characterAnimatorManager.applyRootMotion = false;
             character.characterLocomotionManager.canMove = true;
+            character.characterLocomotionManager.canRun = true;
             character.characterLocomotionManager.canRotate = true;
             character.characterLocomotionManager.isRolling = false;
             character.characterCombatManager.DisableCanDoCombo();

@@ -14,6 +14,7 @@ namespace XD
 
         [Header("Current Active FX")]
         public GameObject activeSpellWarmUpFX;
+        public GameObject activeDrawnProjectileFX;
 
         [Header("VFX")]
         [SerializeField] private GameObject bloodSplatterVFX;
