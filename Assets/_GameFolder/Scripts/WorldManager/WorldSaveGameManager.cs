@@ -73,6 +73,82 @@ namespace XD
             }
         }
 
+        public bool HasFreeCharacterSlot()
+        {
+            saveFileDataWriter = new SaveFileDataWriter();
+            saveFileDataWriter.saveDataDirectoryPath = Application.persistentDataPath;
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_01);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+            {
+                return true;
+            }
+
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_02);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+            {
+                return true;
+            }
+
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_03);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+            {
+                return true;
+            }
+
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_04);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+            {
+                return true;
+            }
+
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_05);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+            {
+                return true;
+            }
+
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_06);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+            {
+                return true;
+            }
+
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_07);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+            {
+                return true;
+            }
+
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_08);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+            {
+                return true;
+            }
+
+            saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_09);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+            {
+                return true;
+            }
+
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_10);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+            {
+                return true;
+            }
+
+            return false;
+        }
         public string DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot characterSlot)
         {
             string fileName = "";
@@ -237,7 +313,7 @@ namespace XD
         private void NewGame()
         {
             // Call(t): Charactet Select&Create New Character Stats nd items
-            player.playerNetworkManager.vitality.Value = 15;
+            player.playerNetworkManager.vigor.Value = 15;
             player.playerNetworkManager.endurance.Value = 12;
             SaveGame();
             LoadWorldScene(WorldSceneIndex);
@@ -320,7 +396,7 @@ namespace XD
         public void LoadWorldScene(int buildIndex)
         {
             //AsyncOperation loadOperation = SceneManager.LoadSceneAsync(currentCharacterData.sceneIndex);
-
+            PlayerUIManager.Instance.playerUILoadingScreenManager.ActivateLoadingScreen();
             string worldScene = SceneUtility.GetScenePathByBuildIndex(buildIndex);
             NetworkManager.Singleton.SceneManager.LoadScene(worldScene, LoadSceneMode.Single);
             player.LoadGameDataFromCurrentCharacterData(ref currentCharacterData);
@@ -331,6 +407,71 @@ namespace XD
         public int GetWorldSceneIndex()
         {
             return WorldSceneIndex;
+        }
+
+        public SerializableWeapon GetSerializableWeaponFromWeaponItem(WeaponItem weapon)
+        {
+            SerializableWeapon serializableWeapon = new SerializableWeapon();
+
+            serializableWeapon.itemID = weapon.itemID;
+
+            if (weapon.ashOfWarAction != null)
+            {
+                serializableWeapon.ashOfWarID = weapon.ashOfWarAction.itemID;
+            }
+            else
+            {
+                // We use an invalid id if there is no ash of war, so the value will be null If it tries to search for one using the ID
+                serializableWeapon.ashOfWarID = -1;
+            }
+            return serializableWeapon;
+        }
+
+        public SerializableRangedProjectile GetSerializableRangedProjectileFromRangedProjectileItem(RangedProjectileItem projectile)
+        {
+            SerializableRangedProjectile serializableRangedProjectile = new SerializableRangedProjectile();
+
+            if (projectile != null)
+            {
+                serializableRangedProjectile.itemID = projectile.itemID;
+                serializableRangedProjectile.itemAmount = projectile.currentAmmoAmount;
+            }
+            else
+            {
+                serializableRangedProjectile.itemID = -1;
+            }
+          
+            return serializableRangedProjectile;
+        }
+
+        public SerializableFlask GetSerializableFlaskFromFlaskItem(FlaskItem flask)
+        {
+            SerializableFlask serializableFlask = new SerializableFlask();
+            if(flask != null)
+            {
+                serializableFlask.itemID = flask.itemID;
+            }
+            else
+            {
+                serializableFlask.itemID = -1;
+            }
+            
+            return serializableFlask;
+        }
+
+        public SerializableQuickSlotItem GetSerializableQuickSlotItemFromQuickSlotItem(QuickSlotItem quickSlotItem)
+        {
+            SerializableQuickSlotItem serializableQuickSlotItem = new SerializableQuickSlotItem();
+            if (quickSlotItem != null)
+            {
+                serializableQuickSlotItem.itemID = quickSlotItem.itemID;
+                serializableQuickSlotItem.itemAmount = quickSlotItem.itemAmount;
+            }
+            else
+            {
+                serializableQuickSlotItem.itemID = -1;
+            }
+            return serializableQuickSlotItem;
         }
     }
 }

@@ -179,7 +179,9 @@ namespace XD
             bool isPerformingAction,
             bool applyRootMotion = true,
             bool canRotate = false,
-            bool canMove = false )
+            bool canMove = false,
+            bool canRun = true,
+            bool canRoll = false)
         {
 
             this.applyRootMotion = applyRootMotion;
@@ -189,6 +191,8 @@ namespace XD
             character.isPerformingAction = isPerformingAction; 
             character.characterLocomotionManager.canRotate = canRotate;
             character.characterLocomotionManager.canMove = canMove;
+            character.characterLocomotionManager.canRun = canRun;
+            character.characterLocomotionManager.canRoll = canRoll;
 
             // Animation Replicated
             character.characterNetworkManager.NotifyTheServerOfActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, animationName, applyRootMotion);
@@ -199,7 +203,9 @@ namespace XD
             bool isPerformingAction,
             bool applyRootMotion = true,
             bool canRotate = false,
-            bool canMove = false)
+            bool canMove = false,
+            bool canRun = true,
+            bool canRoll = false)
         {
 
             this.applyRootMotion = applyRootMotion;
@@ -209,6 +215,8 @@ namespace XD
             character.isPerformingAction = isPerformingAction;
             character.characterLocomotionManager.canRotate = canRotate;
             character.characterLocomotionManager.canMove = canMove;
+            character.characterLocomotionManager.canRun = canRun;
+            character.characterLocomotionManager.canRoll = canRoll;
 
             // Animation Replicated
             character.characterNetworkManager.NotifyTheServerOfInstantActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, animationName, applyRootMotion);
@@ -218,7 +226,8 @@ namespace XD
             bool isPerformingAction,
             bool applyRootMotion = true,
             bool canRotate = false,
-            bool canMove = false)
+            bool canMove = false,
+            bool canRoll = false)
         {
             // Keep Track of last Attack performed ( for combos)
             // Keep Track of attack Type ( Light, Heavy, etc. )
@@ -233,6 +242,7 @@ namespace XD
             character.characterLocomotionManager.canRotate = canRotate;
             character.characterLocomotionManager.canMove = canMove;
             character.characterNetworkManager.isAttacking.Value = true;
+            character.characterLocomotionManager.canRoll = canRoll;
 
             // Animation Replicated
             character.characterNetworkManager.NotifyTheServerOfAttackActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, animationName, applyRootMotion);

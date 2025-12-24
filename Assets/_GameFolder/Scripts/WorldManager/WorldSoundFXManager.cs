@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace XD
@@ -22,6 +23,7 @@ namespace XD
         public AudioClip criticalStrikeSFX;
         public AudioClip[] releaseArrowSFX;
         public AudioClip[] notchArrowSFX;
+        public AudioClip healingFlaskSFX;
 
         private void Awake()
         {
@@ -86,6 +88,31 @@ namespace XD
 
             bossIntroPlayer.Stop();
             bossLoopPlayer.Stop();
+        }
+
+
+        // AI Listen Sound using FUNC and switch state
+        public void ALertNearbyCharactersToSound(Vector3 positionOfSound, float rangeOfSound)
+        {
+            if(!NetworkManager.Singleton.IsServer) { return; }
+
+            Collider[] characterColliders = Physics.OverlapSphere(positionOfSound, rangeOfSound);
+
+            List<AICharacterManager> charactersToAlert = new List<AICharacterManager>();
+
+            for(int i = 0; i < characterColliders.Length; i++)
+            {
+                AICharacterManager aICharacter = characterColliders[i].GetComponent<AICharacterManager>();
+
+                if (aICharacter == null) continue;
+                if (charactersToAlert.Contains(aICharacter)) continue;
+
+                charactersToAlert.Add(aICharacter);
+            }
+            for (int i = 0; i < charactersToAlert.Count; i++)
+            {
+                charactersToAlert[i].aiCharacterCombatManager.AlertCharacterToSound(positionOfSound);
+            }
         }
     }
 }

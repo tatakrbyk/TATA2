@@ -13,7 +13,8 @@ namespace XD
             base.AttemptToPerformAction(playerPerformAction, weaponPerformAction);
 
             if (!playerPerformAction.playerCombatManager.canBlock) return;
-            
+            if(playerPerformAction.playerCombatManager.isUsingItem) { return; }
+
             if (playerPerformAction.playerNetworkManager.isAttacking.Value) 
             {
                 // Disable Blocking (When using a short/medium spear block attacking is allowed light attacks. Handled on another action class)

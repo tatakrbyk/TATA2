@@ -11,6 +11,7 @@ namespace XD
         [Header("Hair")]
         [SerializeField] public GameObject hair;
         [SerializeField] public GameObject facialHair;
+        [SerializeField] private GameObject[] hairObjects;
 
         [Header("Male")]
         [SerializeField] public GameObject maleObject;      // The Master Male GameObject Parent
@@ -161,6 +162,38 @@ namespace XD
             }
 
             player.playerEquipmentManager.EquipArmors();
+        }
+
+        public void ToggleHairType(int hairType)
+        {
+            // Disable All Hair Objects
+            for (int i = 0; i < hairObjects.Length; i++)
+            {
+                hairObjects[i].SetActive(false);
+            }
+
+            // Enable Chosen Hair Object
+            hairObjects[hairType].SetActive(true);
+        }
+
+        public void SetHairColor()
+        {
+            Color32 hairColor;
+
+            byte red = (byte)player.playerNetworkManager.hairColorRed.Value;
+            byte green = (byte)player.playerNetworkManager.hairColorGreen.Value;
+            byte blue = (byte)player.playerNetworkManager.hairColorBlue.Value;
+
+            hairColor = new Color32(red, green, blue, 255);
+
+            for(int i = 0; i < hairObjects.Length ; i++)
+            {
+                SkinnedMeshRenderer skinnedMeshRenderer = hairObjects[i].GetComponent<SkinnedMeshRenderer>();
+                if(skinnedMeshRenderer != null)
+                {
+                    skinnedMeshRenderer.material.SetColor("_Color_Hair", hairColor);
+                }
+            }
         }
     }
 

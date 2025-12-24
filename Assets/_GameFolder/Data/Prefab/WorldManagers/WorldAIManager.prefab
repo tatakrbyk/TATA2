@@ -44,8 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79fa1ba3db2c67c4d9bc362e6b4dd0a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  despawnCharacters: 0
-  respawnCharacters: 0
-  aiCharacters:
-  - {fileID: 4538732985267078996, guid: 9cf78b61206815a4a85a3d54cf4cc9d0, type: 3}
+  isPerformingLoadingOperation: 0
+  aiCharacterSpawners: []
   spawnedInCharacters: []
+  beaconGameobejct: {fileID: 2495555937746718268, guid: 5cb6c5113bc94b84aaa23942672d9e32,
+    type: 3}
+  spawnedInBosses: []
+  aiPatrolPaths: []

@@ -10,10 +10,15 @@ namespace XD
         [Header("Network Join")]
         [SerializeField] bool startGameAsClient;
 
+        [HideInInspector] public PlayerManager localPlayer;
         [HideInInspector] public PlayerUIHUDManager playerUIHUDManager;
         [HideInInspector] public PlayerUIPopUpManager playerUIPopUpManager;
         [HideInInspector] public PlayerUICharacterMenuManager playerUICharacterMenuManager;
         [HideInInspector] public PlayerUIEquipmentManager playerUIEquipmentManager;
+        [HideInInspector] public PlayerUISiteOfGraceManager playerUISiteOfGraceManager;
+        [HideInInspector] public PlayerUITeleportLocationManager playerUITeleportLocationManager;
+        [HideInInspector] public PlayerUILoadingScreenManager playerUILoadingScreenManager;
+        [HideInInspector] public PlayerUILevelUpManager playerUILevelUpManager;
 
         [Header("UI Flags")]
         public bool menuWindowIsOpen = false;  // Inventory screen, Equipment menu, Blacksmith menu, etc.
@@ -34,6 +39,11 @@ namespace XD
             playerUIPopUpManager = GetComponentInChildren<PlayerUIPopUpManager>();
             playerUICharacterMenuManager = GetComponentInChildren<PlayerUICharacterMenuManager>();
             playerUIEquipmentManager = GetComponentInChildren<PlayerUIEquipmentManager>();
+            playerUISiteOfGraceManager = GetComponentInChildren<PlayerUISiteOfGraceManager>();
+            playerUITeleportLocationManager = GetComponentInChildren<PlayerUITeleportLocationManager>();
+            playerUILoadingScreenManager = GetComponentInChildren<PlayerUILoadingScreenManager>();
+            playerUILevelUpManager = GetComponentInChildren<PlayerUILevelUpManager>();
+
         }
 
         private void Start()
@@ -54,8 +64,12 @@ namespace XD
 
         public void CloseAllMenuWindows()
         { 
-            playerUICharacterMenuManager.CloseCharacterMenu();
-            playerUIEquipmentManager.CloseEquipmentManagerMenu();
+            playerUICharacterMenuManager.CloseMenuAfterFixedFrame();
+            playerUIEquipmentManager.CloseMenuAfterFixedFrame();
+            playerUISiteOfGraceManager.CloseMenuAfterFixedFrame();
+            playerUITeleportLocationManager.CloseMenuAfterFixedFrame();
+            playerUILevelUpManager.CloseMenuAfterFixedFrame();
+
         }
     }
 }

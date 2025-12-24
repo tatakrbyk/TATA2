@@ -19,6 +19,13 @@ namespace XD
         {
             PlaySoundFX(WorldSoundFXManager.Instance.ChooseRandomSFXFromArray(player.playerCombatManager.currentWeaponBeingUsed.blocking));
         }
+
+        public override void PlayFootStepSoundFX()
+        {
+            base.PlayFootStepSoundFX();
+            WorldSoundFXManager.Instance.ALertNearbyCharactersToSound(transform.position, 2);
+
+        }
     }
 
 }

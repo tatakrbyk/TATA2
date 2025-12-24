@@ -48,6 +48,10 @@ MonoBehaviour:
     type: 3}
   criticalBloodSplatterVFX: {fileID: 6263686004228876401, guid: 489824e43783a5a4381e576141bc0382,
     type: 3}
+  healingFlaskVFX: {fileID: 1232619836794849224, guid: a8a170ceac536ef4ead866c33f13cfb9,
+    type: 3}
+  deadSpotVFX: {fileID: 989951658115997890, guid: 2e1f6bf9131380f4b9c765d7a88e1408,
+    type: 3}
   takeDamageEffect: {fileID: 11400000, guid: 62a813555807a274d9d86a496f6e2f24, type: 2}
   takeBlockedDamageEffect: {fileID: 11400000, guid: 990999f65cc9847479e83a37c054cf0d,
     type: 2}

@@ -2,24 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using Unity.Collections;
 
 namespace XD
 {   
     public class AICharacterNetworkManager : CharacterNetworkManager
     {
-        AICharacterManager a›character;
+        AICharacterManager aiCharacter;
+
+        [Header("Sleep")]
+        public NetworkVariable<bool> isAwake = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<FixedString64Bytes> sleepingAnimation = new NetworkVariable<FixedString64Bytes>("Sleep_01", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<FixedString64Bytes> wakingAnimation = new NetworkVariable<FixedString64Bytes>("Wake_01", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         protected override void Awake()
         {
             base.Awake();
-            a›character = GetComponent<AICharacterManager>();
+            aiCharacter = GetComponent<AICharacterManager>();
         }
 
         public override void OnIsDeadChanged(bool oldStatus, bool newStatus)
         {
             base.OnIsDeadChanged(oldStatus, newStatus);
 
-            a›character.aiCharacterInventoryManager.DropItem();
+            if (aiCharacter.isDead.Value)
+            {
+                aiCharacter.aiCharacterInventoryManager.DropItem();
+                aiCharacter.aiCharacterCombatManager.AwardRunesOnDeath(PlayerUIManager.Instance.localPlayer);
+            }
         }
 
     }

@@ -11,6 +11,8 @@ namespace XD
         [Header("VFX")]
         public GameObject bloodSplatterVFX;
         public GameObject criticalBloodSplatterVFX;
+        public GameObject healingFlaskVFX;
+        public GameObject deadSpotVFX;
 
         [Header("Damage")]
         public TakeDamageEffect takeDamageEffect;

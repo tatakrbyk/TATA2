@@ -91,7 +91,7 @@ namespace XD
         public override void Interact(PlayerManager player)
         {
             if(player.isPerformingAction) { return; }
-
+            if (player.playerCombatManager.isUsingItem) { return; }
             base.Interact(player);
 
             player.characterSoundFXManager.PlaySoundFX(WorldSoundFXManager.Instance.pickUpItemSFX);

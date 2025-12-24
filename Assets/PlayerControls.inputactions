@@ -322,6 +322,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "SwitchQuickSlotItem",
+                    "type": "Button",
+                    "id": "c0057fe7-64ca-4b8b-b8f7-d94d3b6107a3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "SeekLeftLockOnTarget",
                     "type": "Button",
                     "id": "8927ae77-b280-46a1-94ed-1f8d8f2f8c69",
@@ -833,6 +842,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "SwitchLeftWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f9ad4852-555c-41b2-a3f6-c7202f5e476f",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchQuickSlotItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "88d0d2c9-7fd9-417c-8cc9-0e84b78e1c20",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchQuickSlotItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9257ea10-67d1-45ee-9f56-cbb1277f916d",
+                    "path": "<Joystick>/stick/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchQuickSlotItem",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

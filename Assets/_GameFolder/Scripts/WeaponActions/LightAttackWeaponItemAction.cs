@@ -35,6 +35,8 @@ namespace XD
 
             if (!playerPerformAction.IsOwner) return;
 
+            if(playerPerformAction.playerCombatManager.isUsingItem) { return; }
+
             if (playerPerformAction.playerNetworkManager.currentStamina.Value <= 0) { return; }
             if(!playerPerformAction.playerLocomotionManager.isGrounded) 
             {

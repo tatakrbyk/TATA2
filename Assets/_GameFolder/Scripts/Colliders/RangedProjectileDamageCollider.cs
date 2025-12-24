@@ -32,6 +32,8 @@ namespace XD
         private void OnCollisionEnter(Collision collision)
         {
             CreatePenetrationIntoObject(collision);
+            
+            WorldSoundFXManager.Instance.ALertNearbyCharactersToSound(transform.position, 3);
 
             CharacterManager potentialTarget = collision.transform.gameObject.GetComponent<CharacterManager>(); 
 

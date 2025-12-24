@@ -78,6 +78,8 @@ namespace XD
             {
                 instantiatedDestructionFX = Instantiate(impactParticle, transform.position, Quaternion.identity);               
             }
+            WorldSoundFXManager.Instance.ALertNearbyCharactersToSound(transform.position, 5);
+
             Destroy(gameObject);
         }
 

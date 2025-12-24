@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace XD
 {
@@ -17,6 +19,9 @@ namespace XD
         public bool canCommboWithMainHandWeapon = false;
         public bool canCommboWithOffHandWeapon = false;
 
+        public bool isUsingItem = false;
+        public bool canRoll = true;
+
         
         protected override void Awake()
         {
@@ -24,6 +29,33 @@ namespace XD
             player = GetComponent<PlayerManager>();
             lockOnTransform = GetComponentInChildren<LockOnTransform>().transform;
 
+        }
+
+        private void Start()
+        {
+            SceneManager.activeSceneChanged += OnSceneChanged;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            SceneManager.activeSceneChanged -= OnSceneChanged;
+        }
+        private void OnSceneChanged(Scene current, Scene next)
+        {
+
+            // Dead Spot
+            if (WorldSaveGameManager.Instance.currentCharacterData.hasDeadSpot)
+            {
+                Vector3 deadSpotPosition = new Vector3(
+                    WorldSaveGameManager.Instance.currentCharacterData.deadSpotPositionX, 
+                    WorldSaveGameManager.Instance.currentCharacterData.deadSpotPositionY, 
+                    WorldSaveGameManager.Instance.currentCharacterData.deadSpotPositionZ);
+
+                // We dont remove the player runes here because if you are  loading a previous save were already removed when they died
+                CreateDeadSpot(deadSpotPosition, WorldSaveGameManager.Instance.currentCharacterData.deadSpotRuneCount, false);
+            }
         }
         public void PerformWeaponBasedAction(WeaponItemAction weaponAction, WeaponItem weaponPerformAction)
         {
@@ -37,6 +69,28 @@ namespace XD
             }
         }
 
+        public void CreateDeadSpot(Vector3 position, int runesCount, bool removePlayersRunes = true)
+        {
+            if(!player.IsHost) { return; }
+            // Spawn the dead spot VFX
+            GameObject deadSpotFX = Instantiate(WorldCharacterEffectsManager.Instance.deadSpotVFX);
+            deadSpotFX.GetComponent<NetworkObject>().Spawn();
+
+            // Set its world Position
+            deadSpotFX.transform.position = position;
+
+            // Set The Rune Count
+            PickUpRunesInteractable pickUpRunes = deadSpotFX.GetComponent<PickUpRunesInteractable>();
+            pickUpRunes.runeCount = runesCount;
+
+            if(removePlayersRunes) player.playerStatsManager.AddRunes(-player.playerStatsManager.runes);
+
+            WorldSaveGameManager.Instance.currentCharacterData.hasDeadSpot = true;
+            WorldSaveGameManager.Instance.currentCharacterData.deadSpotRuneCount = pickUpRunes.runeCount;
+            WorldSaveGameManager.Instance.currentCharacterData.deadSpotPositionX = position.x;
+            WorldSaveGameManager.Instance.currentCharacterData.deadSpotPositionY = position.y;
+            WorldSaveGameManager.Instance.currentCharacterData.deadSpotPositionZ = position.z;
+        }
         public override void CloseAllDamageColliders()
         {
             base.CloseAllDamageColliders();
@@ -305,7 +359,17 @@ namespace XD
             Rigidbody projectileRigidbody;
             RangedProjectileDamageCollider projectileDamageCollider;
 
-            
+            switch (currentProjectileBeingUsed)
+            {
+                case ProjectileSlot.Main:
+                    PlayerUIManager.Instance.playerUIHUDManager.SetMainProjectileQuickSlotIcon(projectileItem);
+                    break;
+                case ProjectileSlot.Secondary:
+                    PlayerUIManager.Instance.playerUIHUDManager.SetSecondaryProjectileQuickSlotIcon(projectileItem); 
+                    break;
+                default:
+                    break;
+            }
             // Subtract Ammo
             projectileItem.currentAmmoAmount -= 1;
             // TODO: Make And Update Aroow Count UI
@@ -395,6 +459,15 @@ namespace XD
             if (player.playerInventoryManager.currentSpell == null) { return; }
 
             player.playerInventoryManager.currentSpell.SuccessfullyChargeSpell(player);
+        }
+
+        // Call Animation : "core_main_flask_medium_01_drink" Quic Slot
+        public void SuccessfullyUseQuickSlotItem()
+        {
+            if (player.playerInventoryManager.currentQuickSlotItem != null)
+            {   
+                player.playerInventoryManager.currentQuickSlotItem.SuccessfullyUseItem(player);
+            }
         }
         public WeaponItem SelectWeaponToPerformAshOfWar()
         {

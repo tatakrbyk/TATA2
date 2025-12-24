@@ -54,7 +54,7 @@ namespace XD
             base.OnNetworkDespawn();
             
             isActive.OnValueChanged -= OnIsActiveChanged;
-            WorldObjectManager.Instance.RemoveFogWallToList(this);
+            WorldObjectManager.Instance.RemoveFogWallFromList(this);
         }
         private void OnIsActiveChanged(bool oldStatus, bool newStatus)
         {

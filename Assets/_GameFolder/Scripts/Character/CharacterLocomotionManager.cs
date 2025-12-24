@@ -24,6 +24,7 @@ namespace XD
         public bool canRotate = true;
         public bool canMove = true;
         public bool canRun = true;
+        public bool canRoll = true;
         public bool isGrounded = true;
 
 

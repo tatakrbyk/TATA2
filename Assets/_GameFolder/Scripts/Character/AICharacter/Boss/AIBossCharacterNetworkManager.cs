@@ -14,9 +14,9 @@ namespace XD
             aiBossCharacter = GetComponent<AIBossCharacterManager>();
         }
 
-        public override void CheckHP(int oldValue, int newValue)
+        public override void OnHPChanged(int oldValue, int newValue)
         {
-            base.CheckHP(oldValue, newValue);
+            base.OnHPChanged(oldValue, newValue);
 
             if (aiBossCharacter.IsOwner)
             {

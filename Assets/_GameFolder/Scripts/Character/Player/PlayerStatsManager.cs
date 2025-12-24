@@ -8,6 +8,8 @@ namespace XD
     {
         PlayerManager player;
 
+        [Header("Runes")]
+        public int runes = 0;
         protected override void Awake()
         { 
             base.Awake();
@@ -18,7 +20,7 @@ namespace XD
         {
             base.Start();
 
-            CalculateHealthBasedOnVitalityLevel(player.playerNetworkManager.vitality.Value);
+            CalculateHealthBasedOnVitalityLevel(player.playerNetworkManager.vigor.Value);
             CalculateStaminaBasedOnEnduranceLevel(player.playerNetworkManager.endurance.Value);
             CalculateFocusPointsBasedOnMindLevel(player.playerNetworkManager.mind.Value);
         }
@@ -113,6 +115,13 @@ namespace XD
                 // Poise
                 basePoiseDefense += player.playerInventoryManager.handEquipment.poise;  
             }
+        }
+
+
+        public void AddRunes(int runesToAdd)
+        {
+            runes += runesToAdd;
+            PlayerUIManager.Instance.playerUIHUDManager.SetRunesCount(runesToAdd);
         }
 
     }

@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc097c5cce7a39641a77f9fbe0df66ea, type: 3}
-  m_Name: Chr_LegRight_16
+  m_Name: Chr_LegLeft_Male_16
   m_EditorClassIdentifier: 
-  equipmentModelType: 19
-  maleEquipmentName: Chr_LegRight_Male_16
-  femaleEquipmentName: Chr_LegRight_Female_16
+  equipmentModelType: 21
+  maleEquipmentName: Chr_LegLeft_Male_16
+  femaleEquipmentName: Chr_LegLeft_Female_16

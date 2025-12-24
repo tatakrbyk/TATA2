@@ -261,7 +261,7 @@ namespace XD
         }
         public void AttemptToPerformDodge()
         {
-            if(player.isPerformingAction) {  return; }  
+            if(!player.playerLocomotionManager.canRoll) {  return; }  
             if(player.playerNetworkManager.currentStamina.Value <= 0) { return; }
 
             // if we are moving when we attempt to dodge, we perform a roll
@@ -295,6 +295,7 @@ namespace XD
         public void AttemptToPerformJump()
         {
             if (player.isPerformingAction) { return; }
+            if (player.playerCombatManager.isUsingItem) { return; }
             if (player.playerNetworkManager.currentStamina.Value <= 0) { return; }
             if (player.playerNetworkManager.isJumping.Value) { return; }
             if (!player.playerLocomotionManager.isGrounded) { return; }

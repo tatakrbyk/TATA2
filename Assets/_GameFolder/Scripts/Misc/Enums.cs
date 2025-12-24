@@ -32,6 +32,18 @@ namespace XD
         Team02 // AI 
     }
 
+    // Used to tag sliders for level up UI 
+    public enum CharacterAttribute
+    {
+        Vigor,
+        Mind,
+        Endurance,
+        Strength,
+        Dexterity,
+        Intelligence,
+        Faith
+    }
+
     // Used As A Tag For Each Weapýýn Model Instantiation Slot
     public enum WeaponModelSlot
     {
@@ -112,6 +124,7 @@ namespace XD
     // USED TO DETERMINE WHICH EQUIPMENT SLOT IS CURRENTLY SELECTED (Helmet, Body, Legs ETC)
     public enum EquipmentType
     {
+        // PlayerUIManager -> Equipments Manager -> Equipment Slots -> Assign EventTrigger
         RightWeapon01,      // 0
         RightWeapon02,      // 1
         RightWeapon03,      // 2    
@@ -122,6 +135,11 @@ namespace XD
         Body,               // 7
         Legs,               // 8
         Hands,              // 9
+        MainProjectile,     // 10
+        SecondaryProjectile, // 11
+        QuickSlot01,        // 12
+        QuickSlot02,        // 13
+        QuickSlot03         // 14
     }
 
     // Used To Tag Helmet Type, So Specific Head Portions Can Be Hidden During Equip Process ( Hair, Beard, Face ECT )
@@ -169,4 +187,14 @@ namespace XD
         WorldSpawn,
         CharacterDrop
     }
+
+    // AI STATES
+
+    public enum IdleStateMode
+    {
+        Idle,
+        Patrol,
+        Sleep
+    }
 }
+

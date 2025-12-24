@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc097c5cce7a39641a77f9fbe0df66ea, type: 3}
-  m_Name: Chr_LegLeft_16
+  m_Script: {fileID: 11500000, guid: e09d4870b09eaa2418df01520eaa71f5, type: 3}
+  m_Name: UndeadInvestigateSoundState
   m_EditorClassIdentifier: 
-  equipmentModelType: 21
-  maleEquipmentName: Chr_LegLeft_Male_16
-  femaleEquipmentName: Chr_LegLeft_Female_16
+  destinationSet: 0
+  destinationReached: 0
+  positionOfSound: {x: 0, y: 0, z: 0}

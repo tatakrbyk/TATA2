@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 namespace XD
 {
@@ -12,12 +13,27 @@ namespace XD
 
         public NetworkVariable<FixedString64Bytes> characterName = new NetworkVariable<FixedString64Bytes>("Character", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
+        [Header("Site of Grace")]
+        public NetworkVariable<int> lastSiteOfGraceUsed = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        [Header("Flasks")] // Drink Potions
+        public NetworkVariable<int> remainingHealthFlasks = new NetworkVariable<int>(3, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<int> remainingFocusPointsFlasks = new NetworkVariable<int>(3, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> isChugging = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+        [Header("Body")]
+        public NetworkVariable<int> hairStyleID = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<float> hairColorRed = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<float> hairColorGreen = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<float> hairColorBlue = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
         [Header("Equipment")]
         public NetworkVariable<int> currentWeaponBeingUsed = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> currentRightHandWeaponID = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> currentLeftHandWeaponID = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> currentSpellID = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<int> currentQuickSlotItemID = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
+        [Header("Actions")]
         public NetworkVariable<bool> isUsingRightHand = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<bool> isUsingLeftHand = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
@@ -51,6 +67,15 @@ namespace XD
             player = GetComponent<PlayerManager>();
         }
 
+        public override void OnIsDeadChanged(bool oldStatus, bool newStatus)
+        {
+            base.OnIsDeadChanged(oldStatus, newStatus);
+
+            if(player.isDead.Value)
+            {
+                player.playerCombatManager.CreateDeadSpot(player.transform.position, player.playerStatsManager.runes);
+            }
+        }
         public void SetCharacterActionHand(bool rightHandedAction)
         {
             if(rightHandedAction)
@@ -85,28 +110,70 @@ namespace XD
             currentFocusPoints.Value = maxFocusPoints.Value;
         }
 
+        public void OnHairStyleIDChanged(int oldID, int newID)
+        {
+            player.playerBodyManager.ToggleHairType(hairStyleID.Value);
+        }
+
+        public void OnHairColorRedChanged(float oldValue, float newValue)
+        {
+            player.playerBodyManager.SetHairColor();
+        }
+        public void OnHairColorGreenChanged(float oldValue, float newValue)
+        {
+            player.playerBodyManager.SetHairColor();
+        }
+        public void OnHairColorBlueChanged(float oldValue, float newValue)
+        {
+            player.playerBodyManager.SetHairColor();
+        }
 
         public void OnCurrentRightHandWeaponIDChange(int oldID, int newID)
         {
-            WeaponItem newWeapon = Instantiate(WorldItemDatabase.Instance.GetWeaponByID(newID));            
-            player.playerInventoryManager.currentRightHandWeapon = newWeapon;
+            if(!player.IsOwner)
+            {
+                WeaponItem newWeapon = Instantiate(WorldItemDatabase.Instance.GetWeaponByID(newID));            
+                player.playerInventoryManager.currentRightHandWeapon = newWeapon;
+            }
             player.playerEquipmentManager.LoadRightWeapon();
 
             if(player.IsOwner)
             {
                 PlayerUIManager.Instance.playerUIHUDManager.SetRightWeaponQuickSlotIcon(newID);
+                
+                if (player.playerInventoryManager.currentRightHandWeapon.weaponClass == WeaponClass.Bow)
+                {
+                    PlayerUIManager.Instance.playerUIHUDManager.ToggleProjectileQuickSlotsVisibility(true);
+                }
+                else
+                {
+                    PlayerUIManager.Instance.playerUIHUDManager.ToggleProjectileQuickSlotsVisibility(false);
+                }
             }
         }
 
         public void OnCurrentLeftHandWeaponIDChange(int oldID, int newID)
         {
-            WeaponItem newWeapon = Instantiate(WorldItemDatabase.Instance.GetWeaponByID(newID));
-            player.playerInventoryManager.currentLeftHandWeapon = newWeapon;
+            if(!player.IsOwner)
+            {
+                WeaponItem newWeapon = Instantiate(WorldItemDatabase.Instance.GetWeaponByID(newID));
+                player.playerInventoryManager.currentLeftHandWeapon = newWeapon;
+
+            }
             player.playerEquipmentManager.LoadLeftWeapon();
 
             if(player.IsOwner)
             {
                 PlayerUIManager.Instance.playerUIHUDManager.SetLeftWeaponQuickSlotIcon(newID);
+
+                if (player.playerInventoryManager.currentLeftHandWeapon.weaponClass == WeaponClass.Bow)
+                {
+                    PlayerUIManager.Instance.playerUIHUDManager.ToggleProjectileQuickSlotsVisibility(true);
+                }
+                else
+                {
+                    PlayerUIManager.Instance.playerUIHUDManager.ToggleProjectileQuickSlotsVisibility(false);
+                }
             }
         }     
 
@@ -142,6 +209,31 @@ namespace XD
             
         }
 
+        public void OnCurrentQuickSlotItemIDChange(int oldID, int newID)
+        {
+            QuickSlotItem newQuickSlotItem = null;
+
+            if (WorldItemDatabase.Instance.GetQuickSlotItemByID(newID))
+            {
+                newQuickSlotItem = Instantiate(WorldItemDatabase.Instance.GetQuickSlotItemByID(newID));
+            }
+
+            if (newQuickSlotItem != null)
+            {
+                player.playerInventoryManager.currentQuickSlotItem = newQuickSlotItem;              
+            }
+            else
+            {
+                player.playerInventoryManager.currentQuickSlotItem = null;
+            }
+
+            if (player.IsOwner)
+            {
+                PlayerUIManager.Instance.playerUIHUDManager.SetQuickSlotItemQuickSlotIcon(player.playerInventoryManager.currentQuickSlotItem);
+            }
+
+        }
+
         public void OnMainProjectileIDChange(int oldID, int newID)
         {
             RangedProjectileItem newProjectile = null;
@@ -153,6 +245,10 @@ namespace XD
             if(newProjectile != null)
             { 
                 player.playerInventoryManager.mainProjectile = newProjectile;
+            }
+            if (player.IsOwner)
+            {
+                PlayerUIManager.Instance.playerUIHUDManager.SetMainProjectileQuickSlotIcon(player.playerInventoryManager.mainProjectile);
             }
         }
 
@@ -167,8 +263,27 @@ namespace XD
             {
                 player.playerInventoryManager.secondaryProjectile = newProjectile;
             }
+            if (player.IsOwner)
+            {
+                PlayerUIManager.Instance.playerUIHUDManager.SetSecondaryProjectileQuickSlotIcon(player.playerInventoryManager.secondaryProjectile);
+            }
         }
 
+        public void OnFocusPointsChanged(int oldValue, int newValue)
+        {
+            if(player.IsOwner)
+            {
+                PlayerUIManager.Instance.playerUIHUDManager.SetNewFocusPointValue(oldValue, newValue);
+            }
+        }
+
+        public void OnMaxFocusPointsChanged(int oldValue, int newValue)
+        {
+            if (player.IsOwner)
+            {
+                PlayerUIManager.Instance.playerUIHUDManager.SetMaxFocusPointValue( newValue);
+            }
+        }
         public void OnIsHoldingArrowChanged(bool oldStatus, bool newStatus)
         {
             player.animator.SetBool("IsHoldingArrow", isHoldingArrow.Value);
@@ -265,6 +380,10 @@ namespace XD
             player.playerEquipmentManager.TwoHandLeftWeapon();
         }
 
+        public void OnIsChuggingChanged(bool oldStatus, bool newStatus)
+        {
+            player.animator.SetBool("IsChuggingFlask", isChugging.Value);
+        }
         public void OnHeadEquipmentChanged(int oldValue, int newValue)
         {
             if (IsOwner) return;
@@ -364,7 +483,21 @@ namespace XD
         [ClientRpc]
         public override void DestroyAllCurrentActionFXClientRPC()
         {
-            base.DestroyAllCurrentActionFXClientRPC();
+            // base.DestroyAllCurrentActionFXClientRPC(); inside 
+            if (player.characterEffectsManager.activeSpellWarmUpFX != null)
+            {
+                Destroy(player.characterEffectsManager.activeSpellWarmUpFX);
+            }
+
+            if (player.characterEffectsManager.activeDrawnProjectileFX != null)
+            {
+                Destroy(player.characterEffectsManager.activeDrawnProjectileFX);
+            }
+
+            if (player.characterEffectsManager.activeQuickSlotItemFX != null)
+            {
+                Destroy(player.characterEffectsManager.activeQuickSlotItemFX);
+            }
 
             // For Canvel Arrow Action 
 
@@ -522,6 +655,53 @@ namespace XD
         }
         #endregion
 
+
+        #region Hide Weapons
+
+        [ServerRpc]
+        public void HideWeaponsServerRpc()
+        {
+            if (IsServer)
+            {
+                HideWeaponsClientRpc();
+            }
+        }
+        [ClientRpc]
+        private void HideWeaponsClientRpc()
+        {
+            if (player.playerEquipmentManager.rightHandWeaponModel != null)
+            {
+                player.playerEquipmentManager.rightHandWeaponModel.SetActive(false);
+            }
+            if (player.playerEquipmentManager.leftHandWeaponModel != null)
+            {
+                player.playerEquipmentManager.leftHandWeaponModel.SetActive(false);
+            }
+        }
+
+        #endregion
+
+        #region Quickslot Item Use
+
+        [ServerRpc]
+        public void NotifyServerOfQuickSlotItemActionServerRpc(ulong playerClientID, int quickSlotItemID)
+        {
+            if (IsServer)
+            {
+                NotifyClientsOfQuickSlotItemActionClientRpc(playerClientID, quickSlotItemID);
+            }
+        }
+
+        [ClientRpc]
+        private void NotifyClientsOfQuickSlotItemActionClientRpc(ulong playerClientID, int quickSlotItemID)
+        {
+            if (playerClientID != NetworkManager.Singleton.LocalClientId) // Not call 2 times on the owner
+            {
+                QuickSlotItem item = WorldItemDatabase.Instance.GetQuickSlotItemByID(quickSlotItemID);
+                item.AttemptToUseItem(player);
+            }
+        }
+        #endregion
     }
 
 }

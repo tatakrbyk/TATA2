@@ -19,6 +19,7 @@ namespace XD
             character.characterAnimatorManager.applyRootMotion = false;
             character.characterLocomotionManager.canMove = true;
             character.characterLocomotionManager.canRun = true;
+            character.characterLocomotionManager.canRoll = true;
             character.characterLocomotionManager.canRotate = true;
             character.characterLocomotionManager.isRolling = false;
             character.characterCombatManager.DisableCanDoCombo();
@@ -28,6 +29,11 @@ namespace XD
             if(character.characterEffectsManager.activeSpellWarmUpFX != null)
             {
                 Destroy(character.characterEffectsManager.activeSpellWarmUpFX);
+            }
+
+            if(character.characterEffectsManager.activeQuickSlotItemFX != null)
+            {
+                Destroy(character.characterEffectsManager.activeQuickSlotItemFX);
             }
             if (character.IsOwner)
             {

@@ -8,6 +8,9 @@ namespace XD
     {
         CharacterManager character;
 
+        [Header("Runes")]
+        public int runesDroppedOnDeath = 50;
+
         [Header("Stamine Regeneration")]
         [SerializeField] float staminaRegenerationAmount = 2;
         private float staminaRegenerationTimer = 0;
@@ -76,6 +79,44 @@ namespace XD
             int focusPoints = 0;
             focusPoints = mind * 10;
             return Mathf.RoundToInt(focusPoints);
+        }
+
+        public int CalculateCharacterLevelBasedOnAttributes(bool calculateProjectedLevel = false)
+        {
+            if(calculateProjectedLevel)
+            {
+                int totalProjectedAttributes =
+                                  Mathf.RoundToInt(PlayerUIManager.Instance.playerUILevelUpManager.vigorSlider.value) +
+                                  Mathf.RoundToInt(PlayerUIManager.Instance.playerUILevelUpManager.mindSlider.value) +
+                                  Mathf.RoundToInt(PlayerUIManager.Instance.playerUILevelUpManager.enduranceSlider.value) +
+                                  Mathf.RoundToInt(PlayerUIManager.Instance.playerUILevelUpManager.strengthSlider.value) +
+                                  Mathf.RoundToInt(PlayerUIManager.Instance.playerUILevelUpManager.dexteritySlider.value) +
+                                  Mathf.RoundToInt(PlayerUIManager.Instance.playerUILevelUpManager.intelligenceSlider.value) +
+                                  Mathf.RoundToInt(PlayerUIManager.Instance.playerUILevelUpManager.faithSlider.value);
+
+                int projectedCharacterLevel = totalProjectedAttributes - 70 + 1; // LEVEL 1
+                if (projectedCharacterLevel < 1)
+                {
+                    projectedCharacterLevel = 1;
+                }
+
+                return projectedCharacterLevel;
+            }
+            int totalAttributes = character.characterNetworkManager.vigor.Value +
+                                  character.characterNetworkManager.mind.Value +
+                                  character.characterNetworkManager.endurance.Value +
+                                  character.characterNetworkManager.strength.Value +
+                                  character.characterNetworkManager.dexterity.Value +
+                                  character.characterNetworkManager.intelligence.Value +
+                                  character.characterNetworkManager.faith.Value;
+
+            int characterLevel = totalAttributes - 70 +1; // LEVEL 1
+            if (characterLevel < 1)
+            {
+                characterLevel = 1;
+            }
+
+            return characterLevel;
         }
 
         public virtual void RegenerateStamina()

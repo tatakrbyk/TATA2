@@ -230,6 +230,7 @@ namespace XD
                     {
                         if (model.gameObject.name == maleEquipmentName)
                         {
+                            Debug.Log("[DEBUG] : "+ model.gameObject.name);
                             model.gameObject.SetActive(true);
                             // If you assign the model
                             //model.gameObject.GetComponent<Renderer>().material = Instantiate(equipmentMaterial);
@@ -240,8 +241,11 @@ namespace XD
                 case EquipmentModelType.LeftLeg:
                     foreach (var model in player.playerEquipmentManager.maleLeftLegs)
                     {
+
                         if (model.gameObject.name == maleEquipmentName)
                         {
+                            Debug.Log("[DEBUG] : " + model.gameObject.name);
+
                             model.gameObject.SetActive(true);
                             // If you assign the model
                             //model.gameObject.GetComponent<Renderer>().material = Instantiate(equipmentMaterial);

@@ -22,7 +22,6 @@ namespace XD
         [HideInInspector] public GameObject rightHandWeaponModel;
         [HideInInspector] public GameObject leftHandWeaponModel;
 
-        [SerializeField] bool DebugEquipNewItems = false;
 
         [Header("General Equipment  Models")]
         public GameObject hatsObject;
@@ -113,14 +112,6 @@ namespace XD
             base.Start();
 
             EquipWeapons();
-        }
-        private void Update()
-        {
-            if (DebugEquipNewItems)
-            {
-                DebugEquipNewItems = false;
-                EquipArmors();
-            }
         }
         public void EquipArmors()
         {
@@ -313,6 +304,7 @@ namespace XD
             foreach(Transform child in maleLeftLegObject.transform)
             {
                 maleLeftLegsList.Add(child.gameObject);
+                Debug.Log("[DEBUG] : " + child.gameObject.name);
             }
             maleLeftLegs = maleLeftLegsList.ToArray();
             #endregion
@@ -583,6 +575,7 @@ namespace XD
                     player.playerNetworkManager.legEquipmentID.Value = -1; // -1 Will never be an item ID, So it will always be null
                 }
                 player.playerInventoryManager.legEquipment = null;
+                Debug.Log("[PEM][LLE] Hear");
                 return;
             }
             player.playerInventoryManager.legEquipment = legEquipment;
@@ -663,7 +656,65 @@ namespace XD
                 player.playerNetworkManager.handEquipmentID.Value = handEquipment.itemID;
             }
         }
+      
+        public void LoadMainProjectileEquipment(RangedProjectileItem projectileEquipment)
+        {
+            if (projectileEquipment == null)
+            {
+                if (player.IsOwner)
+                {
+                    player.playerNetworkManager.mainProjectileID.Value = -1; // -1 Will never be an item ID, So it will always be null
+                }
+                player.playerInventoryManager.mainProjectile = null;
+                return;
+            }
 
+            player.playerInventoryManager.mainProjectile = projectileEquipment;
+              
+            if (player.IsOwner)
+            {
+                player.playerNetworkManager.mainProjectileID.Value = projectileEquipment.itemID;
+            }
+        }
+        public void LoadSecondaryProjectileEquipment(RangedProjectileItem projectileEquipment)
+        {
+            if (projectileEquipment == null)
+            {
+                if (player.IsOwner)
+                {
+                    player.playerNetworkManager.secondaryProjectileID.Value = -1; // -1 Will never be an item ID, So it will always be null
+                }
+                player.playerInventoryManager.secondaryProjectile = null;
+                return;
+            }
+
+            player.playerInventoryManager.secondaryProjectile = projectileEquipment;
+
+            if (player.IsOwner)
+            {
+                player.playerNetworkManager.secondaryProjectileID.Value = projectileEquipment.itemID;
+            }
+        }
+
+        public void LoadQuickSlotEquipment(QuickSlotItem equipment)
+        {
+            if (equipment == null)
+            {
+                if (player.IsOwner)
+                {
+                    player.playerNetworkManager.currentQuickSlotItemID.Value = -1; // -1 Will never be an item ID, So it will always be null
+                }
+                player.playerInventoryManager.currentQuickSlotItem = null;
+                return;
+            }
+
+            player.playerInventoryManager.currentQuickSlotItem = equipment;
+
+            if (player.IsOwner)
+            {
+                player.playerNetworkManager.currentQuickSlotItemID.Value = equipment.itemID;
+            }
+        }
         private void UnloadHandEquipmentModel()
         {
             foreach(var model in maleLeftLowerArms)
@@ -737,6 +788,8 @@ namespace XD
         {
             if(!player.IsOwner) { return; }
 
+            player.playerNetworkManager.IsTwoHandingWeapon.Value = false;
+
             player.playerAnimatorManager.PlayActionAnimation("Swap_Right_Weapon_01", false, false, true, true);
 
             WeaponItem selectedWeapon = null;
@@ -768,11 +821,13 @@ namespace XD
                 {
                     player.playerInventoryManager.rightHandWeaponIndex = -1;
                     selectedWeapon = WorldItemDatabase.Instance.unarmedWeapon;
+                    player.playerInventoryManager.currentRightHandWeapon = selectedWeapon;
                     player.playerNetworkManager.currentRightHandWeaponID.Value = selectedWeapon.itemID;
                 }
                 else
                 {
                     player.playerInventoryManager.rightHandWeaponIndex = firstWeaponPosition;
+                    player.playerInventoryManager.currentRightHandWeapon = selectedWeapon;
                     player.playerNetworkManager.currentRightHandWeaponID.Value = firstWeapon.itemID;
                 }
                 return;
@@ -782,20 +837,14 @@ namespace XD
             {
                 if (player.playerInventoryManager.weaponsInRightHandSlots[player.playerInventoryManager.rightHandWeaponIndex].itemID != WorldItemDatabase.Instance.unarmedWeapon.itemID)
                 {
-                    selectedWeapon = player.playerInventoryManager.weaponsInRightHandSlots[player.playerInventoryManager.rightHandWeaponIndex];  
-                    
+                    selectedWeapon = player.playerInventoryManager.weaponsInRightHandSlots[player.playerInventoryManager.rightHandWeaponIndex];
+
                     // Assign the network weapon ID so it swithes for all connected clients
-                    player.playerNetworkManager.currentRightHandWeaponID.Value = player.playerInventoryManager.weaponsInRightHandSlots[player.playerInventoryManager.rightHandWeaponIndex].itemID;
+                    player.playerInventoryManager.currentRightHandWeapon = selectedWeapon;
+                    player.playerNetworkManager.currentRightHandWeaponID.Value = selectedWeapon.itemID;
                     return;
                 }
             }
-
-            if(selectedWeapon == null && player.playerInventoryManager.rightHandWeaponIndex <= 2)
-            {
-                SwitchRightWeapon(); 
-            }
-
-
         }
         public void LoadRightWeapon()
         {
@@ -816,8 +865,8 @@ namespace XD
         public void SwitchLeftWeapon()
         {
             if (!player.IsOwner) { return; }
-            
 
+            player.playerNetworkManager.IsTwoHandingWeapon.Value = false;
 
             player.playerAnimatorManager.PlayActionAnimation("Swap_Left_Weapon_01", false, false, true, true);
 
@@ -851,11 +900,13 @@ namespace XD
                 {
                     player.playerInventoryManager.leftHandWeaponIndex = -1;
                     selectedWeapon = WorldItemDatabase.Instance.unarmedWeapon;
+                    player.playerInventoryManager.currentLeftHandWeapon = selectedWeapon;
                     player.playerNetworkManager.currentLeftHandWeaponID.Value = selectedWeapon.itemID;
                 }
                 else
                 {
                     player.playerInventoryManager.leftHandWeaponIndex = firstWeaponPosition;
+                    player.playerInventoryManager.currentLeftHandWeapon = selectedWeapon;
                     player.playerNetworkManager.currentLeftHandWeaponID.Value = firstWeapon.itemID;
                 }
                 return;
@@ -869,7 +920,8 @@ namespace XD
                     selectedWeapon = player.playerInventoryManager.weaponsInLeftHandSlots[player.playerInventoryManager.leftHandWeaponIndex];
 
                     // Assign the network weapon ID so it swithes for all connected clients
-                    player.playerNetworkManager.currentLeftHandWeaponID.Value = player.playerInventoryManager.weaponsInLeftHandSlots[player.playerInventoryManager.leftHandWeaponIndex].itemID;
+                    player.playerInventoryManager.currentLeftHandWeapon = selectedWeapon;
+                    player.playerNetworkManager.currentLeftHandWeaponID.Value = selectedWeapon.itemID;
                     return;
                 }
             }
@@ -981,6 +1033,70 @@ namespace XD
             leftWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentLeftHandWeapon);
         }
         #endregion
+
+        #region Quick Slot Items
+        public void SwitchQuickSlotItem()
+        {
+            if (!player.IsOwner) { return; }
+
+            QuickSlotItem selectedItem = null;
+
+            player.playerInventoryManager.quickSlotItemIndex += 1;
+
+            if (player.playerInventoryManager.quickSlotItemIndex < 0 || player.playerInventoryManager.quickSlotItemIndex > 2)
+            {
+                player.playerInventoryManager.quickSlotItemIndex = 0;
+
+                // Check if holding more than one weapon
+                float itemCount = 0;
+                QuickSlotItem firsItem = null;
+                int firstItemPosition = 0;
+                for (int i = 0; i < player.playerInventoryManager.quickSlotItemsInQuickSlots.Length; i++)
+                {
+                    if (player.playerInventoryManager.quickSlotItemsInQuickSlots[i] != null)
+                    {
+                        itemCount += 1;
+                        if (firsItem == null)
+                        {
+                            firsItem = player.playerInventoryManager.quickSlotItemsInQuickSlots[i];
+                            firstItemPosition = i;
+                        }
+                    }
+                }
+
+                if (itemCount <= 1)
+                {
+                    player.playerInventoryManager.quickSlotItemIndex = -1;
+                    selectedItem = null;
+                    player.playerNetworkManager.currentQuickSlotItemID.Value = -1;
+                }
+                else
+                {
+                    player.playerInventoryManager.quickSlotItemIndex = firstItemPosition;
+                    player.playerNetworkManager.currentQuickSlotItemID.Value = firsItem.itemID;
+                }
+                return;
+            }
+
+            // If the next potential QuickItem does not equal the null
+            if (player.playerInventoryManager.quickSlotItemsInQuickSlots[player.playerInventoryManager.quickSlotItemIndex] != null)
+            {
+                selectedItem = player.playerInventoryManager.quickSlotItemsInQuickSlots[player.playerInventoryManager.quickSlotItemIndex];
+                // Assign the network weapon ID so it swithes for all connected clients
+                player.playerNetworkManager.currentQuickSlotItemID.Value = player.playerInventoryManager.quickSlotItemsInQuickSlots[player.playerInventoryManager.quickSlotItemIndex].itemID;
+            }
+            else
+            {
+                player.playerNetworkManager.currentQuickSlotItemID.Value = -1;
+
+            }
+
+            if(selectedItem == null && player.playerInventoryManager.quickSlotItemIndex <= 2)
+            {
+                SwitchQuickSlotItem();
+            }
+        }
+        #endregion
         #region Damage Colliders
         // Call: Main_Light_Attack_01 Events
         public void OpenDamageCollider()
@@ -1008,6 +1124,19 @@ namespace XD
             else if (player.playerNetworkManager.isUsingLeftHand.Value)
             {
                 leftWeaponManager.meleeDamageCollider.DisableDamageCollider();
+            }
+        }
+
+        // Unhide Weapons
+        public void UnHideWeapons()
+        {
+            if(player.playerEquipmentManager.rightHandWeaponModel != null)
+            {
+                player.playerEquipmentManager.rightHandWeaponModel.SetActive(true);
+            }
+            if (player.playerEquipmentManager.leftHandWeaponModel != null)
+            {
+                player.playerEquipmentManager.leftHandWeaponModel.SetActive(true);
             }
         }
         #endregion

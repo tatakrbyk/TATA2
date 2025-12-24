@@ -408,6 +408,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""SwitchQuickSlotItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""c0057fe7-64ca-4b8b-b8f7-d94d3b6107a3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""SeekLeftLockOnTarget"",
                     ""type"": ""Button"",
                     ""id"": ""8927ae77-b280-46a1-94ed-1f8d8f2f8c69"",
@@ -924,6 +933,39 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""f9ad4852-555c-41b2-a3f6-c7202f5e476f"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchQuickSlotItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""88d0d2c9-7fd9-417c-8cc9-0e84b78e1c20"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchQuickSlotItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9257ea10-67d1-45ee-9f56-cbb1277f916d"",
+                    ""path"": ""<Joystick>/stick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchQuickSlotItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""7f517fb6-803f-47e1-9986-0997b0d6ff47"",
                     ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
@@ -1392,6 +1434,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_PlayerActions_LockOn = m_PlayerActions.FindAction("LockOn", throwIfNotFound: true);
         m_PlayerActions_SwitchRightWeapon = m_PlayerActions.FindAction("SwitchRightWeapon", throwIfNotFound: true);
         m_PlayerActions_SwitchLeftWeapon = m_PlayerActions.FindAction("SwitchLeftWeapon", throwIfNotFound: true);
+        m_PlayerActions_SwitchQuickSlotItem = m_PlayerActions.FindAction("SwitchQuickSlotItem", throwIfNotFound: true);
         m_PlayerActions_SeekLeftLockOnTarget = m_PlayerActions.FindAction("SeekLeftLockOnTarget", throwIfNotFound: true);
         m_PlayerActions_SeekRightLockOnTarget = m_PlayerActions.FindAction("SeekRightLockOnTarget", throwIfNotFound: true);
         // PlayerCamera
@@ -1601,6 +1644,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerActions_LockOn;
     private readonly InputAction m_PlayerActions_SwitchRightWeapon;
     private readonly InputAction m_PlayerActions_SwitchLeftWeapon;
+    private readonly InputAction m_PlayerActions_SwitchQuickSlotItem;
     private readonly InputAction m_PlayerActions_SeekLeftLockOnTarget;
     private readonly InputAction m_PlayerActions_SeekRightLockOnTarget;
     /// <summary>
@@ -1699,6 +1743,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @SwitchLeftWeapon => m_Wrapper.m_PlayerActions_SwitchLeftWeapon;
         /// <summary>
+        /// Provides access to the underlying input action "PlayerActions/SwitchQuickSlotItem".
+        /// </summary>
+        public InputAction @SwitchQuickSlotItem => m_Wrapper.m_PlayerActions_SwitchQuickSlotItem;
+        /// <summary>
         /// Provides access to the underlying input action "PlayerActions/SeekLeftLockOnTarget".
         /// </summary>
         public InputAction @SeekLeftLockOnTarget => m_Wrapper.m_PlayerActions_SeekLeftLockOnTarget;
@@ -1795,6 +1843,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @SwitchLeftWeapon.started += instance.OnSwitchLeftWeapon;
             @SwitchLeftWeapon.performed += instance.OnSwitchLeftWeapon;
             @SwitchLeftWeapon.canceled += instance.OnSwitchLeftWeapon;
+            @SwitchQuickSlotItem.started += instance.OnSwitchQuickSlotItem;
+            @SwitchQuickSlotItem.performed += instance.OnSwitchQuickSlotItem;
+            @SwitchQuickSlotItem.canceled += instance.OnSwitchQuickSlotItem;
             @SeekLeftLockOnTarget.started += instance.OnSeekLeftLockOnTarget;
             @SeekLeftLockOnTarget.performed += instance.OnSeekLeftLockOnTarget;
             @SeekLeftLockOnTarget.canceled += instance.OnSeekLeftLockOnTarget;
@@ -1875,6 +1926,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @SwitchLeftWeapon.started -= instance.OnSwitchLeftWeapon;
             @SwitchLeftWeapon.performed -= instance.OnSwitchLeftWeapon;
             @SwitchLeftWeapon.canceled -= instance.OnSwitchLeftWeapon;
+            @SwitchQuickSlotItem.started -= instance.OnSwitchQuickSlotItem;
+            @SwitchQuickSlotItem.performed -= instance.OnSwitchQuickSlotItem;
+            @SwitchQuickSlotItem.canceled -= instance.OnSwitchQuickSlotItem;
             @SeekLeftLockOnTarget.started -= instance.OnSeekLeftLockOnTarget;
             @SeekLeftLockOnTarget.performed -= instance.OnSeekLeftLockOnTarget;
             @SeekLeftLockOnTarget.canceled -= instance.OnSeekLeftLockOnTarget;
@@ -2286,6 +2340,13 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSwitchLeftWeapon(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "SwitchQuickSlotItem" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSwitchQuickSlotItem(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "SeekLeftLockOnTarget" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

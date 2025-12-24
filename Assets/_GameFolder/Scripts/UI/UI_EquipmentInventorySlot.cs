@@ -181,6 +181,75 @@ namespace XD
 
                     PlayerUIManager.Instance.playerUIEquipmentManager.RefreshMenu();
                     break;
+
+                case EquipmentType.MainProjectile:
+                    equippedItem = player.playerInventoryManager.mainProjectile;
+                    if (equippedItem != null)
+                    {
+                        player.playerInventoryManager.AddItemToInventory(equippedItem);
+                    }
+                    player.playerInventoryManager.mainProjectile = currentItem as RangedProjectileItem;
+                    player.playerInventoryManager.RemoveItemFromInventory(currentItem);
+                    player.playerEquipmentManager.LoadMainProjectileEquipment(player.playerInventoryManager.mainProjectile);
+                    PlayerUIManager.Instance.playerUIEquipmentManager.RefreshMenu();
+                    break;
+                case EquipmentType.SecondaryProjectile:
+                    equippedItem = player.playerInventoryManager.secondaryProjectile;
+                    if (equippedItem != null)
+                    {
+                        player.playerInventoryManager.AddItemToInventory(equippedItem);
+                    }
+                    player.playerInventoryManager.secondaryProjectile = currentItem as RangedProjectileItem;
+                    player.playerInventoryManager.RemoveItemFromInventory(currentItem);
+                    player.playerEquipmentManager.LoadSecondaryProjectileEquipment(player.playerInventoryManager.secondaryProjectile);
+                    PlayerUIManager.Instance.playerUIEquipmentManager.RefreshMenu();
+                    break;
+
+                case EquipmentType.QuickSlot01:
+                    equippedItem = player.playerInventoryManager.quickSlotItemsInQuickSlots[0];
+                    if (equippedItem != null)
+                    {
+                        player.playerInventoryManager.AddItemToInventory(equippedItem);
+                    }
+                    player.playerInventoryManager.quickSlotItemsInQuickSlots[0] = currentItem as QuickSlotItem;
+                    player.playerInventoryManager.RemoveItemFromInventory(currentItem);
+                    if (player.playerInventoryManager.quickSlotItemIndex == 0)
+                    {
+                        player.playerNetworkManager.currentQuickSlotItemID.Value = currentItem.itemID;
+                    }
+                    PlayerUIManager.Instance.playerUIEquipmentManager.RefreshMenu();
+                    break;
+                case EquipmentType.QuickSlot02:
+                    equippedItem = player.playerInventoryManager.quickSlotItemsInQuickSlots[1];
+                    if (equippedItem != null)
+                    {
+                        player.playerInventoryManager.AddItemToInventory(equippedItem);
+                    }
+                    player.playerInventoryManager.quickSlotItemsInQuickSlots[1] = currentItem as QuickSlotItem;
+                    player.playerInventoryManager.RemoveItemFromInventory(currentItem);
+                    if (player.playerInventoryManager.quickSlotItemIndex == 1)
+                    {
+                        player.playerNetworkManager.currentQuickSlotItemID.Value = currentItem.itemID;
+                    }
+                    PlayerUIManager.Instance.playerUIEquipmentManager.RefreshMenu();
+                    break;
+
+                case EquipmentType.QuickSlot03:
+                    equippedItem = player.playerInventoryManager.quickSlotItemsInQuickSlots[2];
+                    if (equippedItem != null)
+                    {
+                        player.playerInventoryManager.AddItemToInventory(equippedItem);
+                    }
+                    player.playerInventoryManager.quickSlotItemsInQuickSlots[2] = currentItem as QuickSlotItem;
+                    player.playerInventoryManager.RemoveItemFromInventory(currentItem);
+                    if (player.playerInventoryManager.quickSlotItemIndex == 2)
+                    {
+                        player.playerNetworkManager.currentQuickSlotItemID.Value = currentItem.itemID;
+                    }
+                    PlayerUIManager.Instance.playerUIEquipmentManager.RefreshMenu();
+                    break;
+
+
                 default:
                     break;
             }

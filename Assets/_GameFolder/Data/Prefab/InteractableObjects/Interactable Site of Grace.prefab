@@ -219,6 +219,37 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.71
   m_Center: {x: 0, y: 0.27, z: 0}
+--- !u!1 &5358533220683735656
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4268226401649465414}
+  m_Layer: 0
+  m_Name: TeleportTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4268226401649465414
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5358533220683735656}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.3, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 925083991974191637}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7374348530985772063
 GameObject:
   m_ObjectHideFlags: 0
@@ -592,6 +623,7 @@ Transform:
   - {fileID: 4944126215489754954}
   - {fileID: 1739966633485707184}
   - {fileID: 4971584920332540708}
+  - {fileID: 4268226401649465414}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2155010376438822942
@@ -636,6 +668,7 @@ MonoBehaviour:
   activatedParticles: {fileID: 6574271602575764872}
   unactivatedInteractionText: Restore Site of Grace
   activatedInteractionText: Rest
+  teleportTransform: {fileID: 4268226401649465414}
 --- !u!136 &1425239752485560842
 CapsuleCollider:
   m_ObjectHideFlags: 0

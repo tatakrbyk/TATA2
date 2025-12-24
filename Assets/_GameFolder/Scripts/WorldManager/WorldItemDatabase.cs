@@ -40,6 +40,9 @@ namespace XD
         [Header("Projectiles")]
         [SerializeField] List<RangedProjectileItem> projectiles = new List<RangedProjectileItem>();
 
+        [Header("Quick Slot")]
+        [SerializeField] List<QuickSlotItem> quickSlotItems = new List<QuickSlotItem>();
+
         [Header("Items Database")]
         // Every Item we have in the game
         private List<Item> items = new List<Item>();
@@ -87,6 +90,11 @@ namespace XD
             {
                 items.Add(projectile);
             }
+
+            foreach(var item in quickSlotItems)
+            {
+                items.Add(item);
+            }
             // Assign of our items a unique item ID
             for (int i = 0; i < items.Count; i++)
             {
@@ -94,6 +102,7 @@ namespace XD
             }
         }
 
+        #region Item Database
         public Item GetItemByID(int ID)
         {
             return items.FirstOrDefault(item => item.itemID == ID);
@@ -137,6 +146,72 @@ namespace XD
         {
             return projectiles.FirstOrDefault(projectile => projectile.itemID == ID);
         }
+        
+        public QuickSlotItem GetQuickSlotItemByID(int ID)
+        {
+            return quickSlotItems.FirstOrDefault(item => item.itemID == ID);
+        }
+        #endregion
+
+        #region Item Serialization
+
+        public WeaponItem GetWeaponFromSerializedData(SerializableWeapon serializableWeapon)
+        {
+            WeaponItem weapon = null;
+            
+            if(GetWeaponByID(serializableWeapon.itemID))
+            {
+                weapon = Instantiate(GetWeaponByID(serializableWeapon.itemID));
+            }
+
+            if (weapon == null)
+            {
+                return Instantiate(unarmedWeapon);
+            }
+
+            if(GetAshOfWarByID(serializableWeapon.ashOfWarID))
+            {
+                AshOfWar ashOfWar = Instantiate(GetAshOfWarByID(serializableWeapon.ashOfWarID));
+                weapon.ashOfWarAction = ashOfWar;
+            }
+            return weapon;
+        }
+
+        public RangedProjectileItem GetRangedProjectileFromSerializedData(SerializableRangedProjectile serializableRangedProjectile)
+        {
+            RangedProjectileItem rangedProjectile = null;
+
+            if (GetProjectileByID(serializableRangedProjectile.itemID))
+            {
+                rangedProjectile = Instantiate(GetProjectileByID(serializableRangedProjectile.itemID));
+                rangedProjectile.currentAmmoAmount = serializableRangedProjectile.itemAmount;
+            }
+
+            return rangedProjectile;
+        }
+
+        public FlaskItem GetFlaskFromSerializedData(SerializableFlask serializableFlask)
+        {
+            FlaskItem flask = null;
+            if (GetQuickSlotItemByID(serializableFlask.itemID))
+            {
+                flask = Instantiate(GetQuickSlotItemByID(serializableFlask.itemID)) as FlaskItem;
+            }
+            return flask;
+        }
+
+        public QuickSlotItem GetQuickSlotItemSerializedData(SerializableQuickSlotItem serializableQickSlotItem)
+        {
+            QuickSlotItem quickSlotItem = null;
+
+            if(GetQuickSlotItemByID(serializableQickSlotItem.itemID))
+            {
+                quickSlotItem = Instantiate(GetQuickSlotItemByID(serializableQickSlotItem.itemID));
+                quickSlotItem.itemAmount = serializableQickSlotItem.itemAmount;
+            }
+            return quickSlotItem;
+        }
+        #endregion
     }
 
 }

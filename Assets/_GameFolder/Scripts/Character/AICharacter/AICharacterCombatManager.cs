@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 namespace XD
 {
@@ -37,6 +40,8 @@ namespace XD
         [SerializeField] private float defaultTimeUntilStanceRegenerationBegins = 15f;
         private float stanceTickTimer = 0;
 
+        [Header("Activation Range")]
+        public List<PlayerManager> playerWithinActivationRange = new List<PlayerManager>();
         protected override void Awake()
         {
             base.Awake();
@@ -45,9 +50,49 @@ namespace XD
             lockOnTransform = GetComponentInChildren<LockOnTransform>().transform;
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             HandleStanceBreak();
+        }
+
+        public void AddPlayerToPlayersWithinRange(PlayerManager player)
+        {
+            if(playerWithinActivationRange.Contains(player)) { return; }
+
+            playerWithinActivationRange.Add(player);
+
+            for(int i = 0; i < playerWithinActivationRange.Count; i++)
+            {
+                if (playerWithinActivationRange[i] == null)
+                    playerWithinActivationRange.RemoveAt(i);
+            }
+        }
+
+        public void RemovePlayerFromPlayersWithinRange(PlayerManager player)
+        {
+            if (playerWithinActivationRange.Contains(player)) { return; }
+
+            playerWithinActivationRange.Remove(player);
+
+            for (int i = 0; i < playerWithinActivationRange.Count; i++)
+            {
+                if (playerWithinActivationRange[i] == null)
+                    playerWithinActivationRange.RemoveAt(i);
+            }
+        }
+        public void AwardRunesOnDeath(PlayerManager player)
+        {
+            // Check if player is friendly to host (Not an invader)
+            if (player.characterGroup == CharacterGroup.Team02) return;
+
+            // If you want to give less or more runes to a client vs A host, Do it here
+            //if(NetworkManager.Singleton.IsServer)
+            //{
+            //}
+            
+
+            player.playerStatsManager.AddRunes(aiCharacter.characterStatsManager.runesDroppedOnDeath);
+
         }
         private void HandleStanceBreak()
         {
@@ -102,6 +147,24 @@ namespace XD
             // When stance is damaged, The timer is reset, Meaning Constant attacks give no chance at recovering stance that is lost 
             stanceRegenerationTimer = defaultTimeUntilStanceRegenerationBegins;
             currentStance -= stanceDamage;
+        }
+
+        public virtual void AlertCharacterToSound(Vector3 positionOfSound)
+        {
+            if (!aiCharacter.IsOwner) return;
+            if (aiCharacter.isDead.Value) return;
+            if(aiCharacter.idle == null) return;
+            if(aiCharacter.investigateSoundState == null) return;
+            if (!aiCharacter.idle.willInvestigateSound) return;
+
+            // If they are sleeping, here is where you wake them up
+            if(aiCharacter.idle.idleStateMode == IdleStateMode.Sleep && !aiCharacter.aiCharacterNetworkManager.isAwake.Value)
+            {
+                aiCharacter.aiCharacterNetworkManager.isAwake.Value = true;
+                aiCharacter.characterAnimatorManager.PlayActionAnimation(aiCharacter.aiCharacterNetworkManager.wakingAnimation.Value.ToString(), true);
+            }
+            aiCharacter.investigateSoundState.positionOfSound = positionOfSound;
+            aiCharacter.currentState =  aiCharacter.currentState.SwitchState(aiCharacter, aiCharacter.investigateSoundState);
         }
         public void FindATargetViaLineOfSight(AICharacterManager aiCharacter)
         {
@@ -184,6 +247,45 @@ namespace XD
             }
         }
 
+        public virtual void PivotTowardsPosition(AICharacterManager aiCharacterManager, Vector3 position)
+        {
+            if (aiCharacterManager.isPerformingAction) return;
+
+            Vector3 targetsDirection = position - aiCharacterManager.transform.position;
+            float viewableAngle = WorldUtilityManager.Instance.GetAngleOfTarget(aiCharacterManager.transform, targetsDirection);
+            if (viewableAngle >= 20 && viewableAngle <= 60)
+            {
+                aiCharacterManager.characterAnimatorManager.PlayActionAnimation("Zombie_Turn_Right_45_01", true);
+            }
+            else if (viewableAngle <= -20 && viewableAngle >= -60)
+            {
+                aiCharacterManager.characterAnimatorManager.PlayActionAnimation("Zombie_Turn_Left_45_01", true);
+            }
+            else if (viewableAngle >= 61 && viewableAngle <= 110)
+            {
+                aiCharacterManager.characterAnimatorManager.PlayActionAnimation("Zombie_Turn_Right_90_01", true);
+            }
+            else if (viewableAngle <= -61 && viewableAngle >= -110)
+            {
+                aiCharacterManager.characterAnimatorManager.PlayActionAnimation("Zombie_Turn_Left_90_01", true);
+            }
+            else if (viewableAngle >= 110 && viewableAngle <= 145)
+            {
+                aiCharacterManager.characterAnimatorManager.PlayActionAnimation("Zombie_Turn_Right_135_01", true);
+            }
+            else if (viewableAngle <= -110 && viewableAngle >= -145)
+            {
+                aiCharacterManager.characterAnimatorManager.PlayActionAnimation("Zombie_Turn_Left_135_01", true);
+            }
+            else if (viewableAngle >= 146 && viewableAngle <= 180)
+            {
+                aiCharacterManager.characterAnimatorManager.PlayActionAnimation("Zombie_Turn_Right_180_01", true);
+            }
+            else if (viewableAngle <= -146 && viewableAngle >= -180)
+            {
+                aiCharacterManager.characterAnimatorManager.PlayActionAnimation("Zombie_Turn_Left_180_01", true);
+            }
+        }
         public void RotateTowardsAgent(AICharacterManager aICharacter)
         {
             if(aICharacter.aiCharacterNetworkManager.isMoving.Value)

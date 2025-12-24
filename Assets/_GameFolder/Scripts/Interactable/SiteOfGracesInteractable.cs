@@ -8,7 +8,7 @@ namespace XD
     public class SiteOfGracesInteractable : Interactable
     {
         [Header("Site of Grace Info")]
-        [SerializeField] private int siteOfGraceID;
+        public int siteOfGraceID;
         public NetworkVariable<bool> isActivated = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         [Header("VFX")]
@@ -18,6 +18,8 @@ namespace XD
         [SerializeField] string unactivatedInteractionText = "Restore Site of Grace";
         [SerializeField] string activatedInteractionText = "Rest";
 
+        [Header("TeleportTransform")]
+        public Transform teleportTransform;
         protected override void Start()
         {
             base.Start();
@@ -54,6 +56,8 @@ namespace XD
             }
 
             isActivated.OnValueChanged += OnIsActivatedChanged;
+
+            WorldObjectManager.Instance.AddSiteOfGraceToList(this);
         }
 
         public override void OnNetworkDespawn()
@@ -81,14 +85,15 @@ namespace XD
 
         private void RestAtSiteOfGrace(PlayerManager player)
         {
+            PlayerUIManager.Instance.playerUISiteOfGraceManager.OpenMenu();
+
+            // Tempporay Code 
             interactableCollider.enabled = true; // Temp
             player.playerNetworkManager.currentHealth.Value = player.playerNetworkManager.maxHealth.Value;
             player.playerNetworkManager.currentStamina.Value = player.playerNetworkManager.maxStamina.Value;
 
-            WorldSaveGameManager.Instance.SaveGame();
             
-            WorldAIManager.Instance.ResetAllCharacters();
-            WorldSaveGameManager.Instance.LoadGame();
+            WorldAIManager.Instance.ResetAllCharacterS();
 
         }
 
@@ -112,8 +117,13 @@ namespace XD
         public override void Interact(PlayerManager player)
         {
             base.Interact(player);
+            if (player.isPerformingAction) { return; }
+            if (player.playerCombatManager.isUsingItem) { return; }
 
-            if(!isActivated.Value)
+            WorldSaveGameManager.Instance.currentCharacterData.lastSiteOfGraveRestedAt = siteOfGraceID;
+            if(player.IsHost) player.playerNetworkManager.lastSiteOfGraceUsed.Value = siteOfGraceID;
+
+            if (!isActivated.Value)
             {
                 RestoreSiteOfGrace(player);
             }
@@ -121,6 +131,21 @@ namespace XD
             {
                 RestAtSiteOfGrace(player);
             }
+        }
+
+        public void TeleportToSiteOfGrace()
+        {
+            // The player is only able to teleport when not in a co-op game so we can grab  the local player from the network manager
+            PlayerManager player = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerManager>();
+
+            // ENABLE LOADING SCREEN
+            PlayerUIManager.Instance.playerUILoadingScreenManager.ActivateLoadingScreen();
+
+            // TELEPORT PLAYER
+            player.transform.position = teleportTransform.position;
+
+            // DISABLE LOADING SCREEN   
+            PlayerUIManager.Instance.playerUILoadingScreenManager.DeActivateLoadingScreen();
         }
     }
 

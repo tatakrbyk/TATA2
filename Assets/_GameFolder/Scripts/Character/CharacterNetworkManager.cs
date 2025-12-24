@@ -54,17 +54,20 @@ namespace XD
         public NetworkVariable<int> currentFocusPoints = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> maxFocusPoints = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         [Header("Stats")]
-        public NetworkVariable<int> vitality = new NetworkVariable<int>(10, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<int> vigor = new NetworkVariable<int>(10, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> endurance = new NetworkVariable<int>(15, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> mind = new NetworkVariable<int>(5, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> strength = new NetworkVariable<int>(10, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<int> dexterity = new NetworkVariable<int>(1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<int> intelligence = new NetworkVariable<int>(1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<int> faith = new NetworkVariable<int>(1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);  
 
         protected virtual void Awake()
         {
             character = GetComponent<CharacterManager>();
         }
 
-        public virtual void CheckHP(int oldValue, int newValue)
+        public virtual void OnHPChanged(int oldValue, int newValue)
         {
             if(currentHealth.Value <= 0)
             {
@@ -142,6 +145,11 @@ namespace XD
             if (character.characterEffectsManager.activeDrawnProjectileFX != null)
             {
                 Destroy(character.characterEffectsManager.activeDrawnProjectileFX);
+            }
+
+            if(character.characterEffectsManager.activeQuickSlotItemFX != null)
+            {
+                Destroy(character.characterEffectsManager.activeQuickSlotItemFX);
             }
         }
 

@@ -71,3 +71,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fc5c431eb578726498f2f9348f8b2dda, type: 2}
   projectiles:
   - {fileID: 11400000, guid: 732d8b4ec793dcf429bb53173ead3a51, type: 2}
+  quickSlotItems:
+  - {fileID: 11400000, guid: 48efde4d89d980745874bf7f9173127b, type: 2}
+  - {fileID: 11400000, guid: 4c950e7114f9e324698c81c1436bf6be, type: 2}

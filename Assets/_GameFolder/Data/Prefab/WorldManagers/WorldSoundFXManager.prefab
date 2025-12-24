@@ -254,3 +254,4 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8ad154ec2912a1444b41a21e0c1ecb8a, type: 3}
   notchArrowSFX:
   - {fileID: 8300000, guid: e15ae41825bb0034190b95a1fc214bd3, type: 3}
+  healingFlaskSFX: {fileID: 8300000, guid: 39d91a596ae34274a818bb67994a4cd5, type: 3}

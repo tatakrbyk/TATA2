@@ -35,6 +35,8 @@ namespace XD
             interactableCollider.enabled = false; // Disable the collider so it cannot be interacted with again
             player.playerInteractionManager.RemoveInterationFromList(this);
             PlayerUIManager.Instance.playerUIPopUpManager.CloseAllPopUpWindows();
+
+            WorldSaveGameManager.Instance.SaveGame();
         }
         public virtual void OnTriggerEnter(Collider other)
         {

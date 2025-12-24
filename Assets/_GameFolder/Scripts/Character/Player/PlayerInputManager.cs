@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -38,7 +39,9 @@ namespace XD
         [SerializeField] bool jump_Input = false;
         [SerializeField] bool switchRightWeapon_Input = false;
         [SerializeField] bool switchLeftWeapon_Input = false;
+        [SerializeField] bool switchQuickSlotItem_Input = false;
         [SerializeField] bool interaction_Input = false;
+        [SerializeField] bool use_Item_Input = false;
 
         [Header("Bumper INPUTS")]
         [SerializeField] bool RB_Input = false;
@@ -130,7 +133,11 @@ namespace XD
                 playerControls.PlayerActions.Sprint.performed += i => sprint_Input = true;
                 playerControls.PlayerActions.Sprint.canceled += i => sprint_Input = false;
 
+                // Interact
                 playerControls.PlayerActions.Interact.performed += i => interaction_Input = true;
+
+                // Use Item
+                playerControls.PlayerActions.X.performed += i => use_Item_Input = true;
 
                 // Mouse Left Click (Attack)
                 playerControls.PlayerActions.RB.performed += i => RB_Input = true;
@@ -164,6 +171,9 @@ namespace XD
                 // Switch Weapons
                 playerControls.PlayerActions.SwitchLeftWeapon.performed += i => switchLeftWeapon_Input = true;
                 playerControls.PlayerActions.SwitchRightWeapon.performed += i => switchRightWeapon_Input = true;
+
+                // Switch Quick Slot Item
+                playerControls.PlayerActions.SwitchQuickSlotItem.performed += i => switchQuickSlotItem_Input = true;
 
                 // Lock On
                 playerControls.PlayerActions.LockOn.performed += i => lockOn_Input = true;
@@ -207,6 +217,7 @@ namespace XD
 
         private void HandleAllInputs()
         {
+            HandleUseItemInput();
             HandleTwoHandInput();
             HandleLockOnInput();
             HandleLockOnSwitchTargetInput(); 
@@ -224,6 +235,7 @@ namespace XD
             HandleLTInput();
             HandleSwitchRightWeaponInput();
             HandleSwitchLeftWeaponInput();
+            HandleSwitchQuickSlotItem();
             HandleQuedInputs();
             HandleInteractionInput();
             HandleCloseUIInputs();
@@ -306,6 +318,8 @@ namespace XD
             if (dodge_Input)
             {
                 dodge_Input = false;
+
+                if(PlayerUIManager.Instance.menuWindowIsOpen) { return; }
 
                 //  TODO: If any UI or menu is open, return and don't dodge
                 player.playerLocomotionManager.AttemptToPerformDodge();
@@ -565,6 +579,9 @@ namespace XD
                 switchRightWeapon_Input = false;
 
                 if (PlayerUIManager.Instance.menuWindowIsOpen) { return; }
+                if(player.isPerformingAction) { return; }
+                if(player.playerCombatManager.isUsingItem) { return; }
+
                 player.playerEquipmentManager.SwitchRightWeapon();
             }
         }
@@ -574,11 +591,24 @@ namespace XD
             if (switchLeftWeapon_Input)
             {
                 switchLeftWeapon_Input = false;
-                if (PlayerUIManager.Instance.menuWindowIsOpen) { return; }   
+                if (PlayerUIManager.Instance.menuWindowIsOpen) { return; }
+                if (player.isPerformingAction) { return; }
+                if (player.playerCombatManager.isUsingItem) { return; }
                 player.playerEquipmentManager.SwitchLeftWeapon();
             }
         }
 
+        private void HandleSwitchQuickSlotItem()
+        {
+            if (switchQuickSlotItem_Input)
+            {
+                switchQuickSlotItem_Input = false;
+                if (PlayerUIManager.Instance.menuWindowIsOpen) { return; }
+                if (player.isPerformingAction) { return; }
+                if (player.playerCombatManager.isUsingItem) { return; }
+                player.playerEquipmentManager.SwitchQuickSlotItem();
+            }
+        }
         private void HandleInteractionInput()
         {
             if(interaction_Input)
@@ -586,6 +616,23 @@ namespace XD
                 interaction_Input = false;
 
                 player.playerInteractionManager.Interact();                
+            }
+        }
+
+        private void HandleUseItemInput()
+        {
+            if(use_Item_Input)
+            {
+                use_Item_Input = false;
+
+                if(PlayerUIManager.Instance.menuWindowIsOpen) {  return ; }
+
+                if(player.playerInventoryManager.currentQuickSlotItem != null)
+                {
+                    player.playerInventoryManager.currentQuickSlotItem.AttemptToUseItem(player);
+
+                    player.playerNetworkManager.NotifyServerOfQuickSlotItemActionServerRpc(NetworkManager.Singleton.LocalClientId, player.playerInventoryManager.currentQuickSlotItem.itemID);
+                }
             }
         }
         #endregion
@@ -645,7 +692,7 @@ namespace XD
 
                 PlayerUIManager.Instance.playerUIPopUpManager.CloseAllPopUpWindows();
                 PlayerUIManager.Instance.CloseAllMenuWindows();
-                PlayerUIManager.Instance.playerUICharacterMenuManager.OpenCharacterMenu();
+                PlayerUIManager.Instance.playerUICharacterMenuManager.OpenMenu();
             }
         }
         private void HandleCloseUIInputs()

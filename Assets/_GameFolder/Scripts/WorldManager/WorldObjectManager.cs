@@ -18,6 +18,8 @@ namespace XD
         [Header("Fog Walls")]
         public List<FogWallInteractable> fogWalls;
 
+        [Header("Sites of Grace")]
+        public List<SiteOfGracesInteractable> sitesOfGrace;
         private void Awake()
         {
             if (instance == null)
@@ -48,12 +50,29 @@ namespace XD
             }
         }
 
-        public void RemoveFogWallToList(FogWallInteractable fogWall)
+        public void RemoveFogWallFromList(FogWallInteractable fogWall)
         {
             if(fogWalls.Contains(fogWall))
             {
                 fogWalls.Remove(fogWall);
             }
         }
+
+        public void AddSiteOfGraceToList(SiteOfGracesInteractable siteOfGrace)
+        {
+            if (!sitesOfGrace.Contains(siteOfGrace))
+            {
+                sitesOfGrace.Add(siteOfGrace);
+            }
+        }
+
+        public void RemoveSiteOfGraceFromList(SiteOfGracesInteractable siteOfGrace)
+        {
+            if (sitesOfGrace.Contains(siteOfGrace))
+            {
+                sitesOfGrace.Remove(siteOfGrace);
+            }
+        }
+
     }
 }

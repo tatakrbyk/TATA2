@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2810203dc1ffa2c4ab989acad5840675, type: 3}
   m_Name: UndeadIdleState
   m_EditorClassIdentifier: 
+  idleStateMode: 1
+  patrolPath: {fileID: 0}

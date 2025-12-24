@@ -43,7 +43,7 @@ namespace XD
                 contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
 
                 CheckForBlock(damageTarget);
-                CheckForBlock(damageTarget);
+                CheckForParry(damageTarget);
 
                 if (!damageTarget.characterNetworkManager.isInvulnerable.Value)
                 {
